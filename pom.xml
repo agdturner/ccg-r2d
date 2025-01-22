@@ -55,7 +55,7 @@
         <dependency>
             <groupId>io.github.agdturner</groupId>
             <artifactId>ccg-grids</artifactId>
-            <version>2.1</version>
+            <version>2.2-SNAPSHOT</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.github.agdturner/ccg-io -->
         <dependency>
@@ -80,6 +80,12 @@
             <groupId>io.github.agdturner</groupId>
             <artifactId>ccg-data</artifactId>
             <version>0.3.2-SNAPSHOT</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.github.agdturner/ccg-stats -->
+        <dependency>
+            <groupId>io.github.agdturner</groupId>
+            <artifactId>ccg-stats</artifactId>
+            <version>0.7-SNAPSHOT</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
         <dependency>

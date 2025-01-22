@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Centre for Computational Geography.
+ * Copyright 2025 Andy Turner, University of Leeds.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

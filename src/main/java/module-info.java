@@ -19,44 +19,16 @@
  */
 module uk.ac.leeds.ccg.r2d {
 
-    /**
-     * big-math
-     */
     requires transitive ch.obermuhlner.math.big;
 
-    /**
-     * ccg-grids
-     */
     requires transitive uk.ac.leeds.ccg.grids;
-
-    /**
-     * ccg-generic
-     */
     requires transitive uk.ac.leeds.ccg.generic;
-
-    /**
-     * ccg-io
-     */
     requires transitive uk.ac.leeds.ccg.io;
-
-    /**
-     * ccg-data
-     */
     requires transitive uk.ac.leeds.ccg.data;
-
-    /**
-     * ccg-math
-     */
     requires transitive uk.ac.leeds.ccg.math;
-
-    /**
-     * ccg-v3d
-     */
+    requires transitive uk.ac.leeds.ccg.stats;
     requires transitive uk.ac.leeds.ccg.v2d;
 
-    /**
-     * Exports.
-     */
     exports uk.ac.leeds.ccg.r2d.entities;
     exports uk.ac.leeds.ccg.r2d.io;
 }

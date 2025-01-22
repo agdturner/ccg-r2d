@@ -15,16 +15,32 @@
  */
 package uk.ac.leeds.ccg.r2d.d;
 
+import ch.obermuhlner.math.big.BigRational;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Panel;
 import java.awt.image.MemoryImageSource;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Random;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
+import uk.ac.leeds.ccg.generic.core.Generic_Environment;
+import uk.ac.leeds.ccg.generic.io.Generic_Defaults;
+import uk.ac.leeds.ccg.grids.core.Grids_Environment;
+import uk.ac.leeds.ccg.grids.d2.chunk.d.Grids_ChunkDoubleFactory;
+import uk.ac.leeds.ccg.grids.d2.chunk.d.Grids_ChunkDoubleFactoryArray;
+import uk.ac.leeds.ccg.grids.d2.chunk.d.Grids_ChunkDoubleFactorySinglet;
+import uk.ac.leeds.ccg.grids.d2.grid.Grids_Dimensions;
+import uk.ac.leeds.ccg.grids.d2.grid.Grids_GridFactory;
+import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
+import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDoubleFactory;
+import uk.ac.leeds.ccg.io.IO_Cache;
 import uk.ac.leeds.ccg.r2d.d.entities.TriangleDouble;
+import uk.ac.leeds.ccg.r2d.grids.Colour_MapDouble;
 import uk.ac.leeds.ccg.r2d.io.IO;
+import uk.ac.leeds.ccg.stats.range.Stats_RangeDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_FiniteGeometryDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_LineSegmentDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PointDouble;
@@ -43,17 +59,17 @@ public class RenderImageDouble {
      * The window onto the universe to render.
      */
     V2D_RectangleDouble window;
-    
+
     /**
      * For storing axes.
      */
     AxesDouble axes;
-    
+
     /**
      * Lower left corner point of screen.
      */
     V2D_PointDouble p;
-    
+
     /**
      * The pqr of window.
      */
@@ -63,7 +79,7 @@ public class RenderImageDouble {
      * The pq of window.
      */
     V2D_LineSegmentDouble pq;
-    
+
     /**
      * The rsp of window.
      */
@@ -83,7 +99,7 @@ public class RenderImageDouble {
      * The pixel width qrv vector of window.
      */
     V2D_VectorDouble qrv;
-    
+
     /**
      * nrows
      */
@@ -113,7 +129,7 @@ public class RenderImageDouble {
      * If true then axes are drawn.
      */
     boolean drawAxes;
-    
+
     /**
      * Create a new instance.
      *
@@ -138,7 +154,7 @@ public class RenderImageDouble {
         this.pixelSize = rs.getLength() / (double) ncols;
         this.drawAxes = drawAxes;
     }
-
+    
     public static void main(String[] args) {
         Path inDataDir = Paths.get("data", "input");
         Path outDataDir = Paths.get("data", "output");
@@ -164,6 +180,7 @@ public class RenderImageDouble {
         //addTriangles2(universe, epsilon);
         //addTriangles3(universe, epsilon);
         addTriangles4(universe, epsilon);
+        //addTriangles5(universe, epsilon);
 //        V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
 //        V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
 //        V2D_PointDouble r = new V2D_PointDouble(20d, -20d);
@@ -209,7 +226,7 @@ public class RenderImageDouble {
         V2D_TriangleDouble t3 = t0.rotate(origin, theta, epsilon);
         Data_ID_long id3 = universe.addTriangle(t3);
     }
-
+    
     public static void addTriangles2(UniverseDouble universe, double epsilon) {
         // 0
         V2D_PointDouble p = new V2D_PointDouble(-10d, -10d);
@@ -239,7 +256,7 @@ public class RenderImageDouble {
         V2D_TriangleDouble t5 = t4.rotate(t4.getR(), theta, epsilon);
         Data_ID_long id5 = universe.addTriangle(t5);
     }
-
+    
     public static void addTriangles3(UniverseDouble universe, double epsilon) {
         V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
@@ -249,15 +266,33 @@ public class RenderImageDouble {
         V2D_TriangleDouble t1 = t0;
         V2D_TriangleDouble t2 = null;
         double theta = Math.PI / 12d;
-        for (int i = 1; i <= 48; i ++) {
+        for (int i = 1; i <= 48; i++) {
             t2 = t1.rotate(t0.getR(), theta * (double) i, epsilon);
             //universe.addTriangle(t2);
             t1 = t2;
         }
         universe.addTriangle(t2);
     }
-
+    
     public static void addTriangles4(UniverseDouble universe, double epsilon) {
+        V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
+        V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
+        V2D_PointDouble r = new V2D_PointDouble(20d, -20d);
+        V2D_TriangleDouble t0 = new V2D_TriangleDouble(p, q, r);
+        universe.addTriangle(t0);
+        V2D_TriangleDouble t1 = t0;
+        V2D_TriangleDouble t2 = null;
+        double theta = Math.PI / 12d;
+        for (int i = 1; i <= 48; i++) {
+            t2 = t1.rotate(t0.getR(), theta, epsilon);
+            //universe.addTriangle(t2);
+            t0 = t1;
+            t1 = t2;
+        }
+        universe.addTriangle(t2);
+    }
+    
+    public static void addTriangles5(UniverseDouble universe, double epsilon) {
         V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
         V2D_PointDouble r = new V2D_PointDouble(20d, -20d);
@@ -267,7 +302,7 @@ public class RenderImageDouble {
         V2D_TriangleDouble t2 = null;
         double n = 10000000d;
         double theta = Math.PI / (12d * n);
-        for (int i = 1; i <= 48 * n; i ++) {
+        for (int i = 1; i <= 48 * n; i++) {
             t2 = t1.rotate(t0.getR(), theta, epsilon);
             //universe.addTriangle(t2);
             t0 = t1;
@@ -301,6 +336,52 @@ public class RenderImageDouble {
     int[] render() {
         int n = ncols * nrows;
         int[] pix = new int[n];
+        
+        // Render grids
+        
+        Grids_GridDouble grid;
+        try {
+            Grids_Environment ge = new Grids_Environment(new Generic_Environment(new Generic_Defaults(Paths.get("data"))));
+            Path gDir = Paths.get("data", "grids");
+            IO_Cache ioc = new IO_Cache(gDir, "V2D_Grids");
+            Grids_ChunkDoubleFactoryArray dgcdf = new Grids_ChunkDoubleFactoryArray();
+            Grids_ChunkDoubleFactorySinglet gcdf = new Grids_ChunkDoubleFactorySinglet(0d);
+            Grids_GridDoubleFactory gfd = new Grids_GridDoubleFactory(ge, ioc, gcdf, dgcdf, ncols, ncols);
+            BigRational xMin = BigRational.valueOf(-ncols/2d);
+            BigRational xMax = BigRational.valueOf(ncols/2d);
+            BigRational yMin = BigRational.valueOf(-nrows/2d);
+            BigRational yMax = BigRational.valueOf(nrows/2d);
+            BigRational cellsize = BigRational.valueOf(1);
+            Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
+            grid = gfd.create(nrows, ncols, dimensions);
+            Random r = new Random(0);
+            for (long row = 0L; row < nrows; row ++) {
+                for (long col = 0L; col < ncols; col ++) {
+                    grid.addToCell(row, col, r.nextDouble(0d, (double) n));
+                    //grid.addToCell(row, col, row * ncols + col);
+                    //grid.setCell(row, col, row * ncols + col);
+                }
+            }
+            Colour_MapDouble cm = new Colour_MapDouble();
+            //range
+            Stats_RangeDouble range0 = new Stats_RangeDouble(0, n / 2d);
+            cm.addRange(range0, Color.yellow);
+            Stats_RangeDouble range1 = new Stats_RangeDouble(n / 2d, n + 1);
+            cm.addRange(range1, Color.pink);
+            for (long row = 0L; row < nrows; row ++) {
+                for (long col = 0L; col < ncols; col ++) {
+                    int pixelID = (int) (row * ncols + col);
+                    Color color = cm.getColour(grid.getCell(row, col));
+                    pix[pixelID] = color.getRGB();
+                }
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+        
+        
+        
         ArrayList<TriangleDouble> ts = universe.triangles;
         for (int i = 0; i < ts.size(); i++) {
             TriangleDouble t = ts.get(i);
@@ -331,7 +412,7 @@ public class RenderImageDouble {
         int col = getCol(p);
         render(pix, row, col, c);
     }
-
+    
     private void render(int[] pix, int r, int c, Color color) {
         r = nrows - r - 1;
         int in = (r * ncols) + c;
@@ -362,7 +443,7 @@ public class RenderImageDouble {
         double d = pq.getDistance(p, epsilon);
         return (int) (d / pixelSize);
     }
-    
+
     /**
      * For rendering a line on the image. Lines may be obscured by triangles and
      * each other. This will render the closest one.
