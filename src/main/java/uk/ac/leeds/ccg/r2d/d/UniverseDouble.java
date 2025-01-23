@@ -17,11 +17,10 @@ package uk.ac.leeds.ccg.r2d.d;
 
 import java.util.ArrayList;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
+import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
 import uk.ac.leeds.ccg.r2d.d.entities.TriangleDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_EnvelopeDouble;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PointDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_TriangleDouble;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_VectorDouble;
 
 /**
  * A class that holds reference to visible and invisible objects.
@@ -41,6 +40,11 @@ public class UniverseDouble {
     public ArrayList<TriangleDouble> triangles;
     
     /**
+     * The grids to render.
+     */
+    public ArrayList<Grids_GridDouble> grids;
+        
+    /**
      * long
      */
     long nextID;
@@ -58,6 +62,7 @@ public class UniverseDouble {
     public UniverseDouble(V2D_EnvelopeDouble envelope) {
         nextID = 0L;
         triangles = new ArrayList<>();
+        grids = new ArrayList<>();
         this.envelope = envelope;
     }
 
@@ -79,5 +84,13 @@ public class UniverseDouble {
         triangles.add(new TriangleDouble(t, id));
         envelope = envelope.union(t.getEnvelope());
         return id;
+    }
+    
+    /**
+     * Adds the triangle and returns it's id.
+     * @param t The triangle to add. 
+     */
+    public void addGrid(Grids_GridDouble grid) {
+        grids.add(grid);
     }
 }

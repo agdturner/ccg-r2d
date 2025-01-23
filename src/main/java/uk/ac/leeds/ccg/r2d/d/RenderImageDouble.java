@@ -29,11 +29,9 @@ import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.generic.core.Generic_Environment;
 import uk.ac.leeds.ccg.generic.io.Generic_Defaults;
 import uk.ac.leeds.ccg.grids.core.Grids_Environment;
-import uk.ac.leeds.ccg.grids.d2.chunk.d.Grids_ChunkDoubleFactory;
 import uk.ac.leeds.ccg.grids.d2.chunk.d.Grids_ChunkDoubleFactoryArray;
 import uk.ac.leeds.ccg.grids.d2.chunk.d.Grids_ChunkDoubleFactorySinglet;
 import uk.ac.leeds.ccg.grids.d2.grid.Grids_Dimensions;
-import uk.ac.leeds.ccg.grids.d2.grid.Grids_GridFactory;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDoubleFactory;
 import uk.ac.leeds.ccg.io.IO_Cache;
@@ -59,6 +57,11 @@ public class RenderImageDouble {
      * The window onto the universe to render.
      */
     V2D_RectangleDouble window;
+
+    /**
+     * The window grid/screen.
+     */
+    Grids_GridDouble grid;
 
     /**
      * For storing axes.
@@ -101,6 +104,11 @@ public class RenderImageDouble {
     V2D_VectorDouble qrv;
 
     /**
+     * The grids colour maps.
+     */
+    public ArrayList<Colour_MapDouble> gridCMs;
+
+    /**
      * nrows
      */
     int nrows;
@@ -138,7 +146,7 @@ public class RenderImageDouble {
      */
     public RenderImageDouble(UniverseDouble universe,
             V2D_RectangleDouble window, int nrows, int ncols, double epsilon,
-            boolean drawAxes) {
+            boolean drawAxes, Grids_GridDouble grid, ArrayList<Colour_MapDouble> gridCMs) {
         this.universe = universe;
         this.window = window;
         this.pqr = window.getPQR();
@@ -153,8 +161,10 @@ public class RenderImageDouble {
         this.epsilon = epsilon;
         this.pixelSize = rs.getLength() / (double) ncols;
         this.drawAxes = drawAxes;
+        this.grid = grid;
+        this.gridCMs = gridCMs;
     }
-    
+
     public static void main(String[] args) {
         Path inDataDir = Paths.get("data", "input");
         Path outDataDir = Paths.get("data", "output");
@@ -175,6 +185,30 @@ public class RenderImageDouble {
         V2D_PointDouble rb = new V2D_PointDouble(offset, new V2D_VectorDouble(1 * m, -1 * m));
         V2D_RectangleDouble window = new V2D_RectangleDouble(lb, lt, rt, rb);
         UniverseDouble universe = new UniverseDouble(window.getEnvelope());
+        ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
+
+        // Add grids
+        Grids_GridDouble grid = null; // Grid for the window/screen.
+        try {
+            Grids_Environment ge = new Grids_Environment(new Generic_Environment(new Generic_Defaults(Paths.get("data"))));
+            Path gDir = Paths.get("data", "grids");
+            IO_Cache ioc = new IO_Cache(gDir, "V2D_Grids");
+            Grids_ChunkDoubleFactoryArray dgcdf = new Grids_ChunkDoubleFactoryArray();
+            Grids_ChunkDoubleFactorySinglet gcdf = new Grids_ChunkDoubleFactorySinglet(0d);
+            Grids_GridDoubleFactory gdf = new Grids_GridDoubleFactory(ge, ioc, gcdf, dgcdf, ncols, ncols);
+            gridCMs.add(addGrid1(gdf, universe, nrows, ncols));
+            gridCMs.add(addGrid2(gdf, universe, nrows / 2, ncols / 2));
+            BigRational xMin = BigRational.valueOf(-ncols / 2d);
+            BigRational xMax = BigRational.valueOf(ncols / 2d);
+            BigRational yMin = BigRational.valueOf(-nrows / 2d);
+            BigRational yMax = BigRational.valueOf(nrows / 2d);
+            BigRational cellsize = BigRational.valueOf(1);
+            Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
+            grid = gdf.create(nrows, ncols, dimensions);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
         // Add triangles
         //addTriangles1(universe, epsilon);
         //addTriangles2(universe, epsilon);
@@ -198,12 +232,80 @@ public class RenderImageDouble {
 //        }
 //        universe.addTriangle(t2);
         // Render
-        RenderImageDouble ri = new RenderImageDouble(universe, window, nrows, ncols, epsilon, drawAxes);
+        RenderImageDouble ri = new RenderImageDouble(universe, window, nrows, ncols, epsilon, drawAxes, grid, gridCMs);
         ri.output = Paths.get(dir.toString(), "test.png");
         System.out.println(ri.output.toString());
         ri.run();
     }
-    
+
+    public static Colour_MapDouble addGrid1(Grids_GridDoubleFactory gdf, UniverseDouble universe, int nrows, int ncols) {
+        double n = nrows * ncols;
+        Colour_MapDouble cm = new Colour_MapDouble();
+        //range
+        Stats_RangeDouble range0 = new Stats_RangeDouble(0, n / 3d);
+        cm.addRange(range0, Color.yellow);
+        Stats_RangeDouble range1 = new Stats_RangeDouble(n / 3d, 2d * n / 3d);
+        cm.addRange(range1, Color.orange);
+        Stats_RangeDouble range2 = new Stats_RangeDouble(2d * n / 3d, n + 1);
+        cm.addRange(range2, Color.red);
+        Grids_GridDouble grid = null;
+        try {
+            BigRational xMin = BigRational.valueOf(-ncols / 2d);
+            BigRational xMax = BigRational.valueOf(ncols / 2d);
+            BigRational yMin = BigRational.valueOf(-nrows / 2d);
+            BigRational yMax = BigRational.valueOf(nrows / 2d);
+            BigRational cellsize = BigRational.valueOf(1);
+            Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
+            grid = gdf.create(nrows, ncols, dimensions);
+            Random r = new Random(0);
+            for (long row = 0L; row < nrows; row++) {
+                for (long col = 0L; col < ncols; col++) {
+                    grid.addToCell(row, col, r.nextDouble(0d, n));
+                    //grid.addToCell(row, col, row * ncols + col);
+                    //grid.setCell(row, col, row * ncols + col);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+        universe.addGrid(grid);
+        return cm;
+    }
+
+    public static Colour_MapDouble addGrid2(Grids_GridDoubleFactory gdf, UniverseDouble universe, int nrows, int ncols) {
+        Colour_MapDouble cm = new Colour_MapDouble();
+        double n = nrows * ncols;
+        Stats_RangeDouble range0 = new Stats_RangeDouble(0, n / 2d);
+        cm.addRange(range0, Color.yellow);
+        Stats_RangeDouble range1 = new Stats_RangeDouble(n / 2d, n + 1);
+        cm.addRange(range1, Color.black);
+        Grids_GridDouble grid = null;
+        try {
+            BigRational xMin = BigRational.valueOf(0);
+            BigRational xMax = BigRational.valueOf(ncols);
+            BigRational yMin = BigRational.valueOf(0);
+            BigRational yMax = BigRational.valueOf(nrows);
+            BigRational cellsize = BigRational.valueOf(1);
+            Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
+            grid = gdf.create(nrows, ncols, dimensions);
+            Random r = new Random(0);
+            for (long row = 0L; row < nrows; row++) {
+                for (long col = 0L; col < ncols; col++) {
+                    grid.addToCell(row, col, r.nextDouble(0d, n));
+                    //grid.addToCell(row, col, row * ncols + col);
+                    //grid.setCell(row, col, row * ncols + col);
+                }
+            }
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+        universe.addGrid(grid);
+        return cm;
+    }
+
     public static void addTriangles1(UniverseDouble universe, double epsilon) {
         // 0
         V2D_PointDouble p = new V2D_PointDouble(-50d, -50d);
@@ -226,7 +328,7 @@ public class RenderImageDouble {
         V2D_TriangleDouble t3 = t0.rotate(origin, theta, epsilon);
         Data_ID_long id3 = universe.addTriangle(t3);
     }
-    
+
     public static void addTriangles2(UniverseDouble universe, double epsilon) {
         // 0
         V2D_PointDouble p = new V2D_PointDouble(-10d, -10d);
@@ -256,7 +358,7 @@ public class RenderImageDouble {
         V2D_TriangleDouble t5 = t4.rotate(t4.getR(), theta, epsilon);
         Data_ID_long id5 = universe.addTriangle(t5);
     }
-    
+
     public static void addTriangles3(UniverseDouble universe, double epsilon) {
         V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
@@ -273,7 +375,7 @@ public class RenderImageDouble {
         }
         universe.addTriangle(t2);
     }
-    
+
     public static void addTriangles4(UniverseDouble universe, double epsilon) {
         V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
@@ -291,7 +393,7 @@ public class RenderImageDouble {
         }
         universe.addTriangle(t2);
     }
-    
+
     public static void addTriangles5(UniverseDouble universe, double epsilon) {
         V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
@@ -336,52 +438,33 @@ public class RenderImageDouble {
     int[] render() {
         int n = ncols * nrows;
         int[] pix = new int[n];
-        
+
         // Render grids
-        
-        Grids_GridDouble grid;
-        try {
-            Grids_Environment ge = new Grids_Environment(new Generic_Environment(new Generic_Defaults(Paths.get("data"))));
-            Path gDir = Paths.get("data", "grids");
-            IO_Cache ioc = new IO_Cache(gDir, "V2D_Grids");
-            Grids_ChunkDoubleFactoryArray dgcdf = new Grids_ChunkDoubleFactoryArray();
-            Grids_ChunkDoubleFactorySinglet gcdf = new Grids_ChunkDoubleFactorySinglet(0d);
-            Grids_GridDoubleFactory gfd = new Grids_GridDoubleFactory(ge, ioc, gcdf, dgcdf, ncols, ncols);
-            BigRational xMin = BigRational.valueOf(-ncols/2d);
-            BigRational xMax = BigRational.valueOf(ncols/2d);
-            BigRational yMin = BigRational.valueOf(-nrows/2d);
-            BigRational yMax = BigRational.valueOf(nrows/2d);
-            BigRational cellsize = BigRational.valueOf(1);
-            Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
-            grid = gfd.create(nrows, ncols, dimensions);
-            Random r = new Random(0);
-            for (long row = 0L; row < nrows; row ++) {
-                for (long col = 0L; col < ncols; col ++) {
-                    grid.addToCell(row, col, r.nextDouble(0d, (double) n));
-                    //grid.addToCell(row, col, row * ncols + col);
-                    //grid.setCell(row, col, row * ncols + col);
+        ArrayList<Grids_GridDouble> grids = universe.grids;
+        for (int i = 0; i < grids.size(); i++) {
+            Grids_GridDouble grid = grids.get(i);
+            Colour_MapDouble cm = gridCMs.get(i);
+            long nrows = grid.getNRows();
+            long ncols = grid.getNCols();
+            for (long row = 0L; row < nrows; row++) {
+                BigRational y = grid.getCellY(row);
+                int gridRow = (int) this.grid.getRow(y);
+                for (long col = 0L; col < ncols; col++) {
+                    BigRational x = grid.getCellX(col);
+                    if (this.grid.isInGrid(x, y)) {
+                        int gridCol = (int) this.grid.getCol(x);
+                        try {
+                            Color color = cm.getColour(grid.getCell(x, y));
+                            render(pix, gridRow, gridCol, color);
+                        } catch (Exception e) {
+                            System.err.print(e.getMessage());
+                        }
+                    }
                 }
             }
-            Colour_MapDouble cm = new Colour_MapDouble();
-            //range
-            Stats_RangeDouble range0 = new Stats_RangeDouble(0, n / 2d);
-            cm.addRange(range0, Color.yellow);
-            Stats_RangeDouble range1 = new Stats_RangeDouble(n / 2d, n + 1);
-            cm.addRange(range1, Color.pink);
-            for (long row = 0L; row < nrows; row ++) {
-                for (long col = 0L; col < ncols; col ++) {
-                    int pixelID = (int) (row * ncols + col);
-                    Color color = cm.getColour(grid.getCell(row, col));
-                    pix[pixelID] = color.getRGB();
-                }
-            }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
         }
-        
-        
-        
+
+        // Render triangles
         ArrayList<TriangleDouble> ts = universe.triangles;
         for (int i = 0; i < ts.size(); i++) {
             TriangleDouble t = ts.get(i);
@@ -394,6 +477,7 @@ public class RenderImageDouble {
             renderPoint(t.triangle.getQ(), Color.YELLOW, pix);
             renderPoint(t.triangle.getR(), Color.LIGHT_GRAY, pix);
         }
+
         return pix;
     }
 
@@ -412,7 +496,7 @@ public class RenderImageDouble {
         int col = getCol(p);
         render(pix, row, col, c);
     }
-    
+
     private void render(int[] pix, int r, int c, Color color) {
         r = nrows - r - 1;
         int in = (r * ncols) + c;
