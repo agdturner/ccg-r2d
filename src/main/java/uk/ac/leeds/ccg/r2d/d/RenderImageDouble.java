@@ -219,7 +219,8 @@ public class RenderImageDouble {
         //addTriangles3(universe, epsilon);
         //addTriangles4(universe, epsilon);
         //addTriangles5(universe, epsilon);
-        addTriangles6(universe, epsilon);
+        //addTriangles6(universe, epsilon);
+        addTriangles7(universe, epsilon);
 //        V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
 //        V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
 //        V2D_PointDouble r = new V2D_PointDouble(20d, -20d);
@@ -420,7 +421,7 @@ public class RenderImageDouble {
 
     /**
      * Adds two triangles and interects these adding the triangular intersecting
-     * parts.
+     * parts that form a diamond.
      *
      * @param universe
      * @param epsilon
@@ -437,6 +438,31 @@ public class RenderImageDouble {
         // 1
         //theta = Math.PI;
         theta = Math.PI / 2d;
+        TriangleDouble t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, epsilon));
+        // Calculate the intersection
+        V2D_FiniteGeometryDouble gi = t0.triangle.getIntersection(t1.triangle, epsilon);
+        ArrayList<V2D_TriangleDouble> git = ((V2D_ConvexHullDouble) gi).getTriangles();
+        for (int i = 0; i < git.size(); i++) {
+            TriangleDouble t = universe.addTriangle(git.get(i));
+            t.setColor(Color.yellow);
+        }
+    }
+    
+    /**
+     * Adds two triangles and interects these adding the triangular intersecting
+     * parts that form a hexagon.
+     *
+     * @param universe
+     * @param epsilon
+     * @return The ids of the original triangles that are intersected.
+     */
+    public static void addTriangles7(UniverseDouble universe, double epsilon) {
+        V2D_PointDouble origin = new V2D_PointDouble(0d, 0d);
+        TriangleDouble t0 = universe.addTriangle(new V2D_TriangleDouble(
+                new V2D_PointDouble(-30d, -30d),
+                new V2D_PointDouble(0d, 60d),
+                new V2D_PointDouble(30d, -30d)));
+        double theta = Math.PI;
         TriangleDouble t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, epsilon));
         // Calculate the intersection
         V2D_FiniteGeometryDouble gi = t0.triangle.getIntersection(t1.triangle, epsilon);
