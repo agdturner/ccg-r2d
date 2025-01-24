@@ -20,12 +20,10 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Panel;
 import java.awt.image.MemoryImageSource;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
-import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.generic.core.Generic_Environment;
 import uk.ac.leeds.ccg.generic.io.Generic_Defaults;
 import uk.ac.leeds.ccg.grids.core.Grids_Environment;
@@ -35,10 +33,12 @@ import uk.ac.leeds.ccg.grids.d2.grid.Grids_Dimensions;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDoubleFactory;
 import uk.ac.leeds.ccg.io.IO_Cache;
+import uk.ac.leeds.ccg.math.arithmetic.Math_Integer;
 import uk.ac.leeds.ccg.r2d.d.entities.TriangleDouble;
 import uk.ac.leeds.ccg.r2d.grids.Colour_MapDouble;
 import uk.ac.leeds.ccg.r2d.io.IO;
 import uk.ac.leeds.ccg.stats.range.Stats_RangeDouble;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_ConvexHullDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_FiniteGeometryDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_LineSegmentDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PointDouble;
@@ -146,7 +146,8 @@ public class RenderImageDouble {
      */
     public RenderImageDouble(UniverseDouble universe,
             V2D_RectangleDouble window, int nrows, int ncols, double epsilon,
-            boolean drawAxes, Grids_GridDouble grid, ArrayList<Colour_MapDouble> gridCMs) {
+            boolean drawAxes, Grids_GridDouble grid,
+            ArrayList<Colour_MapDouble> gridCMs) {
         this.universe = universe;
         this.window = window;
         this.pqr = window.getPQR();
@@ -172,7 +173,8 @@ public class RenderImageDouble {
         //double epsilon = 1d / 10000000d;
         //double epsilon = 1d / 100000000000d;
         double epsilon = 1d / 10000d;
-        boolean drawAxes = true;
+        //boolean drawAxes = true;
+        boolean drawAxes = false;
         //double epsilon = 0d;
         int nrows = 150;
         int ncols = 150;
@@ -196,8 +198,6 @@ public class RenderImageDouble {
             Grids_ChunkDoubleFactoryArray dgcdf = new Grids_ChunkDoubleFactoryArray();
             Grids_ChunkDoubleFactorySinglet gcdf = new Grids_ChunkDoubleFactorySinglet(0d);
             Grids_GridDoubleFactory gdf = new Grids_GridDoubleFactory(ge, ioc, gcdf, dgcdf, ncols, ncols);
-            gridCMs.add(addGrid1(gdf, universe, nrows, ncols));
-            gridCMs.add(addGrid2(gdf, universe, nrows / 2, ncols / 2));
             BigRational xMin = BigRational.valueOf(-ncols / 2d);
             BigRational xMax = BigRational.valueOf(ncols / 2d);
             BigRational yMin = BigRational.valueOf(-nrows / 2d);
@@ -205,6 +205,10 @@ public class RenderImageDouble {
             BigRational cellsize = BigRational.valueOf(1);
             Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
             grid = gdf.create(nrows, ncols, dimensions);
+            // Add grid 1
+            //gridCMs.add(addGrid1(gdf, universe, nrows, ncols));
+            // Add grid 2
+            //gridCMs.add(addGrid2(gdf, universe, nrows / 2, ncols / 2));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.exit(1);
@@ -213,8 +217,9 @@ public class RenderImageDouble {
         //addTriangles1(universe, epsilon);
         //addTriangles2(universe, epsilon);
         //addTriangles3(universe, epsilon);
-        addTriangles4(universe, epsilon);
+        //addTriangles4(universe, epsilon);
         //addTriangles5(universe, epsilon);
+        addTriangles6(universe, epsilon);
 //        V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
 //        V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
 //        V2D_PointDouble r = new V2D_PointDouble(20d, -20d);
@@ -312,21 +317,21 @@ public class RenderImageDouble {
         V2D_PointDouble q = new V2D_PointDouble(0d, 50d);
         V2D_PointDouble r = new V2D_PointDouble(50d, -50d);
         V2D_TriangleDouble t0 = new V2D_TriangleDouble(p, q, r);
-        Data_ID_long id0 = universe.addTriangle(t0);
+        universe.addTriangle(t0);
         double theta;
         V2D_PointDouble origin = new V2D_PointDouble(0d, 0d);
         // 1
         theta = Math.PI;
         V2D_TriangleDouble t1 = t0.rotate(origin, theta, epsilon);
-        Data_ID_long id1 = universe.addTriangle(t1);
+        universe.addTriangle(t1);
         // 2
         theta = Math.PI / 2d;
         V2D_TriangleDouble t2 = t0.rotate(p, theta, epsilon);
-        Data_ID_long id2 = universe.addTriangle(t2);
+        universe.addTriangle(t2);
         // 3
         theta = 3d * Math.PI / 2d;
         V2D_TriangleDouble t3 = t0.rotate(origin, theta, epsilon);
-        Data_ID_long id3 = universe.addTriangle(t3);
+        universe.addTriangle(t3);
     }
 
     public static void addTriangles2(UniverseDouble universe, double epsilon) {
@@ -335,28 +340,28 @@ public class RenderImageDouble {
         V2D_PointDouble q = new V2D_PointDouble(0d, 10d);
         V2D_PointDouble r = new V2D_PointDouble(10d, -10d);
         V2D_TriangleDouble t0 = new V2D_TriangleDouble(p, q, r);
-        Data_ID_long id0 = universe.addTriangle(t0);
+        universe.addTriangle(t0);
         double theta;
         V2D_PointDouble origin = new V2D_PointDouble(0d, 0d);
         // 1
         theta = Math.PI;
         V2D_TriangleDouble t1 = t0.rotate(origin, theta, epsilon);
-        Data_ID_long id1 = universe.addTriangle(t1);
+        universe.addTriangle(t1);
         // 2
         theta = Math.PI / 2d;
         V2D_TriangleDouble t2 = t0.rotate(p, theta, epsilon);
-        Data_ID_long id2 = universe.addTriangle(t2);
+        universe.addTriangle(t2);
         // 3
         theta = 3d * Math.PI / 2d;
         V2D_TriangleDouble t3 = t2.rotate(origin, theta, epsilon);
-        Data_ID_long id3 = universe.addTriangle(t3);
+        universe.addTriangle(t3);
         // 4
         theta = Math.PI / 2d;
         V2D_TriangleDouble t4 = t2.rotate(t2.getR(), theta, epsilon);
-        Data_ID_long id4 = universe.addTriangle(t4);
+        universe.addTriangle(t4);
         // 5
         V2D_TriangleDouble t5 = t4.rotate(t4.getR(), theta, epsilon);
-        Data_ID_long id5 = universe.addTriangle(t5);
+        universe.addTriangle(t5);
     }
 
     public static void addTriangles3(UniverseDouble universe, double epsilon) {
@@ -414,6 +419,35 @@ public class RenderImageDouble {
     }
 
     /**
+     * Adds two triangles and interects these adding the triangular intersecting
+     * parts.
+     *
+     * @param universe
+     * @param epsilon
+     * @return The ids of the original triangles that are intersected.
+     */
+    public static void addTriangles6(UniverseDouble universe, double epsilon) {
+        // 0
+        V2D_PointDouble p = new V2D_PointDouble(-50d, -50d);
+        V2D_PointDouble q = new V2D_PointDouble(0d, 50d);
+        V2D_PointDouble r = new V2D_PointDouble(50d, -50d);
+        TriangleDouble t0 = universe.addTriangle(new V2D_TriangleDouble(p, q, r));
+        double theta;
+        V2D_PointDouble origin = new V2D_PointDouble(0d, 0d);
+        // 1
+        //theta = Math.PI;
+        theta = Math.PI / 2d;
+        TriangleDouble t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, epsilon));
+        // Calculate the intersection
+        V2D_FiniteGeometryDouble gi = t0.triangle.getIntersection(t1.triangle, epsilon);
+        ArrayList<V2D_TriangleDouble> git = ((V2D_ConvexHullDouble) gi).getTriangles();
+        for (int i = 0; i < git.size(); i++) {
+            TriangleDouble t = universe.addTriangle(git.get(i));
+            t.setColor(Color.yellow);
+        }
+    }
+
+    /**
      * The process for rendering and image.
      *
      * @throws Exception
@@ -422,8 +456,8 @@ public class RenderImageDouble {
         int[] pix = render();
         if (drawAxes) {
             axes = new AxesDouble(universe.envelope);
-            renderLine(axes.xAxis, Color.PINK, pix);
-            renderLine(axes.yAxis, Color.YELLOW, pix);
+            renderLine(axes.xAxis, Color.blue, pix);
+            renderLine(axes.yAxis, Color.red, pix);
         }
         MemoryImageSource m = new MemoryImageSource(ncols, nrows, pix, 0, ncols);
         Panel panel = new Panel();
@@ -467,22 +501,15 @@ public class RenderImageDouble {
         // Render triangles
         ArrayList<TriangleDouble> ts = universe.triangles;
         for (int i = 0; i < ts.size(); i++) {
-            TriangleDouble t = ts.get(i);
-            // Render lines
-            renderLine(t.triangle.getPQ(), Color.GREEN, pix);
-            renderLine(t.triangle.getQR(), Color.BLUE, pix);
-            renderLine(t.triangle.getRP(), Color.RED, pix);
-            // Render corners
-            renderPoint(t.triangle.getP(), Color.PINK, pix);
-            renderPoint(t.triangle.getQ(), Color.YELLOW, pix);
-            renderPoint(t.triangle.getR(), Color.LIGHT_GRAY, pix);
+            renderTriangle(ts.get(i), pix);
         }
 
         return pix;
     }
 
     /**
-     * For rendering a point on the image.
+     * For rendering a point on the image. Points may be obscured by other
+     * rendered entities. The rendering order determines what is visible.
      *
      * @param epsilon The tolerance for intersection.
      * @param p The point to render.
@@ -529,8 +556,8 @@ public class RenderImageDouble {
     }
 
     /**
-     * For rendering a line on the image. Lines may be obscured by triangles and
-     * each other. This will render the closest one.
+     * For rendering a line on the image. Lines may be obscured by other
+     * rendered entities. The rendering order determines what is visible.
      *
      * @param l The line to render.
      * @param pix The image.
@@ -567,6 +594,73 @@ public class RenderImageDouble {
                 V2D_FiniteGeometryDouble pil = pixel.getIntersection(l, epsilon);
                 if (pil != null) {
                     render(pix, r, c, color);
+                }
+            }
+        }
+    }
+
+    /**
+     * For rendering a triangle on the image. Triangles may be obscured by other
+     * rendered entities. The rendering order determines what is visible.
+     *
+     * @param l The line to render.
+     * @param pix The image.
+     */
+    public void renderTriangle(TriangleDouble triangle, int[] pix) {
+        V2D_TriangleDouble t = triangle.triangle;
+        V2D_PointDouble tp = t.getP();
+        // Calculate the min and max row and col.
+        int rp = getRow(tp);
+        int cp = getCol(tp);
+        V2D_PointDouble tq = t.getQ();
+        int rq = getRow(tq);
+        int cq = getCol(tq);
+        V2D_PointDouble tr = t.getR();
+        int rr = getRow(tr);
+        int cr = getCol(tr);
+        int minr = Math_Integer.min(rp, rq, rr);
+        int minc = Math_Integer.min(cp, cq, cr);
+        int maxr = Math_Integer.max(rp, rq, rr);
+        int maxc = Math_Integer.max(cp, cq, cr);
+        if (minr < 0) {
+            minr = 0;
+        }
+        if (minc < 0) {
+            minc = 0;
+        }
+        if (maxr >= nrows) {
+            maxr = nrows - 1;
+        }
+        if (maxc >= ncols) {
+            maxc = ncols - 1;
+        }
+        for (int r = minr; r <= maxr; r++) {
+            for (int c = minc; c <= maxc; c++) {
+                V2D_RectangleDouble pixel = getPixel(r, c);
+                V2D_FiniteGeometryDouble pit = pixel.getIntersection(t, epsilon);
+                if (pit != null) {
+                    render(pix, r, c, triangle.color);
+                    // Edge
+                    /**
+                     * There is probably a faster way to render the edge by only 
+                     * getting intersections for more restricted rows and 
+                     * columns.
+                     */
+                    // PQ
+                    V2D_FiniteGeometryDouble pipq = pixel.getIntersection(t.getPQ(), epsilon);
+                    if (pipq != null) {
+                        render(pix, r, c, triangle.getColorPQ());
+                    } 
+                    // QR
+                    V2D_FiniteGeometryDouble piqr = pixel.getIntersection(t.getQR(), epsilon);
+                    if (piqr != null) {
+                        render(pix, r, c, triangle.getColorQR());
+                    } 
+                    // RP
+                    V2D_FiniteGeometryDouble pirp = pixel.getIntersection(t.getRP(), epsilon);
+                    if (pirp != null) {
+                        render(pix, r, c, triangle.getColorRP());
+                    } 
                 }
             }
         }

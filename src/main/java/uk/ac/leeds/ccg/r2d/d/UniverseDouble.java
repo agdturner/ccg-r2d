@@ -76,14 +76,15 @@ public class UniverseDouble {
     }
     
     /**
-     * Adds the triangle and returns it's id.
-     * @param t The triangle to add. 
+     * Adds the triangle and returns entity.
+     * @param triangle The triangle to add.
+     * @return The TriangleDouble.
      */
-    public Data_ID_long addTriangle(V2D_TriangleDouble t){
-        Data_ID_long id = getNextID();
-        triangles.add(new TriangleDouble(t, id));
-        envelope = envelope.union(t.getEnvelope());
-        return id;
+    public TriangleDouble addTriangle(V2D_TriangleDouble triangle){
+        TriangleDouble t = new TriangleDouble(triangle, getNextID());
+        triangles.add(t);
+        envelope = envelope.union(triangle.getEnvelope());
+        return t;
     }
     
     /**

@@ -4,7 +4,6 @@
  */
 package uk.ac.leeds.ccg.r2d.d;
 
-import uk.ac.leeds.ccg.r2d.d.entities.LineDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_EnvelopeDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_LineSegmentDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PointDouble;
