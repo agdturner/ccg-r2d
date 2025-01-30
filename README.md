@@ -26,3 +26,13 @@ This library has utility for portraying 2D Euclidean spatial data. It is used to
 <img alt="A first rendering of a triangle on a couple of randomly coloured grids" src="data/output/test/test6.png" />
 Two rotated triangles with a four triangle intersection:
 <img alt="Two rotated triangles with a four triangle intersection" src="data/output/test/test7.png" />
+
+## Contributions
+- Please submit issues to initiate discussions about collaboration.
+
+## LICENSE
+- [APACHE LICENSE, VERSION 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+## Acknowledgements and thanks
+- The [University of Leeds](http://www.leeds.ac.uk) and externally funded research grants have supported the development of this library.
+- Thank you Eric for the [BigMath](https://github.com/eobermuhlner/big-math) library.
