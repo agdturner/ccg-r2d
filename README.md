@@ -12,9 +12,9 @@ This library has utility for portraying 2D Euclidean spatial data. It is used to
 <img alt="Three rotated overlapping large triangles" src="data/output/test/test1.png" />
 * Multiple small rotated triangles some overlapping:
 <img alt="Multiple small rotated triangles some overlapping" src="data/output/test/test2.png" />
-* Triangle rotated 48 times with increasing angle:
+* Triangle rotated 48 times with increasing angle (the last triangle has just one colour for it's edge):
 <img alt="Triangle rotated 48 times with increasing angle" src="data/output/test/test3.png" />
-* Triangle rotated a bit, then the result rotated a bit 48 times:
+* Triangle rotated a bit, then the result rotated a bit 48 times (the last triangle has just one colour for it's edge):
 <img alt="Triangle rotated a bit, then the result rotated a bit 48 times" src="data/output/test/test4.png" />
 
 ## With grids
