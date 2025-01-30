@@ -1,5 +1,5 @@
 # [ccg-r2d](https://github.com/agdturner/ccg-r2d)
-A Java library for rendering 2D Euclidean spatial data. This is built on top of [ccg-v2d]((https://github.com/agdturner/ccg-v2d)) and [ccg-grids]((https://github.com/agdturner/ccg-grids)). There are implementations for double precision and for precision accurate to a specified order of magnitude (which the user can specify).
+A Java library for rendering 2D Euclidean spatial data built on [ccg-v2d]((https://github.com/agdturner/ccg-v2d)) and [ccg-grids]((https://github.com/agdturner/ccg-grids)). There are implementations for double precision and for precision accurate to a specified order of magnitude (which the user can specify).
 
 The first examples are rendering triangles, grids behind triangles, and for showing that the algorithms for intersecting triangles work.
 
