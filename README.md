@@ -6,9 +6,9 @@ The first examples are rendering triangles, grids behind triangles, and for show
 This library has utility for portraying 2D Euclidean spatial data. It is used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d) as visualising processed data helps to show that algoithms, like intersection algorithms are working. This helps also in developing [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-grids](https://github.com/agdturner/ccg-grids) for processing 3D Euclidean spatial data, and [ccg-r3d](https://github.com/agdturner/ccg-r3d) for rendering 3D spatial data. As you may appreciate, 3D Euclidean spatial data rendering is a lot harder than 2D Euclidean spatial data rendering, and getting a simpler and related implementation working can help.
 
 ## Rotations and colours
-* One triangle:
+* One triangle (one colour for the triangle and another for it's edge):
 <img alt="One triangle" src="data/output/test/test0.png" />
-* Three rotated overlapping large triangles:
+* Three rotated overlapping large triangles (one colour for the triangle and a different colour for each respective edge):
 <img alt="Three rotated overlapping large triangles" src="data/output/test/test1.png" />
 * Multiple small rotated triangles some overlapping:
 <img alt="Multiple small rotated triangles some overlapping" src="data/output/test/test2.png" />
