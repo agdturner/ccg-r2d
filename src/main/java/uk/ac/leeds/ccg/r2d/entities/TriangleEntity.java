@@ -44,7 +44,6 @@ public class TriangleEntity extends Entity {
      */
     Color colorRP;
     
-    
     /**
      * Create a new instance.
      *
@@ -82,8 +81,6 @@ public class TriangleEntity extends Entity {
         this.colorQR = colorQR;
         this.colorRP = colorRP;
     }
-    
-    
     
     /**
      * @return Sets the colour of the entity including the edge.

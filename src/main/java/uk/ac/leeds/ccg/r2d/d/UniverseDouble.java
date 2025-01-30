@@ -15,6 +15,7 @@
  */
 package uk.ac.leeds.ccg.r2d.d;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
@@ -82,6 +83,38 @@ public class UniverseDouble {
      */
     public TriangleDouble addTriangle(V2D_TriangleDouble triangle){
         TriangleDouble t = new TriangleDouble(triangle, getNextID());
+        triangles.add(t);
+        envelope = envelope.union(triangle.getEnvelope());
+        return t;
+    }
+    
+    /**
+     * Adds the triangle and returns entity.
+     * @param triangle The triangle to add.
+     * @return The Triangle.
+     * @param color The colour of the triangle.
+     * @param colorEdge The colour of the edge of the triangle.
+     */
+    public TriangleDouble addTriangle(V2D_TriangleDouble triangle, Color color, Color colorEdge){
+        TriangleDouble t = new TriangleDouble(triangle, getNextID(), color, colorEdge);
+        triangles.add(t);
+        envelope = envelope.union(triangle.getEnvelope());
+        return t;
+    }
+    
+    /**
+     * Adds the triangle and returns entity.
+     * @param triangle The triangle to add.
+     * @return The Triangle.
+     * @param color The colour of the triangle.
+     * @param colorPQ The colour of the triangle PQ edge.
+     * @param colorQR The colour of the triangle QR edge.
+     * @param colorRP The colour of the triangle RP edge.
+     */
+    public TriangleDouble addTriangle(V2D_TriangleDouble triangle, Color color, 
+            Color colorPQ, Color colorQR, Color colorRP){
+        TriangleDouble t = new TriangleDouble(triangle, getNextID(), color, 
+                colorPQ, colorQR, colorRP);
         triangles.add(t);
         envelope = envelope.union(triangle.getEnvelope());
         return t;

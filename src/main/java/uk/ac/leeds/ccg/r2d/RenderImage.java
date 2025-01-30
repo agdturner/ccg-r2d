@@ -15,7 +15,6 @@
  */
 package uk.ac.leeds.ccg.r2d;
 
-import uk.ac.leeds.ccg.r2d.d.*;
 import ch.obermuhlner.math.big.BigRational;
 import java.awt.Color;
 import java.awt.Image;
@@ -38,7 +37,6 @@ import uk.ac.leeds.ccg.io.IO_Cache;
 import uk.ac.leeds.ccg.math.arithmetic.Math_BigDecimal;
 import uk.ac.leeds.ccg.math.arithmetic.Math_BigRational;
 import uk.ac.leeds.ccg.math.arithmetic.Math_Integer;
-import uk.ac.leeds.ccg.r2d.d.entities.TriangleDouble;
 import uk.ac.leeds.ccg.r2d.entities.Triangle;
 import uk.ac.leeds.ccg.r2d.grids.Colour_MapDouble;
 import uk.ac.leeds.ccg.r2d.io.IO;
@@ -127,7 +125,7 @@ public class RenderImage {
      * The Order of Magnitude for the precision.
      */
     int oom;
-    
+
     /**
      * The RoundingMode for any rounding.
      */
@@ -177,14 +175,17 @@ public class RenderImage {
         this.gridCMs = gridCMs;
     }
 
+    /**
+     * Edit to add/remove grid background and render different triangles. 
+     */
     public static void main(String[] args) {
         Path inDataDir = Paths.get("data", "input");
         Path outDataDir = Paths.get("data", "output");
         Path dir = Paths.get(outDataDir.toString(), "test");
-        int oom = -6;
-        RoundingMode rm = RoundingMode.HALF_UP;
         //boolean drawAxes = true;
         boolean drawAxes = false;
+        int oom = -6;
+        RoundingMode rm = RoundingMode.HALF_UP;
         //double epsilon = 0d;
         int nrows = 150;
         int ncols = 150;
@@ -225,32 +226,28 @@ public class RenderImage {
         }
         // Add triangles
         Math_BigDecimal bd = new Math_BigDecimal(100);
-        //addTriangles1(universe, bd, oom, rm);
-        //addTriangles2(universe, bd, oom, rm);
-        //addTriangles3(universe, bd, oom, rm);
-        //addTriangles4(universe, bd, oom, rm);
-        //addTriangles5(universe, bd, oom, rm);
-        //addTriangles6(universe, bd, oom, rm);
-        addTriangles7(universe, bd, oom, rm);
-//        V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
-//        V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
-//        V2D_PointDouble r = new V2D_PointDouble(20d, -20d);
-//        V2D_TriangleDouble t0 = new V2D_TriangleDouble(p, q, r);
-//        universe.addTriangle(t0);
-//        V2D_TriangleDouble t1 = t0;
-//        V2D_TriangleDouble t2 = null;
-//        double theta = Math.PI / 12d;
-//        for (int i = 1; i <= 48; i ++) {
-//            //t2 = t1.rotate(t0.getR(), theta, epsilon);
-//            t2 = t1.rotate(t0.getR(), theta * (double) i, epsilon);
-//            //universe.addTriangle(t2);
-//            //t0 = t1;
-//            t1 = t2;
-//        }
-//        universe.addTriangle(t2);
+        int tt = 7;
+        switch (tt) {
+            case 0 ->
+                addTriangles0(universe, bd, oom, rm);
+            case 1 ->
+                addTriangles1(universe, bd, oom, rm);
+            case 2 ->
+                addTriangles2(universe, bd, oom, rm);
+            case 3 ->
+                addTriangles3(universe, bd, oom, rm); // 10 minutes
+            case 4 ->
+                addTriangles4(universe, bd, oom, rm); // 8 mins
+            case 5 ->
+                addTriangles5(universe, bd, oom, rm); // 2 minutes.
+            case 6 ->
+                addTriangles6(universe, bd, oom, rm); // 1 minute
+            case 7 ->
+                addTriangles7(universe, bd, oom, rm); // 1 minute
+        }
         // Render
         RenderImage ri = new RenderImage(universe, window, nrows, ncols, oom, rm, drawAxes, grid, gridCMs);
-        ri.output = Paths.get(dir.toString(), "test.png");
+        ri.output = Paths.get(dir.toString(), "test" + tt + ".png");
         System.out.println(ri.output.toString());
         ri.run();
     }
@@ -323,60 +320,100 @@ public class RenderImage {
         return cm;
     }
 
+    /**
+     * One triangle.
+     */
+    public static void addTriangles0(Universe universe, Math_BigDecimal bd, int oom, RoundingMode rm) {
+        Color color = Color.gray;
+        Color colorEdge = Color.blue;
+        V2D_Point p = new V2D_Point(-50d, -50d);
+        V2D_Point q = new V2D_Point(0d, 50d);
+        V2D_Point r = new V2D_Point(50d, -50d);
+        V2D_Triangle t0 = new V2D_Triangle(p, q, r, oom, rm);
+        //universe.addTriangle(t0, oom);
+        universe.addTriangle(t0, oom, color, colorEdge);
+        BigRational theta;
+        V2D_Point origin = new V2D_Point(0d, 0d);
+    }
+
+    /**
+     * Three rotated overlapping large triangles.
+     */
     public static void addTriangles1(Universe universe, Math_BigDecimal bd, int oom, RoundingMode rm) {
+        Color color = Color.gray;
+        //Color colorEdge = Color.blue;
+        Color colorPQ = Color.blue;
+        Color colorQR = Color.green;
+        Color colorRP = Color.red;
         // 0
         V2D_Point p = new V2D_Point(-50d, -50d);
         V2D_Point q = new V2D_Point(0d, 50d);
         V2D_Point r = new V2D_Point(50d, -50d);
         V2D_Triangle t0 = new V2D_Triangle(p, q, r, oom, rm);
-        universe.addTriangle(t0, oom);
+        universe.addTriangle(t0, oom, color, colorPQ, colorQR, colorRP);
         BigRational theta;
         V2D_Point origin = new V2D_Point(0d, 0d);
         // 1
         theta = Math_BigRational.getPi(bd, oom - 2, rm);
         V2D_Triangle t1 = t0.rotate(origin, theta, bd, oom, rm);
-        universe.addTriangle(t1, oom);
+        universe.addTriangle(t1, oom, color, colorPQ, colorQR, colorRP);
         // 2
         theta = theta.divide(2);
         V2D_Triangle t2 = t0.rotate(p, theta, bd, oom, rm);
-        universe.addTriangle(t2, oom);
+        universe.addTriangle(t2, oom, color, colorPQ, colorQR, colorRP);
         // 3
         theta = theta.multiply(3);
         V2D_Triangle t3 = t0.rotate(origin, theta, bd, oom, rm);
-        universe.addTriangle(t3, oom);
+        universe.addTriangle(t3, oom, color, colorPQ, colorQR, colorRP);
     }
 
+    /**
+     * Multiple small rotated triangles some overlapping.
+     */
     public static void addTriangles2(Universe universe, Math_BigDecimal bd, int oom, RoundingMode rm) {
+        Color color = Color.gray;
+        //Color colorEdge = Color.blue;
+        Color colorPQ = Color.blue;
+        Color colorQR = Color.green;
+        Color colorRP = Color.red;
         // 0
         V2D_Point p = new V2D_Point(-10d, -10d);
         V2D_Point q = new V2D_Point(0d, 10d);
         V2D_Point r = new V2D_Point(10d, -10d);
         V2D_Triangle t0 = new V2D_Triangle(p, q, r, oom, rm);
-        universe.addTriangle(t0, oom);
+        universe.addTriangle(t0, oom, color, colorPQ, colorQR, colorRP);
         BigRational theta;
         V2D_Point origin = new V2D_Point(0d, 0d);
         // 1
         theta = Math_BigRational.getPi(bd, oom - 2, rm);
         V2D_Triangle t1 = t0.rotate(origin, theta, bd, oom, rm);
-        universe.addTriangle(t1, oom);
+        universe.addTriangle(t1, oom, color, colorPQ, colorQR, colorRP);
         // 2
         theta = theta.divide(2);
         V2D_Triangle t2 = t0.rotate(p, theta, bd, oom, rm);
-        universe.addTriangle(t2, oom);
+        universe.addTriangle(t2, oom, color, colorPQ, colorQR, colorRP);
         // 3
         theta = theta.multiply(3);
         V2D_Triangle t3 = t2.rotate(origin, theta, bd, oom, rm);
-        universe.addTriangle(t3, oom);
+        universe.addTriangle(t3, oom, color, colorPQ, colorQR, colorRP);
         // 4
         theta = theta.divide(3);
         V2D_Triangle t4 = t2.rotate(t2.getR(), theta, bd, oom, rm);
-        universe.addTriangle(t4, oom);
+        universe.addTriangle(t4, oom, color, colorPQ, colorQR, colorRP);
         // 5
         V2D_Triangle t5 = t4.rotate(t4.getR(), theta, bd, oom, rm);
-        universe.addTriangle(t5, oom);
+        universe.addTriangle(t5, oom, color, colorPQ, colorQR, colorRP);
     }
 
+    /**
+     * Triangle rotated 48 times with increasing angle.
+     */
     public static void addTriangles3(Universe universe, Math_BigDecimal bd, int oom, RoundingMode rm) {
+        Color color = Color.gray;
+        //Color colorEdge = Color.blue;
+        Color colorPQ = Color.blue;
+        Color colorQR = Color.green;
+        Color colorRP = Color.red;
         V2D_Point p = new V2D_Point(-20d, -20d);
         V2D_Point q = new V2D_Point(0d, 20d);
         V2D_Point r = new V2D_Point(20d, -20d);
@@ -387,13 +424,21 @@ public class RenderImage {
         BigRational theta = Math_BigRational.getPi(bd, oom - 2, rm).divide(12);
         for (int i = 1; i <= 48; i++) {
             t2 = t1.rotate(t0.getR(), theta.multiply(i), bd, oom, rm);
-            //universe.addTriangle(t2, oom);
+            universe.addTriangle(t2, oom, color, colorPQ, colorQR, colorRP);
             t1 = t2;
         }
         universe.addTriangle(t2, oom);
     }
 
+    /**
+     * Triangle rotated a bit, then the result rotated a bit 48 times.
+     */
     public static void addTriangles4(Universe universe, Math_BigDecimal bd, int oom, RoundingMode rm) {
+        Color color = Color.gray;
+        //Color colorEdge = Color.blue;
+        Color colorPQ = Color.blue;
+        Color colorQR = Color.green;
+        Color colorRP = Color.red;
         V2D_Point p = new V2D_Point(-20d, -20d);
         V2D_Point q = new V2D_Point(0d, 20d);
         V2D_Point r = new V2D_Point(20d, -20d);
@@ -404,13 +449,16 @@ public class RenderImage {
         BigRational theta = Math_BigRational.getPi(bd, oom - 2, rm).divide(12);
         for (int i = 1; i <= 48; i++) {
             t2 = t1.rotate(t0.getR(), theta, bd, oom, rm);
-            //universe.addTriangle(t2, oom);
+            universe.addTriangle(t2, oom, color, colorPQ, colorQR, colorRP);
             t0 = t1;
             t1 = t2;
         }
         universe.addTriangle(t2, oom);
     }
 
+    /**
+     * Apply lots of rotations to rotate a triangle back to original position.
+     */
     public static void addTriangles5(Universe universe, Math_BigDecimal bd, int oom, RoundingMode rm) {
         V2D_Point p = new V2D_Point(-20d, -20d);
         V2D_Point q = new V2D_Point(0d, 20d);
@@ -419,7 +467,8 @@ public class RenderImage {
         universe.addTriangle(t0, oom);
         V2D_Triangle t1 = t0;
         V2D_Triangle t2 = null;
-        int n = 10000000;
+        int n = 1000;
+        //int n = 1000000; // Takes too long. Might be useful for profiling/optimisation...
         BigRational theta = Math_BigRational.getPi(bd, oom - 2, rm).divide(12 * n);
         for (int i = 1; i <= 48 * n; i++) {
             t2 = t1.rotate(t0.getR(), theta, bd, oom, rm);
@@ -431,12 +480,9 @@ public class RenderImage {
     }
 
     /**
-     * Adds two triangles and interects these adding the triangular intersecting
-     * parts that form a diamond.
-     *
-     * @param universe
-     * @param epsilon
-     * @return The ids of the original triangles that are intersected.
+     * Adds two triangles and intersects these adding the triangular 
+     * intersecting parts. Two rotated triangles with a two triangle 
+     * intersection.
      */
     public static void addTriangles6(Universe universe, Math_BigDecimal bd, int oom, RoundingMode rm) {
         // 0
@@ -458,14 +504,11 @@ public class RenderImage {
             t.setColor(Color.yellow);
         }
     }
-    
+
     /**
-     * Adds two triangles and interects these adding the triangular intersecting
-     * parts that form a hexagon.
-     *
-     * @param universe
-     * @param epsilon
-     * @return The ids of the original triangles that are intersected.
+     * Adds two triangles and intersects these adding the triangular
+     * intersecting parts. Two rotated triangles with a four triangle 
+     * intersection.
      */
     public static void addTriangles7(Universe universe, Math_BigDecimal bd, int oom, RoundingMode rm) {
         V2D_Point origin = new V2D_Point(0d, 0d);
@@ -679,25 +722,25 @@ public class RenderImage {
                     render(pix, r, c, triangle.color);
                     // Edge
                     /**
-                     * There is probably a faster way to render the edge by only 
-                     * getting intersections for more restricted rows and 
+                     * There is probably a faster way to render the edge by only
+                     * getting intersections for more restricted rows and
                      * columns.
                      */
                     // PQ
                     V2D_FiniteGeometry pipq = pixel.getIntersection(t.getPQ(oom, rm), oom, rm);
                     if (pipq != null) {
                         render(pix, r, c, triangle.getColorPQ());
-                    } 
+                    }
                     // QR
                     V2D_FiniteGeometry piqr = pixel.getIntersection(t.getQR(oom, rm), oom, rm);
                     if (piqr != null) {
                         render(pix, r, c, triangle.getColorQR());
-                    } 
+                    }
                     // RP
                     V2D_FiniteGeometry pirp = pixel.getIntersection(t.getRP(oom, rm), oom, rm);
                     if (pirp != null) {
                         render(pix, r, c, triangle.getColorRP());
-                    } 
+                    }
                 }
             }
         }

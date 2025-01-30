@@ -56,6 +56,7 @@ public class TriangleDouble extends TriangleEntity {
     public TriangleDouble(V2D_TriangleDouble triangle, Data_ID_long id,
             Color color, Color colorEdge){
         super(id, color, colorEdge);
+        this.triangle = triangle;
     }
     
     /**

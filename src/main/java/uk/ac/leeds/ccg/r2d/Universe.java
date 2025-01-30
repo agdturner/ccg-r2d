@@ -15,6 +15,7 @@
  */
 package uk.ac.leeds.ccg.r2d;
 
+import java.awt.Color;
 import uk.ac.leeds.ccg.r2d.d.*;
 import java.util.ArrayList;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
@@ -83,6 +84,39 @@ public class Universe {
      */
     public Triangle addTriangle(V2D_Triangle triangle, int oom){
         Triangle t = new Triangle(triangle, getNextID());
+        triangles.add(t);
+        envelope = envelope.union(triangle.getEnvelope(oom), oom);
+        return t;
+    }
+    
+    /**
+     * Adds the triangle and returns entity.
+     * @param triangle The triangle to add.
+     * @param oom The Order of Magnitude for the precision.
+     * @param color The colour of the triangle.
+     * @param colorEdge The colour of the edge of the triangle.
+     * @return The Triangle.
+     */
+    public Triangle addTriangle(V2D_Triangle triangle, int oom, Color color, Color colorEdge){
+        Triangle t = new Triangle(triangle, getNextID(), color, colorEdge);
+        triangles.add(t);
+        envelope = envelope.union(triangle.getEnvelope(oom), oom);
+        return t;
+    }
+    
+    /**
+     * Adds the triangle and returns entity.
+     * @param triangle The triangle to add.
+     * @param oom The Order of Magnitude for the precision.
+     * @param color The colour of the triangle.
+     * @param colorPQ The colour of the triangle PQ edge.
+     * @param colorQR The colour of the triangle QR edge.
+     * @param colorRP The colour of the triangle RP edge.
+     * @return The Triangle.
+     */
+    public Triangle addTriangle(V2D_Triangle triangle, int oom, Color color, 
+            Color colorPQ, Color colorQR, Color colorRP){
+        Triangle t = new Triangle(triangle, getNextID(), color, colorPQ, colorQR, colorRP);
         triangles.add(t);
         envelope = envelope.union(triangle.getEnvelope(oom), oom);
         return t;
