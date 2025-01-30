@@ -194,6 +194,8 @@ public class RenderImageDouble {
         V2D_RectangleDouble window = new V2D_RectangleDouble(lb, lt, rt, rb);
         UniverseDouble universe = new UniverseDouble(window.getEnvelope());
         ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
+        //boolean addGrid = false;
+        boolean addGrid = true;
         // Add grids
         Grids_GridDouble grid = null; // Grid for the window/screen.
         try {
@@ -210,16 +212,18 @@ public class RenderImageDouble {
             BigRational cellsize = BigRational.valueOf(1);
             Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
             grid = gdf.create(nrows, ncols, dimensions);
-            // Add grid 1
-            //gridCMs.add(addGrid1(gdf, universe, nrows, ncols));
-            // Add grid 2
-            //gridCMs.add(addGrid2(gdf, universe, nrows / 2, ncols / 2));
+            if (addGrid) {
+                // Add grid 1
+                gridCMs.add(addGrid1(gdf, universe, nrows, ncols));
+                // Add grid 2
+                gridCMs.add(addGrid2(gdf, universe, nrows / 2, ncols / 2));
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.exit(1);
         }
         // Add triangles
-        int tt = 5;
+        int tt = 0;
         switch (tt) {
             case 0 ->
                 addTriangles0(universe, epsilon);
@@ -241,7 +245,11 @@ public class RenderImageDouble {
         // Render
         RenderImageDouble ri = new RenderImageDouble(universe, window, nrows,
                 ncols, epsilon, oom, rm, drawAxes, grid, gridCMs);
-        ri.output = Paths.get(dir.toString(), "test" + tt + ".png");
+        if (addGrid) {
+            ri.output = Paths.get(dir.toString(), "test" + tt + "_grid.png");
+        } else {
+            ri.output = Paths.get(dir.toString(), "test" + tt + ".png");
+        }
         System.out.println(ri.output.toString());
         ri.run();
     }

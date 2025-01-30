@@ -176,7 +176,7 @@ public class RenderImage {
     }
 
     /**
-     * Edit to add/remove grid background and render different triangles. 
+     * Edit to add/remove grid background and render different triangles.
      */
     public static void main(String[] args) {
         Path inDataDir = Paths.get("data", "input");
@@ -200,6 +200,8 @@ public class RenderImage {
         Universe universe = new Universe(window.getEnvelope(oom));
         ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
 
+        //boolean addGrid = false;
+        boolean addGrid = true;
         // Add grids
         Grids_GridDouble grid = null; // Grid for the window/screen.
         try {
@@ -216,17 +218,19 @@ public class RenderImage {
             BigRational cellsize = BigRational.valueOf(1);
             Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
             grid = gdf.create(nrows, ncols, dimensions);
-            // Add grid 1
-            //gridCMs.add(addGrid1(gdf, universe, nrows, ncols));
-            // Add grid 2
-            //gridCMs.add(addGrid2(gdf, universe, nrows / 2, ncols / 2));
+            if (addGrid) {
+                // Add grid 1
+                gridCMs.add(addGrid1(gdf, universe, nrows, ncols));
+                // Add grid 2
+                gridCMs.add(addGrid2(gdf, universe, nrows / 2, ncols / 2));
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.exit(1);
         }
         // Add triangles
         Math_BigDecimal bd = new Math_BigDecimal(100);
-        int tt = 7;
+        int tt = 0;
         switch (tt) {
             case 0 ->
                 addTriangles0(universe, bd, oom, rm);
@@ -247,7 +251,11 @@ public class RenderImage {
         }
         // Render
         RenderImage ri = new RenderImage(universe, window, nrows, ncols, oom, rm, drawAxes, grid, gridCMs);
-        ri.output = Paths.get(dir.toString(), "test" + tt + ".png");
+        if (addGrid) {
+            ri.output = Paths.get(dir.toString(), "test" + tt + "_grid.png");
+        } else {
+            ri.output = Paths.get(dir.toString(), "test" + tt + ".png");
+        }
         System.out.println(ri.output.toString());
         ri.run();
     }
@@ -480,8 +488,8 @@ public class RenderImage {
     }
 
     /**
-     * Adds two triangles and intersects these adding the triangular 
-     * intersecting parts. Two rotated triangles with a two triangle 
+     * Adds two triangles and intersects these adding the triangular
+     * intersecting parts. Two rotated triangles with a two triangle
      * intersection.
      */
     public static void addTriangles6(Universe universe, Math_BigDecimal bd, int oom, RoundingMode rm) {
@@ -507,7 +515,7 @@ public class RenderImage {
 
     /**
      * Adds two triangles and intersects these adding the triangular
-     * intersecting parts. Two rotated triangles with a four triangle 
+     * intersecting parts. Two rotated triangles with a four triangle
      * intersection.
      */
     public static void addTriangles7(Universe universe, Math_BigDecimal bd, int oom, RoundingMode rm) {
