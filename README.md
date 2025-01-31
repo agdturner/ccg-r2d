@@ -33,6 +33,7 @@ Two rotated triangles with a four triangle intersection:
 - Improve documentation.
 - Generate some example renderings of geographical data.
 - Make a versioned release on Maven Central.
+- Investigate ways to speed up rendering.
 
 ## Development history
 - The code was originally developed for academic research projects.
