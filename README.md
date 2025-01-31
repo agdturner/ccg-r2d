@@ -29,6 +29,14 @@ Developing 2D spatial data functionaility also helps with developing 3D spatial 
 Two rotated triangles with a four triangle intersection:
 <img alt="Two rotated triangles with a four triangle intersection" src="data/output/test/test7.png" />
 
+## Development plans/ideas
+- Improve documentation.
+- Generate some example renderings of geographical data.
+- Make a versioned release on Maven Central.
+
+## Development history
+- The code was originally developed for academic research projects.
+
 ## Contributions welcome
 - Please submit issues and initiate discussions about collaboration to help develop the code.
 
