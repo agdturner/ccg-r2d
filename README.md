@@ -1,9 +1,11 @@
 # [ccg-r2d](https://github.com/agdturner/ccg-r2d)
-A Java library for rendering 2D Euclidean spatial data built on [ccg-v2d](https://github.com/agdturner/ccg-v2d) and [ccg-grids](https://github.com/agdturner/ccg-grids). There are implementations for double precision and for precision accurate to a specified order of magnitude (which the user can arbitrarily specify).
+A Java library for rendering 2D Euclidean spatial data using [ccg-v2d](https://github.com/agdturner/ccg-v2d) for vectors and [ccg-grids](https://github.com/agdturner/ccg-grids) for rasters.
 
-The first examples are rendering triangles, grids behind triangles, and for showing that the algorithms for intersecting triangles work.
+Example static renderings of data are shown below.
 
-This library has utility for portraying 2D Euclidean spatial data. It is used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d) as visualising processed data helps to show that algoithms, like intersection algorithms are working. This helps also in developing [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-grids](https://github.com/agdturner/ccg-grids) for processing 3D Euclidean spatial data, and [ccg-r3d](https://github.com/agdturner/ccg-r3d) for rendering 3D spatial data. As you may appreciate, 3D Euclidean spatial data rendering is a lot harder than 2D Euclidean spatial data rendering, and getting a simpler and related implementation working can help.
+This library is being used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d) as visualising things like calculated intersections helps to show that geometrical algorithms work.
+
+Developing 2D spatial data functionaility also helps with developing 3D spatial data functionality. If you are interested in processing 3D Euclidean spatial data then maybe also have a look at: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d).
 
 ## Rotations and colours
 * One triangle (one colour for the triangle and another for it's edge):
@@ -27,8 +29,8 @@ This library has utility for portraying 2D Euclidean spatial data. It is used to
 Two rotated triangles with a four triangle intersection:
 <img alt="Two rotated triangles with a four triangle intersection" src="data/output/test/test7.png" />
 
-## Contributions
-- Please submit issues to initiate discussions about collaboration.
+## Contributions welcome
+- Please submit issues and initiate discussions about collaboration to help develop the code.
 
 ## LICENSE
 - [APACHE LICENSE, VERSION 2.0](https://www.apache.org/licenses/LICENSE-2.0)
