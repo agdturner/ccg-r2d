@@ -140,6 +140,11 @@ public class RenderImageDouble {
     boolean drawAxes;
 
     /**
+     * If true then circumcircles are drawn for all triangles.
+     */
+    boolean drawCircumcircles;
+
+    /**
      * Create a new instance.
      *
      * @param universe The universe.
@@ -148,7 +153,7 @@ public class RenderImageDouble {
     public RenderImageDouble(UniverseDouble universe,
             V2D_RectangleDouble window, int nrows, int ncols, double epsilon,
             int oom, RoundingMode rm, boolean drawAxes, Grids_GridDouble grid,
-            ArrayList<Colour_MapDouble> gridCMs) {
+            ArrayList<Colour_MapDouble> gridCMs, boolean  drawCircumcircles) {
         this.universe = universe;
         this.window = window;
         this.pqr = window.getPQR();
@@ -165,6 +170,7 @@ public class RenderImageDouble {
         this.drawAxes = drawAxes;
         this.grid = grid;
         this.gridCMs = gridCMs;
+        this.drawCircumcircles =  drawCircumcircles;
     }
 
     /**
@@ -194,8 +200,8 @@ public class RenderImageDouble {
         V2D_RectangleDouble window = new V2D_RectangleDouble(lb, lt, rt, rb);
         UniverseDouble universe = new UniverseDouble(window.getEnvelope());
         ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
-        //boolean addGrid = false;
-        boolean addGrid = true;
+        boolean addGrid = false;
+        //boolean addGrid = true;
         // Add grids
         Grids_GridDouble grid = null; // Grid for the window/screen.
         try {
@@ -223,7 +229,7 @@ public class RenderImageDouble {
             System.exit(1);
         }
         // Add triangles
-        int tt = 0;
+        int tt = 2;
         switch (tt) {
             case 0 ->
                 addTriangles0(universe, epsilon);
@@ -242,9 +248,13 @@ public class RenderImageDouble {
             case 7 ->
                 addTriangles7(universe, epsilon);
         }
+        // Draw circumcircles
+        //boolean drawCircumcircles = false;
+        boolean drawCircumcircles = true;
         // Render
         RenderImageDouble ri = new RenderImageDouble(universe, window, nrows,
-                ncols, epsilon, oom, rm, drawAxes, grid, gridCMs);
+                ncols, epsilon, oom, rm, drawAxes, grid, gridCMs, 
+                drawCircumcircles);
         if (addGrid) {
             ri.output = Paths.get(dir.toString(), "test" + tt + "_grid.png");
         } else {
@@ -699,6 +709,12 @@ public class RenderImageDouble {
      */
     public void renderTriangle(TriangleDouble triangle, int[] pix) {
         V2D_TriangleDouble t = triangle.triangle;
+        // Circumcircles
+        if (drawCircumcircles) {
+            V2D_PointDouble circumcentre = t.getCircumcenter();
+            double radius = circumcentre.getDistance(t.getP());
+            drawCircle(pix, circumcentre, radius, Color.white);
+        }
         V2D_PointDouble tp = t.getP();
         // Calculate the min and max row and col.
         int rp = getRow(tp);
@@ -776,5 +792,39 @@ public class RenderImageDouble {
         V2D_PointDouble pS = new V2D_PointDouble(p);
         pS.translate(pqv.multiply(row).add(qrv.multiply(col + 1)));
         return new V2D_RectangleDouble(pP, pQ, pR, pS);
+    }
+
+    /**
+     * https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
+     * https://rosettacode.org/wiki/Bitmap/Midpoint_circle_algorithm#Java
+     * @param pix The image.
+     * @param centre The circle centre.
+     * @param radius The circle radius.
+     * @param color The colour of the circle.
+     */
+    private void drawCircle(int[] pix, V2D_PointDouble centre, double radius, 
+            Color color) {
+        int d = (5 - (int) radius * 4) / 4;
+        int x = 0;
+        int y = (int) radius;
+        int centreY = getCol(centre);
+        int centreX = getRow(centre);
+        do {
+            render(pix, centreX + x, centreY + y, color);
+            render(pix, centreX + x, centreY - y, color);
+            render(pix, centreX - x, centreY + y, color);
+            render(pix, centreX - x, centreY - y, color);
+            render(pix, centreX + y, centreY + x, color);
+            render(pix, centreX + y, centreY - x, color);
+            render(pix, centreX - y, centreY + x, color);
+            render(pix, centreX - y, centreY - x, color);
+            if (d < 0) {
+                d += 2 * x + 1;
+            } else {
+                d += 2 * (x - y) + 1;
+                y--;
+            }
+            x++;
+        } while (x <= y);
     }
 }
