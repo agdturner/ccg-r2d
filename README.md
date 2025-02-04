@@ -3,7 +3,7 @@ A Java library for rendering 2D Euclidean spatial data using [ccg-v2d](https://g
 
 Example static renderings of data are shown below.
 
-This library is being used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d) as visualising things like calculated intersections helps to show that geometrical algorithms work.
+This library is being used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d). Visualising things like calculated intersections helps to show that geometrical algorithms work.
 
 Developing 2D spatial data functionaility also helps with developing 3D spatial data functionality. If you are interested in processing 3D Euclidean spatial data then maybe also have a look at: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d).
 
