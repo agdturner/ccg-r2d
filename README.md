@@ -7,7 +7,7 @@ This library is being used to help develop [ccg-v2d](https://github.com/agdturne
 
 Developing 2D spatial data functionaility also helps with developing 3D spatial data functionality. If you are interested in processing 3D Euclidean spatial data then maybe also have a look at: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d).
 
-## Rotations and colours
+## Rotations, colours and circumcircles
 * One triangle (one colour for the triangle and another for it's edge):
 <img alt="One triangle" src="data/output/test/test0.png" />
 * Three rotated overlapping large triangles (one colour for the triangle and a different colour for each respective edge):
