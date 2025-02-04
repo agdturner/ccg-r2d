@@ -30,7 +30,9 @@ Two rotated triangles with a four triangle intersection:
 <img alt="Two rotated triangles with a four triangle intersection" src="data/output/test/test7.png" />
 
 ## Development plans/ideas
-- Improve documentation.
+- Add classes for polygons. 
+- Add functionality for cutting/clipping.
+- Add functionality for merging.
 - Generate some example renderings of geographical data.
 - Make a versioned release on Maven Central.
 - Investigate ways to speed up rendering.
