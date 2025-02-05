@@ -16,7 +16,6 @@
 package uk.ac.leeds.ccg.r2d;
 
 import java.awt.Color;
-import uk.ac.leeds.ccg.r2d.d.*;
 import java.util.ArrayList;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
@@ -123,8 +122,8 @@ public class Universe {
     }
     
     /**
-     * Adds the triangle and returns it's id.
-     * @param t The triangle to add. 
+     * Adds the grid.
+     * @param grid The grid to add. 
      */
     public void addGrid(Grids_GridDouble grid) {
         grids.add(grid);

@@ -24,6 +24,7 @@ import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import uk.ac.leeds.ccg.generic.core.Generic_Environment;
 import uk.ac.leeds.ccg.generic.io.Generic_Defaults;
@@ -35,6 +36,7 @@ import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDoubleFactory;
 import uk.ac.leeds.ccg.io.IO_Cache;
 import uk.ac.leeds.ccg.math.arithmetic.Math_Integer;
+import uk.ac.leeds.ccg.r2d.d.entities.PolygonDouble;
 import uk.ac.leeds.ccg.r2d.d.entities.TriangleDouble;
 import uk.ac.leeds.ccg.r2d.grids.Colour_MapDouble;
 import uk.ac.leeds.ccg.r2d.io.IO;
@@ -43,6 +45,7 @@ import uk.ac.leeds.ccg.v2d.geometry.d.V2D_ConvexHullDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_FiniteGeometryDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_LineSegmentDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PointDouble;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_RectangleDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_TriangleDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_VectorDouble;
@@ -140,9 +143,19 @@ public class RenderImageDouble {
     boolean drawAxes;
 
     /**
+     * If true then triangles are drawn.
+     */
+    boolean drawTriangles;
+
+    /**
      * If true then circumcircles are drawn for all triangles.
      */
     boolean drawCircumcircles;
+
+    /**
+     * If true then polygons are drawn.
+     */
+    boolean drawPolygons;
 
     /**
      * Create a new instance.
@@ -153,7 +166,8 @@ public class RenderImageDouble {
     public RenderImageDouble(UniverseDouble universe,
             V2D_RectangleDouble window, int nrows, int ncols, double epsilon,
             int oom, RoundingMode rm, boolean drawAxes, Grids_GridDouble grid,
-            ArrayList<Colour_MapDouble> gridCMs, boolean  drawCircumcircles) {
+            ArrayList<Colour_MapDouble> gridCMs, boolean drawTriangles,
+            boolean drawCircumcircles, boolean drawPolygons) {
         this.universe = universe;
         this.window = window;
         this.pqr = window.getPQR();
@@ -170,7 +184,9 @@ public class RenderImageDouble {
         this.drawAxes = drawAxes;
         this.grid = grid;
         this.gridCMs = gridCMs;
-        this.drawCircumcircles =  drawCircumcircles;
+        this.drawTriangles = drawTriangles;
+        this.drawCircumcircles = drawCircumcircles;
+        this.drawPolygons = drawPolygons;
     }
 
     /**
@@ -229,6 +245,8 @@ public class RenderImageDouble {
             System.exit(1);
         }
         // Add triangles
+        //boolean drawTriangles = true;
+        boolean drawTriangles = false;
         int tt = 2;
         switch (tt) {
             case 0 ->
@@ -248,18 +266,33 @@ public class RenderImageDouble {
             case 7 ->
                 addTriangles7(universe, epsilon);
         }
+        // Add polygons
+        boolean drawPolygons = true;
+        //boolean drawPolygons = false;
+        int pp = 0;
+        switch (pp) {
+            case 0 ->
+                addPolygons0(universe, epsilon);
+        }
+
         // Draw circumcircles
         //boolean drawCircumcircles = false;
         boolean drawCircumcircles = true;
         // Render
         RenderImageDouble ri = new RenderImageDouble(universe, window, nrows,
-                ncols, epsilon, oom, rm, drawAxes, grid, gridCMs, 
-                drawCircumcircles);
-        if (addGrid) {
-            ri.output = Paths.get(dir.toString(), "test" + tt + "_grid.png");
-        } else {
-            ri.output = Paths.get(dir.toString(), "test" + tt + ".png");
+                ncols, epsilon, oom, rm, drawAxes, grid, gridCMs, drawTriangles,
+                drawCircumcircles, drawPolygons);
+        String fname = "test";
+        if (drawTriangles) {
+            fname += "_triangles" + tt;
         }
+        if (drawPolygons) {
+            fname += "_polygons" + pp;
+        }
+        if (addGrid) {
+            fname += "_grid";
+        }
+        ri.output = Paths.get(dir.toString(), fname + ".png");
         System.out.println(ri.output.toString());
         ri.run();
     }
@@ -549,6 +582,44 @@ public class RenderImageDouble {
     }
 
     /**
+     * Adds two triangles and interects these adding the triangular intersecting
+     * parts that form a hexagon.
+     *
+     * @param universe
+     * @param epsilon
+     * @return The ids of the original triangles that are intersected.
+     */
+    public static void addPolygons0(UniverseDouble universe, double epsilon) {
+        V2D_PointDouble origin = new V2D_PointDouble(0d, 0d);
+        V2D_PointDouble a = new V2D_PointDouble(-30d, -30d);
+        V2D_PointDouble b = new V2D_PointDouble(-20d, 0d);
+        V2D_PointDouble c = new V2D_PointDouble(-30d, 30d);
+        V2D_PointDouble d = new V2D_PointDouble(0d, 20d);
+        V2D_PointDouble e = new V2D_PointDouble(30d, 30d);
+        V2D_PointDouble f = new V2D_PointDouble(20d, 0d);
+        V2D_PointDouble g = new V2D_PointDouble(30d, -30d);
+        V2D_PointDouble h = new V2D_PointDouble(0d, -20d);
+        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon,
+                a, b, c, d, e, f, g, h);
+        ArrayList<V2D_LineSegmentDouble> edges = new ArrayList<>();
+        edges.add(new V2D_LineSegmentDouble(a, b));
+        edges.add(new V2D_LineSegmentDouble(b, c));
+        edges.add(new V2D_LineSegmentDouble(c, d));
+        edges.add(new V2D_LineSegmentDouble(d, e));
+        edges.add(new V2D_LineSegmentDouble(e, f));
+        edges.add(new V2D_LineSegmentDouble(f, g));
+        edges.add(new V2D_LineSegmentDouble(g, h));
+        edges.add(new V2D_LineSegmentDouble(h, a));
+        ArrayList<V2D_ConvexHullDouble> holes = new ArrayList<>();
+        holes.add(new V2D_ConvexHullDouble(epsilon, a, b, c));
+        holes.add(new V2D_ConvexHullDouble(epsilon, c, d, e));
+        holes.add(new V2D_ConvexHullDouble(epsilon, e, f, g));
+        holes.add(new V2D_ConvexHullDouble(epsilon, g, h, a));
+        V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, edges, holes);
+        PolygonDouble p0 = universe.addPolygon(polygon);
+    }
+
+    /**
      * The process for rendering and image.
      *
      * @throws Exception
@@ -600,9 +671,19 @@ public class RenderImageDouble {
         }
 
         // Render triangles
-        ArrayList<TriangleDouble> ts = universe.triangles;
-        for (int i = 0; i < ts.size(); i++) {
-            renderTriangle(ts.get(i), pix);
+        if (drawTriangles) {
+            ArrayList<TriangleDouble> ts = universe.triangles;
+            for (int i = 0; i < ts.size(); i++) {
+                renderTriangle(ts.get(i), pix);
+            }
+        }
+
+        // Render polygons
+        if (drawPolygons) {
+            ArrayList<PolygonDouble> ts = universe.polygons;
+            for (int i = 0; i < ts.size(); i++) {
+                renderPolygon(ts.get(i), pix);
+            }
         }
 
         return pix;
@@ -774,6 +855,62 @@ public class RenderImageDouble {
     }
 
     /**
+     * For rendering a triangle on the image. Triangles may be obscured by other
+     * rendered entities. The rendering order determines what is visible.
+     *
+     * @param l The polygon to render.
+     * @param pix The image.
+     */
+    public void renderPolygon(PolygonDouble polygon, int[] pix) {
+        V2D_PolygonDouble poly = polygon.polygon;
+        V2D_ConvexHullDouble ch = poly.getConvexHull(epsilon);
+        ArrayList<V2D_LineSegmentDouble> edges = poly.getEdges();
+        V2D_LineSegmentDouble[] edgesArray = new V2D_LineSegmentDouble[edges.size()];
+        for (int i = 0; i < edgesArray.length; i ++) {
+            edgesArray[i] = edges.get(i);
+        }
+        //ArrayList<V2D_ConvexHullDouble> holes = poly.getHoles(epsilon);
+        V2D_PointDouble[] ePs = ch.getPoints();
+        // Calculate the min and max row and col.
+        int minr = getRow(ePs[0]);
+        int maxr = getRow(ePs[0]);
+        int minc = getCol(ePs[0]);
+        int maxc = getCol(ePs[0]);
+        for (int i = 1; i < ePs.length; i++) {
+            minr = Math.min(minr, getRow(ePs[i]));
+            maxr = Math.max(maxr, getRow(ePs[i]));
+            minc = Math.min(minc, getCol(ePs[i]));
+            maxc = Math.max(maxc, getCol(ePs[i]));
+        }
+        if (minr < 0) {
+            minr = 0;
+        }
+        if (minc < 0) {
+            minc = 0;
+        }
+        if (maxr >= nrows) {
+            maxr = nrows - 1;
+        }
+        if (maxc >= ncols) {
+            maxc = ncols - 1;
+        }
+        for (int r = minr; r <= maxr; r++) {
+            for (int c = minc; c <= maxc; c++) {
+                V2D_RectangleDouble pixel = getPixel(r, c);
+                if (ch.isIntersectedBy(pixel, epsilon)) {
+                    if (poly.isIntersectedBy(pixel, epsilon)) {
+                        render(pix, r, c, polygon.color);
+                    } else {
+                        if (pixel.isIntersectedBy(epsilon, edgesArray)) {
+                            render(pix, r, c, polygon.colorEdge);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * @param row The row index for the pixel returned.
      * @param col The column index for the pixel returned.
      * @return The pixel rectangle.
@@ -797,12 +934,13 @@ public class RenderImageDouble {
     /**
      * https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
      * https://rosettacode.org/wiki/Bitmap/Midpoint_circle_algorithm#Java
+     *
      * @param pix The image.
      * @param centre The circle centre.
      * @param radius The circle radius.
      * @param color The colour of the circle.
      */
-    private void drawCircle(int[] pix, V2D_PointDouble centre, double radius, 
+    private void drawCircle(int[] pix, V2D_PointDouble centre, double radius,
             Color color) {
         int d = (5 - (int) radius * 4) / 4;
         int x = 0;

@@ -19,8 +19,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
+import uk.ac.leeds.ccg.r2d.d.entities.PolygonDouble;
 import uk.ac.leeds.ccg.r2d.d.entities.TriangleDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_EnvelopeDouble;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_TriangleDouble;
 
 /**
@@ -36,9 +38,14 @@ public class UniverseDouble {
     V2D_EnvelopeDouble envelope;
 
     /**
-     * The triangles to render.
+     * The triangles.
      */
     public ArrayList<TriangleDouble> triangles;
+    
+    /**
+     * The polygons.
+     */
+    public ArrayList<PolygonDouble> polygons;
     
     /**
      * The grids to render.
@@ -63,6 +70,7 @@ public class UniverseDouble {
     public UniverseDouble(V2D_EnvelopeDouble envelope) {
         nextID = 0L;
         triangles = new ArrayList<>();
+        polygons = new ArrayList<>();
         grids = new ArrayList<>();
         this.envelope = envelope;
     }
@@ -120,9 +128,54 @@ public class UniverseDouble {
         return t;
     }
     
+    
     /**
-     * Adds the triangle and returns it's id.
-     * @param t The triangle to add. 
+     * Adds the polygon and returns entity.
+     * @param polygon The polygon to add.
+     * @return The TriangleDouble.
+     */
+    public PolygonDouble addPolygon(V2D_PolygonDouble polygon){
+        PolygonDouble t = new PolygonDouble(polygon, getNextID());
+        polygons.add(t);
+        envelope = envelope.union(polygon.getEnvelope());
+        return t;
+    }
+    
+    /**
+     * Adds the polygon and returns entity.
+     * @param polygon The polygon to add.
+     * @return The Polygon.
+     * @param color The colour of the polygon.
+     * @param colorEdge The colour of the edge of the polygon.
+     */
+    public PolygonDouble addPolygon(V2D_PolygonDouble polygon, Color color, Color colorEdge){
+        PolygonDouble t = new PolygonDouble(polygon, getNextID(), color, colorEdge);
+        polygons.add(t);
+        envelope = envelope.union(polygon.getEnvelope());
+        return t;
+    }
+    
+    /**
+     * Adds the polygon and returns entity.
+     * @param polygon The polygon to add.
+     * @return The Polygon.
+     * @param color The colour of the polygon.
+     * @param colorPQ The colour of the polygon PQ edge.
+     * @param colorQR The colour of the polygon QR edge.
+     * @param colorRP The colour of the polygon RP edge.
+     */
+    public PolygonDouble addPolygon(V2D_PolygonDouble polygon, Color color, 
+            Color colorPQ, Color colorQR, Color colorRP){
+        PolygonDouble t = new PolygonDouble(polygon, getNextID(), color, 
+                colorPQ, colorQR, colorRP);
+        polygons.add(t);
+        envelope = envelope.union(polygon.getEnvelope());
+        return t;
+    }
+    
+    /**
+     * Adds the grid.
+     * @param grid The grid to add. 
      */
     public void addGrid(Grids_GridDouble grid) {
         grids.add(grid);
