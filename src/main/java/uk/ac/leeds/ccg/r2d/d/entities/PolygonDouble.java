@@ -65,13 +65,12 @@ public class PolygonDouble extends PolygonEntity {
      * @param polygon What {@link #polygon} is set to.
      * @param id What {@link #id} is set to.
      * @param color What {@link #color} is set to.
-     * @param colorPQ What {@link #colorPQ} is set to.
-     * @param colorQR What {@link #colorQR} is set to.
-     * @param colorRP What {@link #colorRP} is set to.
+     * @param colorInternalEdge What {@link #colorInternalEdge} is set to.
+     * @param colorExternalEdge What {@link #colorExternalEdge} is set to.
      */
     public PolygonDouble(V2D_PolygonDouble polygon, Data_ID_long id,
-            Color color, Color colorPQ, Color colorQR, Color colorRP) {
-        super(id, color, colorPQ, colorQR, colorRP);
+            Color color, Color colorInternalEdge, Color colorExternalEdge) {
+        super(id, color, colorInternalEdge, colorExternalEdge);
         this.polygon = polygon;
     }
 }

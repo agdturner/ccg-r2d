@@ -60,11 +60,6 @@ public class UniverseDouble {
     /**
      * Create a new instance.
      *
-     * @param oom The Order of Magnitude for the precision.
-     * @param rm The RoundingMode for any rounding.
-     */
-    
-    /**
      * @param envelope The initial envelope.
      */
     public UniverseDouble(V2D_EnvelopeDouble envelope) {
@@ -160,14 +155,13 @@ public class UniverseDouble {
      * @param polygon The polygon to add.
      * @return The Polygon.
      * @param color The colour of the polygon.
-     * @param colorPQ The colour of the polygon PQ edge.
-     * @param colorQR The colour of the polygon QR edge.
-     * @param colorRP The colour of the polygon RP edge.
+     * @param colorInternalEdge What {@link #colorInternalEdge} is set to.
+     * @param colorExternalEdge What {@link #colorExternalEdge} is set to.
      */
     public PolygonDouble addPolygon(V2D_PolygonDouble polygon, Color color, 
-            Color colorPQ, Color colorQR, Color colorRP){
+            Color colorInternalEdge, Color colorExternalEdge){
         PolygonDouble t = new PolygonDouble(polygon, getNextID(), color, 
-                colorPQ, colorQR, colorRP);
+                colorInternalEdge, colorExternalEdge);
         polygons.add(t);
         envelope = envelope.union(polygon.getEnvelope());
         return t;

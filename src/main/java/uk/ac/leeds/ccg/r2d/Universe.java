@@ -61,11 +61,6 @@ public class Universe {
     /**
      * Create a new instance.
      *
-     * @param oom The Order of Magnitude for the precision.
-     * @param rm The RoundingMode for any rounding.
-     */
-    
-    /**
      * @param envelope The initial envelope.
      */
     public Universe(V2D_Envelope envelope) {
@@ -168,18 +163,16 @@ public class Universe {
     /**
      * Adds the polygon and returns entity.
      * @param polygon The polygon to add.
-     * @return The Polygon.
-     * @param color The colour of the polygon.
-     * @param colorPQ The colour of the polygon PQ edge.
-     * @param colorQR The colour of the polygon QR edge.
-     * @param colorRP The colour of the polygon RP edge.
      * @param oom The Order of Magnitude for the precision.
      * @param rm The RoundingMode for any rounding.
+     * @param colorInternalEdge What {@link #colorInternalEdge} is set to.
+     * @param colorExternalEdge What {@link #colorExternalEdge} is set to.
+     * @return The Polygon.
      */
     public Polygon addPolygon(V2D_Polygon polygon, int oom, RoundingMode rm,
-            Color color, Color colorPQ, Color colorQR, Color colorRP){
+            Color color, Color colorInternalEdge, Color colorExternalEdge){
         Polygon t = new Polygon(polygon, getNextID(), color, 
-                colorPQ, colorQR, colorRP);
+                colorInternalEdge, colorExternalEdge);
         polygons.add(t);
         envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
         return t;

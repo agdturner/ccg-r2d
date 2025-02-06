@@ -24,7 +24,6 @@ import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import uk.ac.leeds.ccg.generic.core.Generic_Environment;
 import uk.ac.leeds.ccg.generic.io.Generic_Defaults;
@@ -204,8 +203,8 @@ public class RenderImageDouble {
         //double epsilon = 1d / 100000000000d;
         double epsilon = 1d / 10000d;
         //double epsilon = 0d;
-        int nrows = 150;
-        int ncols = 150;
+        int nrows = 150; //150;
+        int ncols = 150; //150;
         // Init universe
         long m = 75;         // multiplication factor
         V2D_VectorDouble offset = V2D_VectorDouble.ZERO;
@@ -269,10 +268,14 @@ public class RenderImageDouble {
         // Add polygons
         boolean drawPolygons = true;
         //boolean drawPolygons = false;
-        int pp = 0;
+        int pp = 1;
         switch (pp) {
             case 0 ->
                 addPolygons0(universe, epsilon);
+            case 1 ->
+                addPolygons1(universe, epsilon);
+            case 2 ->
+                addPolygons2(universe, epsilon);
         }
 
         // Draw circumcircles
@@ -582,15 +585,13 @@ public class RenderImageDouble {
     }
 
     /**
-     * Adds two triangles and interects these adding the triangular intersecting
-     * parts that form a hexagon.
+     * One polygon that is not a convex hull.
      *
      * @param universe
      * @param epsilon
      * @return The ids of the original triangles that are intersected.
      */
     public static void addPolygons0(UniverseDouble universe, double epsilon) {
-        V2D_PointDouble origin = new V2D_PointDouble(0d, 0d);
         V2D_PointDouble a = new V2D_PointDouble(-30d, -30d);
         V2D_PointDouble b = new V2D_PointDouble(-20d, 0d);
         V2D_PointDouble c = new V2D_PointDouble(-30d, 30d);
@@ -610,13 +611,134 @@ public class RenderImageDouble {
         edges.add(new V2D_LineSegmentDouble(f, g));
         edges.add(new V2D_LineSegmentDouble(g, h));
         edges.add(new V2D_LineSegmentDouble(h, a));
-        ArrayList<V2D_ConvexHullDouble> holes = new ArrayList<>();
-        holes.add(new V2D_ConvexHullDouble(epsilon, a, b, c));
-        holes.add(new V2D_ConvexHullDouble(epsilon, c, d, e));
-        holes.add(new V2D_ConvexHullDouble(epsilon, e, f, g));
-        holes.add(new V2D_ConvexHullDouble(epsilon, g, h, a));
+        ArrayList<V2D_PolygonDouble> holes = new ArrayList<>();
+        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, a, b, c)));
+        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, c, d, e)));
+        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, e, f, g)));
+        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, g, h, a)));
         V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, edges, holes);
         PolygonDouble p0 = universe.addPolygon(polygon);
+    }
+
+    /**
+     * One polygon that is not a convex hull and that has other holes.
+     *
+     * @param universe
+     * @param epsilon
+     * @return The ids of the original triangles that are intersected.
+     */
+    public static void addPolygons1(UniverseDouble universe, double epsilon) {
+        // Outer points
+        V2D_PointDouble a = new V2D_PointDouble(-48d, -48d);
+        V2D_PointDouble b = new V2D_PointDouble(-48d, 48d);
+        V2D_PointDouble c = new V2D_PointDouble(0d, 36d);
+        V2D_PointDouble d = new V2D_PointDouble(48d, 48d);
+        V2D_PointDouble e = new V2D_PointDouble(48d, -48d);
+        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon,
+                a, b, c, d, e);
+        // Holes
+        ArrayList<V2D_PolygonDouble> holes = new ArrayList<>();
+        // Outer holes
+        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, b, c, d)));
+        // Internal hole
+        // Outer points of inner hole
+        V2D_PointDouble f = new V2D_PointDouble(-24d, -24d);
+        V2D_PointDouble g = new V2D_PointDouble(-24d, 24d);
+        V2D_PointDouble h = new V2D_PointDouble(-16d, 24d);
+        V2D_PointDouble i = new V2D_PointDouble(-8d, -2d);
+        V2D_PointDouble j = new V2D_PointDouble(8d, -2d);
+        V2D_PointDouble k = new V2D_PointDouble(16d, 24d);
+        V2D_PointDouble l = new V2D_PointDouble(24d, 24d);
+        V2D_PointDouble m = new V2D_PointDouble(24d, -24d);
+        // Holes of inner hole
+        ArrayList<V2D_PolygonDouble> holesOfHole = new ArrayList<>();
+        holesOfHole.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, h, i, j, k)));
+        V2D_PolygonDouble hole = new V2D_PolygonDouble(
+                new V2D_ConvexHullDouble(epsilon, f, g, h, i, j, k, l, m), holesOfHole);
+        holes.add(hole);
+        // Edges
+        // Outer edge
+        ArrayList<V2D_LineSegmentDouble> edges = new ArrayList<>();
+        edges.add(new V2D_LineSegmentDouble(a, b));
+        edges.add(new V2D_LineSegmentDouble(b, c));
+        edges.add(new V2D_LineSegmentDouble(c, d));
+        edges.add(new V2D_LineSegmentDouble(d, e));
+        edges.add(new V2D_LineSegmentDouble(e, a));
+        // Inner edge
+        edges.add(new V2D_LineSegmentDouble(f, g));
+        edges.add(new V2D_LineSegmentDouble(g, h));
+        edges.add(new V2D_LineSegmentDouble(h, i));
+        edges.add(new V2D_LineSegmentDouble(i, j));
+        edges.add(new V2D_LineSegmentDouble(j, k));
+        edges.add(new V2D_LineSegmentDouble(k, l));
+        edges.add(new V2D_LineSegmentDouble(l, m));
+        edges.add(new V2D_LineSegmentDouble(m, f));
+        V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, edges, holes);
+        universe.addPolygon(polygon);
+    }
+
+    /**
+     * One polygon that is not a convex hull and that has other holes.
+     *
+     * @param universe
+     * @param epsilon
+     * @return The ids of the original triangles that are intersected.
+     */
+    public static void addPolygons2(UniverseDouble universe, double epsilon) {
+        // Outer points
+        V2D_PointDouble a = new V2D_PointDouble(-30d, -30d);
+        V2D_PointDouble b = new V2D_PointDouble(-20d, 0d);
+        V2D_PointDouble c = new V2D_PointDouble(-30d, 30d);
+        V2D_PointDouble d = new V2D_PointDouble(0d, 20d);
+        V2D_PointDouble e = new V2D_PointDouble(30d, 30d);
+        V2D_PointDouble f = new V2D_PointDouble(20d, 0d);
+        V2D_PointDouble g = new V2D_PointDouble(30d, -30d);
+        V2D_PointDouble h = new V2D_PointDouble(0d, -20d);
+        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon,
+                a, b, c, d, e, f, g, h);
+        // Holes
+        ArrayList<V2D_PolygonDouble> holes = new ArrayList<>();
+        // Outer holes
+        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, a, b, c)));
+        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, c, d, e)));
+        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, e, f, g)));
+        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, g, h, a)));
+        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, g, h, a)));
+        // Internal hole
+        // Outer points of inner hole
+        V2D_PointDouble i = new V2D_PointDouble(-10d, 10d);
+        V2D_PointDouble j = new V2D_PointDouble(3d, 2d);
+        V2D_PointDouble k = new V2D_PointDouble(15d, 15d);
+        V2D_PointDouble l = new V2D_PointDouble(12d, -13d);
+        V2D_PointDouble m = new V2D_PointDouble(-6d, -4d);
+        V2D_PointDouble n = new V2D_PointDouble(-10d, -15d);
+        // Holes of inner hole
+        ArrayList<V2D_PolygonDouble> holesOfHole = new ArrayList<>();
+        holesOfHole.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, i, j, k)));
+        holesOfHole.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, l, m, n)));
+        V2D_PolygonDouble hole = new V2D_PolygonDouble(
+                new V2D_ConvexHullDouble(epsilon, i, j, k, l, m, n), holesOfHole);
+        holes.add(hole);
+        // Edges
+        // Outer edge
+        ArrayList<V2D_LineSegmentDouble> edges = new ArrayList<>();
+        edges.add(new V2D_LineSegmentDouble(a, b));
+        edges.add(new V2D_LineSegmentDouble(b, c));
+        edges.add(new V2D_LineSegmentDouble(c, d));
+        edges.add(new V2D_LineSegmentDouble(d, e));
+        edges.add(new V2D_LineSegmentDouble(e, f));
+        edges.add(new V2D_LineSegmentDouble(f, g));
+        edges.add(new V2D_LineSegmentDouble(g, h));
+        edges.add(new V2D_LineSegmentDouble(h, a));
+        // Inner edge
+        edges.add(new V2D_LineSegmentDouble(i, j));
+        edges.add(new V2D_LineSegmentDouble(j, k));
+        edges.add(new V2D_LineSegmentDouble(k, l));
+        edges.add(new V2D_LineSegmentDouble(l, m));
+        edges.add(new V2D_LineSegmentDouble(m, n));
+        edges.add(new V2D_LineSegmentDouble(n, i));
+        V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, edges, holes);
+        universe.addPolygon(polygon);
     }
 
     /**
@@ -866,7 +988,7 @@ public class RenderImageDouble {
         V2D_ConvexHullDouble ch = poly.getConvexHull(epsilon);
         ArrayList<V2D_LineSegmentDouble> edges = poly.getEdges();
         V2D_LineSegmentDouble[] edgesArray = new V2D_LineSegmentDouble[edges.size()];
-        for (int i = 0; i < edgesArray.length; i ++) {
+        for (int i = 0; i < edgesArray.length; i++) {
             edgesArray[i] = edges.get(i);
         }
         //ArrayList<V2D_ConvexHullDouble> holes = poly.getHoles(epsilon);
@@ -895,17 +1017,31 @@ public class RenderImageDouble {
             maxc = ncols - 1;
         }
         for (int r = minr; r <= maxr; r++) {
+
+            if (r == ((maxr - minr) / 2) + minr) {
+                int debug = 1;
+            }
+
             for (int c = minc; c <= maxc; c++) {
+
+                if (c == ((maxc - minc) / 2) + minc) {
+                    int debug = 1;
+                }
+
                 V2D_RectangleDouble pixel = getPixel(r, c);
-                if (ch.isIntersectedBy(pixel, epsilon)) {
-                    if (poly.isIntersectedBy(pixel, epsilon)) {
-                        render(pix, r, c, polygon.color);
-                    } else {
-                        if (pixel.isIntersectedBy(epsilon, edgesArray)) {
-                            render(pix, r, c, polygon.colorEdge);
-                        }
+                //if (ch.isIntersectedBy(pixel, epsilon)) {
+                if (poly.isIntersectedBy(pixel, epsilon)) {
+                    render(pix, r, c, polygon.color);
+                } else {
+                    if (pixel.isIntersectedBy(epsilon, edgesArray)) {
+                        render(pix, r, c, polygon.colorEdge);
                     }
                 }
+                if (pixel.isIntersectedBy(epsilon, edgesArray)) {
+                    render(pix, r, c, polygon.colorEdge);
+                }
+
+                //}
             }
         }
     }

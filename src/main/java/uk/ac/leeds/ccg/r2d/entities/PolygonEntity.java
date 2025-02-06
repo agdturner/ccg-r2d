@@ -17,8 +17,6 @@ package uk.ac.leeds.ccg.r2d.entities;
 
 import java.awt.Color;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
-import uk.ac.leeds.ccg.r2d.entities.Entity;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_TriangleDouble;
 
 /**
  * For representing a triangle entity.
@@ -30,20 +28,15 @@ public class PolygonEntity extends Entity {
     private static final long serialVersionUID = 1L;
     
     /**
-     * For the colour of the PQ edge.
+     * For the colour of the external edges.
      */
-    Color colorPQ;
+    Color colorExternalEdge;
 
     /**
-     * For the colour of the QR edge.
+     * For the colour of the internal edges.
      */
-    Color colorQR;
+    Color colorInternalEdge;
 
-    /**
-     * For the colour of the RP edge.
-     */
-    Color colorRP;
-    
     /**
      * Create a new instance.
      *
@@ -70,16 +63,14 @@ public class PolygonEntity extends Entity {
      *
      * @param id What {@link #id} is set to.
      * @param color What {@link #color} is set to.
-     * @param colorPQ What {@link #colorPQ} is set to.
-     * @param colorQR What {@link #colorQR} is set to.
-     * @param colorRP What {@link #colorRP} is set to.
+     * @param colorExternalEdge What {@link #colorExternalEdge} is set to.
+     * @param colorInternalEdge What {@link #colorInternalEdge} is set to.
      */
     public PolygonEntity(Data_ID_long id,
-            Color color, Color colorPQ, Color colorQR, Color colorRP) {
+            Color color, Color colorExternalEdge, Color colorInternalEdge) {
         super(id, color);
-        this.colorPQ = colorPQ;
-        this.colorQR = colorQR;
-        this.colorRP = colorRP;
+        this.colorExternalEdge = colorExternalEdge;
+        this.colorInternalEdge = colorInternalEdge;
     }
     
     /**
@@ -88,60 +79,43 @@ public class PolygonEntity extends Entity {
      */
     public void setColor(Color color) {
         this.color = color;
-        colorPQ = null;
-        colorQR = null;
-        colorRP = null;
+        colorExternalEdge = null;
+        colorInternalEdge = null;
         this.colorEdge = color;
     }
     
     /**
-     * @return The colour of the PQ Edge setting it first if it is null. 
+     * @return The colour of the colorExternalEdge setting it first if it is null. 
      */
-    public Color getColorPQ() {
-        if (colorPQ == null) {
-            colorPQ = colorEdge;
+    public Color getColorExternalEdge() {
+        if (colorExternalEdge == null) {
+            colorExternalEdge = colorEdge;
         }
-        return colorPQ;
+        return colorExternalEdge;
     }
     
     /**
      * @param color The colour to use in rendering the PQ Edge. 
      */
-    public void setColorPQ(Color color) {
-        colorPQ = color;
+    public void setColorExternalEdge(Color color) {
+        colorExternalEdge = color;
     }
     
     /**
      * @return The colour of the QR Edge setting it first if it is null. 
      */
-    public Color getColorQR() {
-        if (colorQR == null) {
-            colorQR = colorEdge;
+    public Color getColorInternalEdge() {
+        if (colorInternalEdge == null) {
+            colorInternalEdge = colorEdge;
         }
-        return colorQR;
+        return colorInternalEdge;
     }
     
     /**
-     * @param color The colour to use in rendering the QR Edge. 
+     * @param color What {@link #colorInternalEdge} is set to.
      */
-    public void setColorQR(Color color) {
-        colorQR = color;
+    public void setColorInternalEdge(Color color) {
+        colorInternalEdge = color;
     }
     
-    /**
-     * @return The colour of the RP Edge setting it first if it is null. 
-     */
-    public Color getColorRP() {
-        if (colorRP == null) {
-            colorRP = colorEdge;
-        }
-        return colorRP;
-    }
-    
-    /**
-     * @param color The colour to use in rendering the RP Edge. 
-     */
-    public void setColorRP(Color color) {
-        colorRP = color;
-    }
 }
