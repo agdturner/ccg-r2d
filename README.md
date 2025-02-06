@@ -45,9 +45,6 @@ Two rotated triangles with a four triangle intersection:
 - Make a versioned release on Maven Central.
 - Investigate ways to speed up rendering.
 
-## Development history
-- The code was originally developed for academic research projects.
-
 ## Contributions welcome
 - Please submit issues and initiate discussions about collaboration to help develop the code.
 
@@ -55,5 +52,5 @@ Two rotated triangles with a four triangle intersection:
 - [APACHE LICENSE, VERSION 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 ## Acknowledgements and thanks
-- The [University of Leeds](http://www.leeds.ac.uk) and externally funded research grants have supported the development of this library.
+- The [University of Leeds](http://www.leeds.ac.uk) and some externally funded research grants have supported the development of libraries dependencies.
 - Thank you Eric for the [BigMath](https://github.com/eobermuhlner/big-math) library.
