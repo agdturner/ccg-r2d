@@ -986,7 +986,7 @@ public class RenderImageDouble {
     public void renderPolygon(PolygonDouble polygon, int[] pix) {
         V2D_PolygonDouble poly = polygon.polygon;
         V2D_ConvexHullDouble ch = poly.getConvexHull(epsilon);
-        ArrayList<V2D_LineSegmentDouble> edges = poly.getEdges();
+        ArrayList<V2D_LineSegmentDouble> edges = poly.getExternalEdges();
         V2D_LineSegmentDouble[] edgesArray = new V2D_LineSegmentDouble[edges.size()];
         for (int i = 0; i < edgesArray.length; i++) {
             edgesArray[i] = edges.get(i);

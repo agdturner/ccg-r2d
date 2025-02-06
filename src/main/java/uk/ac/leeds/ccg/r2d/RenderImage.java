@@ -254,7 +254,7 @@ public class RenderImage {
         //boolean drawTriangles = true;
         boolean drawTriangles = false;
         Math_BigDecimal bd = new Math_BigDecimal(100);
-        int tt = 1;
+        int tt = 2;
         switch (tt) {
             case 0 ->
                 addTriangles0(universe, bd, oom, rm);
@@ -743,7 +743,7 @@ public class RenderImage {
         edges.add(new V2D_LineSegment(m, n, oom, rm));
         edges.add(new V2D_LineSegment(n, i, oom, rm));
         V2D_Polygon polygon = new V2D_Polygon(ch, edges, holes);
-        universe.addPolygon(polygon, oom, rm);
+        universe.addPolygon(polygon, oom, rm, Color.lightGray, Color.red, Color.blue);
     }
 
     /**
