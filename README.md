@@ -32,6 +32,8 @@ Two rotated triangles with a four triangle intersection:
 ## Polygon
 * Polygon that is not a convex hull with a darker outline
 <img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons0.png" />
+* Polygon that is not a convex hull with a darker outline and with a polygonal hole
+<img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons2.png" />
   
 ## Development plans/ideas
 - Add classes for polygons. 
