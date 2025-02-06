@@ -268,7 +268,7 @@ public class RenderImageDouble {
         // Add polygons
         boolean drawPolygons = true;
         //boolean drawPolygons = false;
-        int pp = 1;
+        int pp = 2;
         switch (pp) {
             case 0 ->
                 addPolygons0(universe, epsilon);
@@ -697,14 +697,15 @@ public class RenderImageDouble {
         V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon,
                 a, b, c, d, e, f, g, h);
         // Holes
-        ArrayList<V2D_PolygonDouble> holes = new ArrayList<>();
+        ArrayList<V2D_PolygonDouble> externalHoles = new ArrayList<>();
         // Outer holes
-        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, a, b, c)));
-        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, c, d, e)));
-        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, e, f, g)));
-        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, g, h, a)));
-        holes.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, g, h, a)));
-        // Internal hole
+        externalHoles.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, a, b, c)));
+        externalHoles.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, c, d, e)));
+        externalHoles.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, e, f, g)));
+        externalHoles.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, g, h, a)));
+        externalHoles.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, g, h, a)));
+        // Internal holes
+        ArrayList<V2D_PolygonDouble> internalHoles = new ArrayList<>();
         // Outer points of inner hole
         V2D_PointDouble i = new V2D_PointDouble(-10d, 10d);
         V2D_PointDouble j = new V2D_PointDouble(3d, 2d);
@@ -713,32 +714,32 @@ public class RenderImageDouble {
         V2D_PointDouble m = new V2D_PointDouble(-6d, -4d);
         V2D_PointDouble n = new V2D_PointDouble(-10d, -15d);
         // Holes of inner hole
-        ArrayList<V2D_PolygonDouble> holesOfHole = new ArrayList<>();
-        holesOfHole.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, i, j, k)));
-        holesOfHole.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, l, m, n)));
-        V2D_PolygonDouble hole = new V2D_PolygonDouble(
-                new V2D_ConvexHullDouble(epsilon, i, j, k, l, m, n), holesOfHole);
-        holes.add(hole);
+        ArrayList<V2D_PolygonDouble> holeHoles = new ArrayList<>();
+        holeHoles.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, i, j, k)));
+        holeHoles.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, l, m, n)));
+        internalHoles.add(new V2D_PolygonDouble(new V2D_ConvexHullDouble(epsilon, i, j, k, l, m, n), holeHoles));
         // Edges
         // Outer edge
-        ArrayList<V2D_LineSegmentDouble> edges = new ArrayList<>();
-        edges.add(new V2D_LineSegmentDouble(a, b));
-        edges.add(new V2D_LineSegmentDouble(b, c));
-        edges.add(new V2D_LineSegmentDouble(c, d));
-        edges.add(new V2D_LineSegmentDouble(d, e));
-        edges.add(new V2D_LineSegmentDouble(e, f));
-        edges.add(new V2D_LineSegmentDouble(f, g));
-        edges.add(new V2D_LineSegmentDouble(g, h));
-        edges.add(new V2D_LineSegmentDouble(h, a));
+        ArrayList<V2D_LineSegmentDouble> externalEdges = new ArrayList<>();
+        externalEdges.add(new V2D_LineSegmentDouble(a, b));
+        externalEdges.add(new V2D_LineSegmentDouble(b, c));
+        externalEdges.add(new V2D_LineSegmentDouble(c, d));
+        externalEdges.add(new V2D_LineSegmentDouble(d, e));
+        externalEdges.add(new V2D_LineSegmentDouble(e, f));
+        externalEdges.add(new V2D_LineSegmentDouble(f, g));
+        externalEdges.add(new V2D_LineSegmentDouble(g, h));
+        externalEdges.add(new V2D_LineSegmentDouble(h, a));
         // Inner edge
-        edges.add(new V2D_LineSegmentDouble(i, j));
-        edges.add(new V2D_LineSegmentDouble(j, k));
-        edges.add(new V2D_LineSegmentDouble(k, l));
-        edges.add(new V2D_LineSegmentDouble(l, m));
-        edges.add(new V2D_LineSegmentDouble(m, n));
-        edges.add(new V2D_LineSegmentDouble(n, i));
-        V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, edges, holes);
-        universe.addPolygon(polygon);
+        ArrayList<V2D_LineSegmentDouble> internalEdges = new ArrayList<>();
+        internalEdges.add(new V2D_LineSegmentDouble(i, j));
+        internalEdges.add(new V2D_LineSegmentDouble(j, k));
+        internalEdges.add(new V2D_LineSegmentDouble(k, l));
+        internalEdges.add(new V2D_LineSegmentDouble(l, m));
+        internalEdges.add(new V2D_LineSegmentDouble(m, n));
+        internalEdges.add(new V2D_LineSegmentDouble(n, i));
+        V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges, 
+                externalHoles, internalEdges, internalHoles);
+        universe.addPolygon(polygon, Color.lightGray, Color.red, Color.blue);
     }
 
     /**
@@ -986,12 +987,16 @@ public class RenderImageDouble {
     public void renderPolygon(PolygonDouble polygon, int[] pix) {
         V2D_PolygonDouble poly = polygon.polygon;
         V2D_ConvexHullDouble ch = poly.getConvexHull(epsilon);
-        ArrayList<V2D_LineSegmentDouble> edges = poly.getExternalEdges();
-        V2D_LineSegmentDouble[] edgesArray = new V2D_LineSegmentDouble[edges.size()];
-        for (int i = 0; i < edgesArray.length; i++) {
-            edgesArray[i] = edges.get(i);
+        ArrayList<V2D_LineSegmentDouble> externalEdges = poly.getExternalEdges();
+        V2D_LineSegmentDouble[] externalEdgesArray = new V2D_LineSegmentDouble[externalEdges.size()];
+        for (int i = 0; i < externalEdgesArray.length; i++) {
+            externalEdgesArray[i] = externalEdges.get(i);
         }
-        //ArrayList<V2D_ConvexHullDouble> holes = poly.getHoles(epsilon);
+        ArrayList<V2D_LineSegmentDouble> internalEdges = poly.getInternalEdges();
+        V2D_LineSegmentDouble[] internalEdgesArray = new V2D_LineSegmentDouble[internalEdges.size()];
+        for (int i = 0; i < internalEdgesArray.length; i++) {
+            internalEdgesArray[i] = internalEdges.get(i);
+        }
         V2D_PointDouble[] ePs = ch.getPoints();
         // Calculate the min and max row and col.
         int minr = getRow(ePs[0]);
@@ -1029,19 +1034,17 @@ public class RenderImageDouble {
                 }
 
                 V2D_RectangleDouble pixel = getPixel(r, c);
-                //if (ch.isIntersectedBy(pixel, epsilon)) {
-                if (poly.isIntersectedBy(pixel, epsilon)) {
-                    render(pix, r, c, polygon.color);
-                } else {
-                    if (pixel.isIntersectedBy(epsilon, edgesArray)) {
-                        render(pix, r, c, polygon.colorEdge);
+                if (ch.isIntersectedBy(pixel, epsilon)) {
+                    if (poly.isIntersectedBy(pixel, epsilon)) {
+                        render(pix, r, c, polygon.color);
+                    }
+                    if (pixel.isIntersectedBy(epsilon, internalEdgesArray)) {
+                        render(pix, r, c, polygon.getColorInternalEdge());
+                    }
+                    if (pixel.isIntersectedBy(epsilon, externalEdgesArray)) {
+                        render(pix, r, c, polygon.getColorExternalEdge());
                     }
                 }
-                if (pixel.isIntersectedBy(epsilon, edgesArray)) {
-                    render(pix, r, c, polygon.colorEdge);
-                }
-
-                //}
             }
         }
     }
