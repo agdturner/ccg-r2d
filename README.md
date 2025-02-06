@@ -7,7 +7,7 @@ This library is being used to help develop [ccg-v2d](https://github.com/agdturne
 
 Developing 2D spatial data functionaility also helps with developing 3D spatial data functionality. If you are interested in processing 3D Euclidean spatial data then maybe also have a look at: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d).
 
-## Rotations, colours and circumcircles
+## Triangle rotations, colours and circumcircles
 * One triangle (one colour for the triangle and another for it's edge):
 <img alt="One triangle" src="data/output/test/test0.png" />
 * Three rotated overlapping large triangles (one colour for the triangle and a different colour for each respective edge):
@@ -23,12 +23,16 @@ Developing 2D spatial data functionaility also helps with developing 3D spatial 
 * A triangle on a couple of randomly coloured grids:
 <img alt="A triangle on a couple of randomly coloured grids" src="data/output/test/test0_grid.png" />
 
-## Showing intersections
+## Triangle intersections
 * Two rotated triangles with a two triangle intersection
 <img alt="A first rendering of a triangle on a couple of randomly coloured grids" src="data/output/test/test6.png" />
 Two rotated triangles with a four triangle intersection:
 <img alt="Two rotated triangles with a four triangle intersection" src="data/output/test/test7.png" />
 
+## Polygon
+* Polygon that is not a convex hull with a darker outline
+<img alt="Polygon that is not a convex hull with a darker outline" src="data/output/d/test/test_polygons0.png" />
+  
 ## Development plans/ideas
 - Add classes for polygons. 
 - Add functionality for cutting/clipping.
