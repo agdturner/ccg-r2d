@@ -20,8 +20,10 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
+import uk.ac.leeds.ccg.r2d.entities.Polygon;
 import uk.ac.leeds.ccg.r2d.entities.Triangle;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Envelope;
+import uk.ac.leeds.ccg.v2d.geometry.V2D_Polygon;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Triangle;
 
 /**
@@ -40,6 +42,11 @@ public class Universe {
      * The triangles to render.
      */
     public ArrayList<Triangle> triangles;
+    
+    /**
+     * The polygons.
+     */
+    public ArrayList<Polygon> polygons;
     
     /**
      * The grids to render.
@@ -64,6 +71,7 @@ public class Universe {
     public Universe(V2D_Envelope envelope) {
         nextID = 0L;
         triangles = new ArrayList<>();
+        polygons = new ArrayList<>();
         grids = new ArrayList<>();
         this.envelope = envelope;
     }
@@ -80,6 +88,8 @@ public class Universe {
     /**
      * Adds the triangle and returns entity.
      * @param triangle The triangle to add.
+     * @param oom The Order of Magnitude for the precision.
+     * @param rm The RoundingMode for any rounding.
      * @return The Triangle.
      */
     public Triangle addTriangle(V2D_Triangle triangle, int oom, RoundingMode rm){
@@ -93,6 +103,7 @@ public class Universe {
      * Adds the triangle and returns entity.
      * @param triangle The triangle to add.
      * @param oom The Order of Magnitude for the precision.
+     * @param rm The RoundingMode for any rounding.
      * @param color The colour of the triangle.
      * @param colorEdge The colour of the edge of the triangle.
      * @return The Triangle.
@@ -108,6 +119,7 @@ public class Universe {
      * Adds the triangle and returns entity.
      * @param triangle The triangle to add.
      * @param oom The Order of Magnitude for the precision.
+     * @param rm The RoundingMode for any rounding.
      * @param color The colour of the triangle.
      * @param colorPQ The colour of the triangle PQ edge.
      * @param colorQR The colour of the triangle QR edge.
@@ -119,6 +131,57 @@ public class Universe {
         Triangle t = new Triangle(triangle, getNextID(), color, colorPQ, colorQR, colorRP);
         triangles.add(t);
         envelope = envelope.union(triangle.getEnvelope(oom, rm), oom);
+        return t;
+    }
+    
+    /**
+     * Adds the polygon and returns entity.
+     * @param polygon The polygon to add.
+     * @param oom The Order of Magnitude for the precision.
+     * @param rm The RoundingMode for any rounding.
+     * @return The Triangle.
+     */
+    public Polygon addPolygon(V2D_Polygon polygon, int oom, RoundingMode rm){
+        Polygon t = new Polygon(polygon, getNextID());
+        polygons.add(t);
+        envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
+        return t;
+    }
+    
+    /**
+     * Adds the polygon and returns entity.
+     * @param polygon The polygon to add.
+     * @return The Polygon.
+     * @param color The colour of the polygon.
+     * @param colorEdge The colour of the edge of the polygon.
+     * @param oom The Order of Magnitude for the precision.
+     * @param rm The RoundingMode for any rounding.
+     */
+    public Polygon addPolygon(V2D_Polygon polygon, int oom, RoundingMode rm,
+            Color color, Color colorEdge){
+        Polygon t = new Polygon(polygon, getNextID(), color, colorEdge);
+        polygons.add(t);
+        envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
+        return t;
+    }
+    
+    /**
+     * Adds the polygon and returns entity.
+     * @param polygon The polygon to add.
+     * @return The Polygon.
+     * @param color The colour of the polygon.
+     * @param colorPQ The colour of the polygon PQ edge.
+     * @param colorQR The colour of the polygon QR edge.
+     * @param colorRP The colour of the polygon RP edge.
+     * @param oom The Order of Magnitude for the precision.
+     * @param rm The RoundingMode for any rounding.
+     */
+    public Polygon addPolygon(V2D_Polygon polygon, int oom, RoundingMode rm,
+            Color color, Color colorPQ, Color colorQR, Color colorRP){
+        Polygon t = new Polygon(polygon, getNextID(), color, 
+                colorPQ, colorQR, colorRP);
+        polygons.add(t);
+        envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
         return t;
     }
     

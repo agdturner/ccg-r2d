@@ -37,6 +37,7 @@ import uk.ac.leeds.ccg.io.IO_Cache;
 import uk.ac.leeds.ccg.math.arithmetic.Math_BigDecimal;
 import uk.ac.leeds.ccg.math.arithmetic.Math_BigRational;
 import uk.ac.leeds.ccg.math.arithmetic.Math_Integer;
+import uk.ac.leeds.ccg.r2d.entities.Polygon;
 import uk.ac.leeds.ccg.r2d.entities.Triangle;
 import uk.ac.leeds.ccg.r2d.grids.Colour_MapDouble;
 import uk.ac.leeds.ccg.r2d.io.IO;
@@ -149,9 +150,19 @@ public class RenderImage {
     boolean drawAxes;
 
     /**
+     * If true then triangles are drawn.
+     */
+    boolean drawTriangles;
+
+    /**
      * If true then circumcircles are drawn for all triangles.
      */
     boolean drawCircumcircles;
+
+    /**
+     * If true then polygons are drawn.
+     */
+    boolean drawPolygons;
     
     /**
      * Create a new instance.
@@ -162,7 +173,8 @@ public class RenderImage {
     public RenderImage(Universe universe,
             V2D_Rectangle window, int nrows, int ncols, int oom, RoundingMode rm,
             boolean drawAxes, Grids_GridDouble grid,
-            ArrayList<Colour_MapDouble> gridCMs, boolean  drawCircumcircles) {
+            ArrayList<Colour_MapDouble> gridCMs, boolean drawTriangles,
+            boolean drawCircumcircles, boolean drawPolygons) {
         this.universe = universe;
         this.window = window;
         this.pqr = window.getPQR();
@@ -180,7 +192,9 @@ public class RenderImage {
         this.drawAxes = drawAxes;
         this.grid = grid;
         this.gridCMs = gridCMs;
-        this.drawCircumcircles =  drawCircumcircles;
+        this.drawTriangles = drawTriangles;
+        this.drawCircumcircles = drawCircumcircles;
+        this.drawPolygons = drawPolygons;
     }
 
     /**
@@ -237,6 +251,8 @@ public class RenderImage {
             System.exit(1);
         }
         // Add triangles
+        //boolean drawTriangles = true;
+        boolean drawTriangles = false;
         Math_BigDecimal bd = new Math_BigDecimal(100);
         int tt = 2;
         switch (tt) {
@@ -257,17 +273,33 @@ public class RenderImage {
             case 7 ->
                 addTriangles7(universe, bd, oom, rm); // 1 minute
         }
+        // Add polygons
+        boolean drawPolygons = true;
+        //boolean drawPolygons = false;
+        int pp = 0;
+        switch (pp) {
+            case 0 ->
+                addPolygons0(universe, oom, rm);
+        }
+        
         // Draw circumcircles
         //boolean drawCircumcircles = false;
         boolean drawCircumcircles = true;
         // Render
         RenderImage ri = new RenderImage(universe, window, nrows, ncols, oom, 
-                rm, drawAxes, grid, gridCMs, drawCircumcircles);
-        if (addGrid) {
-            ri.output = Paths.get(dir.toString(), "test" + tt + "_grid.png");
-        } else {
-            ri.output = Paths.get(dir.toString(), "test" + tt + ".png");
+                rm, drawAxes, grid, gridCMs, drawTriangles, drawCircumcircles, 
+                drawPolygons);
+        String fname = "test";
+        if (drawTriangles) {
+            fname += "_triangles" + tt;
         }
+        if (drawPolygons) {
+            fname += "_polygons" + pp;
+        }
+        if (addGrid) {
+            fname += "_grid";
+        }
+        ri.output = Paths.get(dir.toString(), fname + ".png");
         System.out.println(ri.output.toString());
         ri.run();
     }
@@ -581,8 +613,8 @@ public class RenderImage {
         holes.add(new V2D_ConvexHull(oom, rm, c, d, e));
         holes.add(new V2D_ConvexHull(oom, rm, e, f, g));
         holes.add(new V2D_ConvexHull(oom, rm, g, h, a));
-        V2D_Polygon polygon = new V2D_Polygon(ch, edges, holes, oom, rm);
-        Polygon p0 = universe.addPolygon(polygon);
+        V2D_Polygon polygon = new V2D_Polygon(ch, edges, holes);
+        Polygon p0 = universe.addPolygon(polygon, oom, rm);
     }
 
     /**
@@ -637,9 +669,19 @@ public class RenderImage {
         }
 
         // Render triangles
+        if (drawTriangles) {
         ArrayList<Triangle> ts = universe.triangles;
         for (int i = 0; i < ts.size(); i++) {
             renderTriangle(ts.get(i), pix);
+        }
+        }
+        
+        // Render polygons
+        if (drawPolygons) {
+            ArrayList<Polygon> ts = universe.polygons;
+            for (int i = 0; i < ts.size(); i++) {
+                renderPolygon(ts.get(i), pix);
+            }
         }
 
         return pix;
@@ -804,6 +846,62 @@ public class RenderImage {
                     V2D_FiniteGeometry pirp = pixel.getIntersection(t.getRP(oom, rm), oom, rm);
                     if (pirp != null) {
                         render(pix, r, c, triangle.getColorRP());
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * For rendering a triangle on the image. Triangles may be obscured by other
+     * rendered entities. The rendering order determines what is visible.
+     *
+     * @param l The polygon to render.
+     * @param pix The image.
+     */
+    public void renderPolygon(Polygon polygon, int[] pix) {
+        V2D_Polygon poly = polygon.polygon;
+        V2D_ConvexHull ch = poly.getConvexHull(oom, rm);
+        ArrayList<V2D_LineSegment> edges = poly.getEdges();
+        V2D_LineSegment[] edgesArray = new V2D_LineSegment[edges.size()];
+        for (int i = 0; i < edgesArray.length; i ++) {
+            edgesArray[i] = edges.get(i);
+        }
+        //ArrayList<V2D_ConvexHullDouble> holes = poly.getHoles(epsilon);
+        V2D_Point[] ePs = ch.getPoints(oom, rm);
+        // Calculate the min and max row and col.
+        int minr = getRow(ePs[0]);
+        int maxr = getRow(ePs[0]);
+        int minc = getCol(ePs[0]);
+        int maxc = getCol(ePs[0]);
+        for (int i = 1; i < ePs.length; i++) {
+            minr = Math.min(minr, getRow(ePs[i]));
+            maxr = Math.max(maxr, getRow(ePs[i]));
+            minc = Math.min(minc, getCol(ePs[i]));
+            maxc = Math.max(maxc, getCol(ePs[i]));
+        }
+        if (minr < 0) {
+            minr = 0;
+        }
+        if (minc < 0) {
+            minc = 0;
+        }
+        if (maxr >= nrows) {
+            maxr = nrows - 1;
+        }
+        if (maxc >= ncols) {
+            maxc = ncols - 1;
+        }
+        for (int r = minr; r <= maxr; r++) {
+            for (int c = minc; c <= maxc; c++) {
+                V2D_Rectangle pixel = getPixel(r, c);
+                if (ch.isIntersectedBy(pixel, oom, rm)) {
+                    if (poly.isIntersectedBy(pixel, oom, rm)) {
+                        render(pix, r, c, polygon.color);
+                    } else {
+                        if (pixel.isIntersectedBy(oom, rm, edgesArray)) {
+                            render(pix, r, c, polygon.colorEdge);
+                        }
                     }
                 }
             }
