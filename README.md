@@ -3,9 +3,9 @@ A Java library for rendering 2D Euclidean spatial data using [ccg-v2d](https://g
 
 Example static renderings of data are shown below.
 
-This library is being used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d). Visualising things like calculated intersections helps to show that geometrical algorithms work.
+This library is being used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d). Visualising inputs and outputs of geometrical operationa helps to show that algorithms work.
 
-Developing 2D spatial data functionaility also helps with developing 3D spatial data functionality. If you are interested in processing 3D Euclidean spatial data then maybe also have a look at: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d).
+The development of 2D spatial data libraries helps with developing the 3D spatial data libraries: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d).
 
 ## Triangle rotations, colours and circumcircles
 * One triangle (one colour for the triangle and another for it's edge):
@@ -43,7 +43,7 @@ Two rotated triangles with a four triangle intersection:
 - Investigate ways to speed up rendering.
 
 ## Contributions welcome
-- Please submit issues and initiate discussions about collaboration to help develop the code.
+- Please submit issues.
 
 ## LICENSE
 - [APACHE LICENSE, VERSION 2.0](https://www.apache.org/licenses/LICENSE-2.0)
