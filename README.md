@@ -38,9 +38,6 @@ Two rotated triangles with a four triangle intersection:
 <img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2.png" />
   
 ## Development plans/ideas
-- Add classes for polygons. 
-- Add functionality for cutting/clipping.
-- Add functionality for merging.
 - Generate some example renderings of geographical data.
 - Make a versioned release on Maven Central.
 - Investigate ways to speed up rendering.
