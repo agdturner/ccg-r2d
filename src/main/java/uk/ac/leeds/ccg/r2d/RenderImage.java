@@ -45,6 +45,7 @@ import uk.ac.leeds.ccg.v2d.geometry.V2D_ConvexHull;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_FiniteGeometry;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_LineSegment;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Point;
+import uk.ac.leeds.ccg.v2d.geometry.V2D_Polygon;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Rectangle;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Triangle;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Vector;
@@ -204,7 +205,7 @@ public class RenderImage {
         V2D_Point rt = new V2D_Point(offset, new V2D_Vector(1 * m, 1 * m));
         V2D_Point rb = new V2D_Point(offset, new V2D_Vector(1 * m, -1 * m));
         V2D_Rectangle window = new V2D_Rectangle(lb, lt, rt, rb, oom, rm);
-        Universe universe = new Universe(window.getEnvelope(oom));
+        Universe universe = new Universe(window.getEnvelope(oom, rm));
         ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
 
         boolean addGrid = false;
@@ -350,7 +351,7 @@ public class RenderImage {
         V2D_Point r = new V2D_Point(50d, -50d);
         V2D_Triangle t0 = new V2D_Triangle(p, q, r, oom, rm);
         //universe.addTriangle(t0, oom);
-        universe.addTriangle(t0, oom, color, colorEdge);
+        universe.addTriangle(t0, oom, rm, color, colorEdge);
         BigRational theta;
         V2D_Point origin = new V2D_Point(0d, 0d);
     }
@@ -369,21 +370,21 @@ public class RenderImage {
         V2D_Point q = new V2D_Point(0d, 50d);
         V2D_Point r = new V2D_Point(50d, -50d);
         V2D_Triangle t0 = new V2D_Triangle(p, q, r, oom, rm);
-        universe.addTriangle(t0, oom, color, colorPQ, colorQR, colorRP);
+        universe.addTriangle(t0, oom, rm, color, colorPQ, colorQR, colorRP);
         BigRational theta;
         V2D_Point origin = new V2D_Point(0d, 0d);
         // 1
         theta = Math_BigRational.getPi(bd, oom - 2, rm);
         V2D_Triangle t1 = t0.rotate(origin, theta, bd, oom, rm);
-        universe.addTriangle(t1, oom, color, colorPQ, colorQR, colorRP);
+        universe.addTriangle(t1, oom, rm, color, colorPQ, colorQR, colorRP);
         // 2
         theta = theta.divide(2);
         V2D_Triangle t2 = t0.rotate(p, theta, bd, oom, rm);
-        universe.addTriangle(t2, oom, color, colorPQ, colorQR, colorRP);
+        universe.addTriangle(t2, oom, rm, color, colorPQ, colorQR, colorRP);
         // 3
         theta = theta.multiply(3);
         V2D_Triangle t3 = t0.rotate(origin, theta, bd, oom, rm);
-        universe.addTriangle(t3, oom, color, colorPQ, colorQR, colorRP);
+        universe.addTriangle(t3, oom, rm, color, colorPQ, colorQR, colorRP);
     }
 
     /**
@@ -400,28 +401,28 @@ public class RenderImage {
         V2D_Point q = new V2D_Point(0d, 10d);
         V2D_Point r = new V2D_Point(10d, -10d);
         V2D_Triangle t0 = new V2D_Triangle(p, q, r, oom, rm);
-        universe.addTriangle(t0, oom, color, colorPQ, colorQR, colorRP);
+        universe.addTriangle(t0, oom, rm, color, colorPQ, colorQR, colorRP);
         BigRational theta;
         V2D_Point origin = new V2D_Point(0d, 0d);
         // 1
         theta = Math_BigRational.getPi(bd, oom - 2, rm);
         V2D_Triangle t1 = t0.rotate(origin, theta, bd, oom, rm);
-        universe.addTriangle(t1, oom, color, colorPQ, colorQR, colorRP);
+        universe.addTriangle(t1, oom, rm, color, colorPQ, colorQR, colorRP);
         // 2
         theta = theta.divide(2);
         V2D_Triangle t2 = t0.rotate(p, theta, bd, oom, rm);
-        universe.addTriangle(t2, oom, color, colorPQ, colorQR, colorRP);
+        universe.addTriangle(t2, oom, rm, color, colorPQ, colorQR, colorRP);
         // 3
         theta = theta.multiply(3);
         V2D_Triangle t3 = t2.rotate(origin, theta, bd, oom, rm);
-        universe.addTriangle(t3, oom, color, colorPQ, colorQR, colorRP);
+        universe.addTriangle(t3, oom, rm, color, colorPQ, colorQR, colorRP);
         // 4
         theta = theta.divide(3);
         V2D_Triangle t4 = t2.rotate(t2.getR(), theta, bd, oom, rm);
-        universe.addTriangle(t4, oom, color, colorPQ, colorQR, colorRP);
+        universe.addTriangle(t4, oom, rm, color, colorPQ, colorQR, colorRP);
         // 5
         V2D_Triangle t5 = t4.rotate(t4.getR(), theta, bd, oom, rm);
-        universe.addTriangle(t5, oom, color, colorPQ, colorQR, colorRP);
+        universe.addTriangle(t5, oom, rm, color, colorPQ, colorQR, colorRP);
     }
 
     /**
@@ -437,16 +438,16 @@ public class RenderImage {
         V2D_Point q = new V2D_Point(0d, 20d);
         V2D_Point r = new V2D_Point(20d, -20d);
         V2D_Triangle t0 = new V2D_Triangle(p, q, r, oom, rm);
-        universe.addTriangle(t0, oom);
+        universe.addTriangle(t0, oom, rm);
         V2D_Triangle t1 = t0;
         V2D_Triangle t2 = null;
         BigRational theta = Math_BigRational.getPi(bd, oom - 2, rm).divide(12);
         for (int i = 1; i <= 48; i++) {
             t2 = t1.rotate(t0.getR(), theta.multiply(i), bd, oom, rm);
-            universe.addTriangle(t2, oom, color, colorPQ, colorQR, colorRP);
+            universe.addTriangle(t2, oom, rm, color, colorPQ, colorQR, colorRP);
             t1 = t2;
         }
-        universe.addTriangle(t2, oom);
+        universe.addTriangle(t2, oom, rm);
     }
 
     /**
@@ -462,17 +463,17 @@ public class RenderImage {
         V2D_Point q = new V2D_Point(0d, 20d);
         V2D_Point r = new V2D_Point(20d, -20d);
         V2D_Triangle t0 = new V2D_Triangle(p, q, r, oom, rm);
-        universe.addTriangle(t0, oom);
+        universe.addTriangle(t0, oom, rm);
         V2D_Triangle t1 = t0;
         V2D_Triangle t2 = null;
         BigRational theta = Math_BigRational.getPi(bd, oom - 2, rm).divide(12);
         for (int i = 1; i <= 48; i++) {
             t2 = t1.rotate(t0.getR(), theta, bd, oom, rm);
-            universe.addTriangle(t2, oom, color, colorPQ, colorQR, colorRP);
+            universe.addTriangle(t2, oom, rm, color, colorPQ, colorQR, colorRP);
             t0 = t1;
             t1 = t2;
         }
-        universe.addTriangle(t2, oom);
+        universe.addTriangle(t2, oom, rm);
     }
 
     /**
@@ -483,7 +484,7 @@ public class RenderImage {
         V2D_Point q = new V2D_Point(0d, 20d);
         V2D_Point r = new V2D_Point(20d, -20d);
         V2D_Triangle t0 = new V2D_Triangle(p, q, r, oom, rm);
-        universe.addTriangle(t0, oom);
+        universe.addTriangle(t0, oom, rm);
         V2D_Triangle t1 = t0;
         V2D_Triangle t2 = null;
         int n = 1000;
@@ -495,7 +496,7 @@ public class RenderImage {
             t0 = t1;
             t1 = t2;
         }
-        universe.addTriangle(t2, oom);
+        universe.addTriangle(t2, oom, rm);
     }
 
     /**
@@ -508,18 +509,18 @@ public class RenderImage {
         V2D_Point p = new V2D_Point(-50d, -50d);
         V2D_Point q = new V2D_Point(0d, 50d);
         V2D_Point r = new V2D_Point(50d, -50d);
-        Triangle t0 = universe.addTriangle(new V2D_Triangle(p, q, r, oom, rm), oom);
+        Triangle t0 = universe.addTriangle(new V2D_Triangle(p, q, r, oom, rm), oom, rm);
         BigRational theta;
         V2D_Point origin = new V2D_Point(0d, 0d);
         // 1
         //theta = Math.PI;
         theta = Math_BigRational.getPi(bd, oom - 2, rm).divide(2);
-        Triangle t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, bd, oom, rm), oom);
+        Triangle t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, bd, oom, rm), oom, rm);
         // Calculate the intersection
         V2D_FiniteGeometry gi = t0.triangle.getIntersection(t1.triangle, oom, rm);
         ArrayList<V2D_Triangle> git = ((V2D_ConvexHull) gi).getTriangles(oom, rm);
         for (int i = 0; i < git.size(); i++) {
-            Triangle t = universe.addTriangle(git.get(i), oom);
+            Triangle t = universe.addTriangle(git.get(i), oom, rm);
             t.setColor(Color.yellow);
         }
     }
@@ -534,16 +535,54 @@ public class RenderImage {
         Triangle t0 = universe.addTriangle(new V2D_Triangle(
                 new V2D_Point(-30d, -30d),
                 new V2D_Point(0d, 60d),
-                new V2D_Point(30d, -30d), oom, rm), oom);
+                new V2D_Point(30d, -30d), oom, rm), oom, rm);
         BigRational theta = Math_BigRational.getPi(bd, oom - 2, rm);
-        Triangle t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, bd, oom, rm), oom);
+        Triangle t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, bd, oom, rm), oom, rm);
         // Calculate the intersection
         V2D_FiniteGeometry gi = t0.triangle.getIntersection(t1.triangle, oom, rm);
         ArrayList<V2D_Triangle> git = ((V2D_ConvexHull) gi).getTriangles(oom, rm);
         for (int i = 0; i < git.size(); i++) {
-            Triangle t = universe.addTriangle(git.get(i), oom);
+            Triangle t = universe.addTriangle(git.get(i), oom, rm);
             t.setColor(Color.yellow);
         }
+    }
+    
+    /**
+     * Adds two triangles and interects these adding the triangular intersecting
+     * parts that form a hexagon.
+     *
+     * @param universe
+     * @param epsilon
+     * @return The ids of the original triangles that are intersected.
+     */
+    public static void addPolygons0(Universe universe, int oom, RoundingMode rm) {
+        V2D_Point origin = new V2D_Point(0d, 0d);
+        V2D_Point a = new V2D_Point(-30d, -30d);
+        V2D_Point b = new V2D_Point(-20d, 0d);
+        V2D_Point c = new V2D_Point(-30d, 30d);
+        V2D_Point d = new V2D_Point(0d, 20d);
+        V2D_Point e = new V2D_Point(30d, 30d);
+        V2D_Point f = new V2D_Point(20d, 0d);
+        V2D_Point g = new V2D_Point(30d, -30d);
+        V2D_Point h = new V2D_Point(0d, -20d);
+        V2D_ConvexHull ch = new V2D_ConvexHull(oom, rm,
+                a, b, c, d, e, f, g, h);
+        ArrayList<V2D_LineSegment> edges = new ArrayList<>();
+        edges.add(new V2D_LineSegment(a, b, oom, rm));
+        edges.add(new V2D_LineSegment(b, c, oom, rm));
+        edges.add(new V2D_LineSegment(c, d, oom, rm));
+        edges.add(new V2D_LineSegment(d, e, oom, rm));
+        edges.add(new V2D_LineSegment(e, f, oom, rm));
+        edges.add(new V2D_LineSegment(f, g, oom, rm));
+        edges.add(new V2D_LineSegment(g, h, oom, rm));
+        edges.add(new V2D_LineSegment(h, a, oom, rm));
+        ArrayList<V2D_ConvexHull> holes = new ArrayList<>();
+        holes.add(new V2D_ConvexHull(oom, rm, a, b, c));
+        holes.add(new V2D_ConvexHull(oom, rm, c, d, e));
+        holes.add(new V2D_ConvexHull(oom, rm, e, f, g));
+        holes.add(new V2D_ConvexHull(oom, rm, g, h, a));
+        V2D_Polygon polygon = new V2D_Polygon(ch, edges, holes, oom, rm);
+        Polygon p0 = universe.addPolygon(polygon);
     }
 
     /**
@@ -668,7 +707,7 @@ public class RenderImage {
         int minc = getCol(lp);
         int maxr = minr;
         int maxc = minc;
-        V2D_Point lq = l.getQ();
+        V2D_Point lq = l.getQ(oom, rm);
         int rq = getRow(lq);
         int cq = getCol(lq);
         minr = Math.min(minr, rq);

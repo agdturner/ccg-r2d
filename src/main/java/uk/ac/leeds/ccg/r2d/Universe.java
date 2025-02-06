@@ -16,6 +16,7 @@
 package uk.ac.leeds.ccg.r2d;
 
 import java.awt.Color;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
@@ -81,10 +82,10 @@ public class Universe {
      * @param triangle The triangle to add.
      * @return The Triangle.
      */
-    public Triangle addTriangle(V2D_Triangle triangle, int oom){
+    public Triangle addTriangle(V2D_Triangle triangle, int oom, RoundingMode rm){
         Triangle t = new Triangle(triangle, getNextID());
         triangles.add(t);
-        envelope = envelope.union(triangle.getEnvelope(oom), oom);
+        envelope = envelope.union(triangle.getEnvelope(oom, rm), oom);
         return t;
     }
     
@@ -96,10 +97,10 @@ public class Universe {
      * @param colorEdge The colour of the edge of the triangle.
      * @return The Triangle.
      */
-    public Triangle addTriangle(V2D_Triangle triangle, int oom, Color color, Color colorEdge){
+    public Triangle addTriangle(V2D_Triangle triangle, int oom, RoundingMode rm, Color color, Color colorEdge){
         Triangle t = new Triangle(triangle, getNextID(), color, colorEdge);
         triangles.add(t);
-        envelope = envelope.union(triangle.getEnvelope(oom), oom);
+        envelope = envelope.union(triangle.getEnvelope(oom, rm), oom);
         return t;
     }
     
@@ -113,11 +114,11 @@ public class Universe {
      * @param colorRP The colour of the triangle RP edge.
      * @return The Triangle.
      */
-    public Triangle addTriangle(V2D_Triangle triangle, int oom, Color color, 
+    public Triangle addTriangle(V2D_Triangle triangle, int oom, RoundingMode rm, Color color, 
             Color colorPQ, Color colorQR, Color colorRP){
         Triangle t = new Triangle(triangle, getNextID(), color, colorPQ, colorQR, colorRP);
         triangles.add(t);
-        envelope = envelope.union(triangle.getEnvelope(oom), oom);
+        envelope = envelope.union(triangle.getEnvelope(oom, rm), oom);
         return t;
     }
     
