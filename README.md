@@ -39,6 +39,8 @@ Two rotated triangles with a four triangle intersection:
   
 ## Development plans/ideas
 - Generate some example renderings of geographical data.
+  - For geophysical interest, render some [Global Self-Consistent Hierarchical High-Resolution Shoreline (GSHHS) data](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/
+    - https://github.com/GenericMappingTools/gshhg-gmt   
 - Make a versioned release on Maven Central.
 - Investigate ways to speed up rendering.
 
