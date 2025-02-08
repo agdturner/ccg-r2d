@@ -40,6 +40,7 @@ import uk.ac.leeds.ccg.math.arithmetic.Math_Integer;
 import uk.ac.leeds.ccg.r2d.entities.Polygon;
 import uk.ac.leeds.ccg.r2d.entities.Triangle;
 import uk.ac.leeds.ccg.r2d.grids.Colour_MapDouble;
+import uk.ac.leeds.ccg.r2d.io.GSHHG;
 import uk.ac.leeds.ccg.r2d.io.IO;
 import uk.ac.leeds.ccg.stats.range.Stats_RangeDouble;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_ConvexHull;
@@ -50,7 +51,6 @@ import uk.ac.leeds.ccg.v2d.geometry.V2D_Polygon;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Rectangle;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Triangle;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Vector;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PointDouble;
 
 public class RenderImage {
 
@@ -276,7 +276,7 @@ public class RenderImage {
         // Add polygons
         boolean drawPolygons = true;
         //boolean drawPolygons = false;
-        int pp = 2;
+        int pp = 3;
         switch (pp) {
             case 0 ->
                 addPolygons0(universe, oom, rm);
@@ -284,6 +284,8 @@ public class RenderImage {
                 addPolygons1(universe, oom, rm);
             case 2 ->
                 addPolygons2(universe, oom, rm);
+            case 3 ->
+                addPolygons3(universe, oom, rm);
         }
 
         // Draw circumcircles
@@ -748,6 +750,17 @@ public class RenderImage {
         universe.addPolygon(polygon, oom, rm, Color.lightGray, Color.red, Color.blue);
     }
 
+    public static void addPolygons3(Universe universe, int oom, RoundingMode rm) {
+        Path outDataDir = Paths.get("data", "input", "gshhg-bin-2.3.7");
+        Path filepath = Paths.get(outDataDir.toString(), "gshhs_c.b");
+        V2D_Point[] points = null;
+        GSHHG gshhg = new GSHHG(filepath, oom, rm);
+        ArrayList<V2D_Polygon> polygons = gshhg.polygons;
+        for (V2D_Polygon p : polygons) {
+            universe.addPolygon(p, oom, rm);
+        }
+    }
+    
     /**
      * The process for rendering and image.
      *
@@ -809,9 +822,9 @@ public class RenderImage {
 
         // Render polygons
         if (drawPolygons) {
-            ArrayList<Polygon> ts = universe.polygons;
-            for (int i = 0; i < ts.size(); i++) {
-                renderPolygon(ts.get(i), pix);
+            ArrayList<Polygon> ps = universe.polygons;
+            for (int i = 0; i < ps.size(); i++) {
+                renderPolygon(ps.get(i), pix);
             }
         }
 
@@ -1029,17 +1042,17 @@ public class RenderImage {
         for (int r = minr; r <= maxr; r++) {
             for (int c = minc; c <= maxc; c++) {
                 V2D_Rectangle pixel = getPixel(r, c);
-                if (ch.isIntersectedBy(pixel, oom, rm)) {
-                    if (poly.isIntersectedBy(pixel, oom, rm)) {
-                        render(pix, r, c, polygon.color);
-                    }
-                    if (pixel.isIntersectedBy(oom, rm, internalEdgesArray)) {
-                        render(pix, r, c, polygon.getColorInternalEdge());
-                    }
+//                if (ch.isIntersectedBy(pixel, oom, rm)) {
+//                    if (poly.isIntersectedBy(pixel, oom, rm)) {
+//                        render(pix, r, c, polygon.color);
+//                    }
+//                    if (pixel.isIntersectedBy(oom, rm, internalEdgesArray)) {
+//                        render(pix, r, c, polygon.getColorInternalEdge());
+//                    }
                     if (pixel.isIntersectedBy(oom, rm, externalEdgesArray)) {
                         render(pix, r, c, polygon.getColorExternalEdge());
                     }
-                }
+//                }
             }
         }
     }

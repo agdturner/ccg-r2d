@@ -38,6 +38,7 @@ import uk.ac.leeds.ccg.math.arithmetic.Math_Integer;
 import uk.ac.leeds.ccg.r2d.d.entities.PolygonDouble;
 import uk.ac.leeds.ccg.r2d.d.entities.TriangleDouble;
 import uk.ac.leeds.ccg.r2d.grids.Colour_MapDouble;
+import uk.ac.leeds.ccg.r2d.io.GSHHGDouble;
 import uk.ac.leeds.ccg.r2d.io.IO;
 import uk.ac.leeds.ccg.stats.range.Stats_RangeDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_ConvexHullDouble;
@@ -203,8 +204,8 @@ public class RenderImageDouble {
         //double epsilon = 1d / 100000000000d;
         double epsilon = 1d / 10000d;
         //double epsilon = 0d;
-        int nrows = 150; //150;
-        int ncols = 150; //150;
+        int nrows = 180; //150;
+        int ncols = 180; //150;
         // Init universe
         long m = 75;         // multiplication factor
         V2D_VectorDouble offset = V2D_VectorDouble.ZERO;
@@ -268,7 +269,7 @@ public class RenderImageDouble {
         // Add polygons
         boolean drawPolygons = true;
         //boolean drawPolygons = false;
-        int pp = 2;
+        int pp = 3;
         switch (pp) {
             case 0 ->
                 addPolygons0(universe, epsilon);
@@ -276,6 +277,8 @@ public class RenderImageDouble {
                 addPolygons1(universe, epsilon);
             case 2 ->
                 addPolygons2(universe, epsilon);
+            case 3 ->
+                addPolygons3(universe, epsilon);
         }
 
         // Draw circumcircles
@@ -737,9 +740,20 @@ public class RenderImageDouble {
         internalEdges.add(new V2D_LineSegmentDouble(l, m));
         internalEdges.add(new V2D_LineSegmentDouble(m, n));
         internalEdges.add(new V2D_LineSegmentDouble(n, i));
-        V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges, 
+        V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges,
                 externalHoles, internalEdges, internalHoles);
         universe.addPolygon(polygon, Color.lightGray, Color.red, Color.blue);
+    }
+
+    public static void addPolygons3(UniverseDouble universe, double epsilon) {
+        Path outDataDir = Paths.get("data", "input", "gshhg-bin-2.3.7");
+        Path filepath = Paths.get(outDataDir.toString(), "gshhs_c.b");
+        V2D_PointDouble[] points = null;
+        GSHHGDouble gshhg = new GSHHGDouble(filepath, epsilon);
+        ArrayList<V2D_PolygonDouble> polygons = gshhg.polygons;
+        for (V2D_PolygonDouble p : polygons) {
+            universe.addPolygon(p);
+        }
     }
 
     /**
@@ -803,9 +817,9 @@ public class RenderImageDouble {
 
         // Render polygons
         if (drawPolygons) {
-            ArrayList<PolygonDouble> ts = universe.polygons;
-            for (int i = 0; i < ts.size(); i++) {
-                renderPolygon(ts.get(i), pix);
+            ArrayList<PolygonDouble> ps = universe.polygons;
+            for (int i = 0; i < ps.size(); i++) {
+                renderPolygon(ps.get(i), pix);
             }
         }
 
@@ -1034,17 +1048,17 @@ public class RenderImageDouble {
                 }
 
                 V2D_RectangleDouble pixel = getPixel(r, c);
-                if (ch.isIntersectedBy(pixel, epsilon)) {
-                    if (poly.isIntersectedBy(pixel, epsilon)) {
-                        render(pix, r, c, polygon.color);
-                    }
-                    if (pixel.isIntersectedBy(epsilon, internalEdgesArray)) {
-                        render(pix, r, c, polygon.getColorInternalEdge());
-                    }
-                    if (pixel.isIntersectedBy(epsilon, externalEdgesArray)) {
-                        render(pix, r, c, polygon.getColorExternalEdge());
-                    }
+//                if (ch.isIntersectedBy(pixel, epsilon)) {
+//                    if (poly.isIntersectedBy(pixel, epsilon)) {
+//                        render(pix, r, c, polygon.color);
+//                    }
+//                    if (pixel.isIntersectedBy(epsilon, internalEdgesArray)) {
+//                        render(pix, r, c, polygon.getColorInternalEdge());
+//                    }
+                if (pixel.isIntersectedBy(epsilon, externalEdgesArray)) {
+                    render(pix, r, c, polygon.getColorExternalEdge());
                 }
+//                }
             }
         }
     }
