@@ -314,7 +314,7 @@ public class RenderImage {
         double n = nrows * ncols;
         Colour_MapDouble cm = new Colour_MapDouble();
         //range
-        Stats_RangeDouble range0 = new Stats_RangeDouble(0, n / 3d);
+        Stats_RangeDouble<Double> range0 = new Stats_RangeDouble(0d, n / 3d);
         cm.addRange(range0, Color.yellow);
         Stats_RangeDouble range1 = new Stats_RangeDouble(n / 3d, 2d * n / 3d);
         cm.addRange(range1, Color.orange);

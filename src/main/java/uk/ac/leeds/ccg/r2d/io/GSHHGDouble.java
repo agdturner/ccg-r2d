@@ -32,10 +32,14 @@ public class GSHHGDouble {
     public ArrayList<V2D_PolygonDouble> polygons;
 
     public GSHHGDouble(Path p, double epsilon) {
-        
+
         polygons = new ArrayList<>();
-        
+
         try {
+            int xmin = Integer.MAX_VALUE;
+            int ymin = Integer.MAX_VALUE;
+            int xmax = -Integer.MAX_VALUE;
+            int ymax = -Integer.MAX_VALUE;
             DataInputStream in = new DataInputStream(new FileInputStream(p.toFile()));
             byte[] data = in.readNBytes(4);
             while (data[0] != -1) {
@@ -63,52 +67,76 @@ public class GSHHGDouble {
                 System.out.println("ancestor=" + ancestor);
                 V2D_PointDouble[] points = new V2D_PointDouble[n];
                 ArrayList<V2D_LineSegmentDouble> externalEdges = new ArrayList<>();
-                double x0 = in.readInt();
-                double y0 = in.readInt();
-                points[0] = new V2D_PointDouble(x0, y0);
-                double xmin = x0;
-                double ymin = y0;
-                double xmax = x0;
-                double ymax = y0;
-                double x1 = in.readInt();
-                double y1 = in.readInt();
-                points[1] = new V2D_PointDouble(x1 /1000000d, y1 /1000000d);
-                xmin = Math.min(xmin, x1);
-                xmax = Math.max(xmax, x1);
-                ymin = Math.min(ymin, y1);
-                ymax = Math.max(ymax, y1);
-                for (int i = 2; i < n; i++) {
-                    x0 = x1;
-                    y0 = y1;
-                    points[0] = points[1];
-                    x1 = in.readInt();
-                    y1 = in.readInt();
-                    if (x0 > 180 && x1 < 180) {
-                        System.out.println("Crossleft i = " + i);
+                int x0 = in.readInt();
+                int y0 = in.readInt();
+                if (n > 1) {
+                    points[0] = new V2D_PointDouble((double) x0 / 1000000d, (double) y0 / 1000000d);
+                    xmin = Math.min(xmin, x0);
+                    xmax = Math.max(xmax, x0);
+                    ymin = Math.min(ymin, y0);
+                    ymax = Math.max(ymax, y0);
+                    int x1 = in.readInt();
+                    int y1 = in.readInt();
+                    if (x0 > 180000000 && x1 < 180000000) {
+                        //System.out.println("Crossleft i = " + i);
+                        x1 = x1 + 360000000;
                     }
-                    if (x0 < 180 && x1 > 180) {
-                        System.out.println("Crossright i = " + i);
+                    if (x0 < 180000000 && x1 > 180000000) {
+                        //System.out.println("Crossright i = " + i);
+                        x1 = x1 - 360000000;
                     }
-                    points[i] = new V2D_PointDouble(x1 /1000000d, y1 /1000000d);
+                    points[1] = new V2D_PointDouble((double) x1 / 1000000d, (double) y1 / 1000000d);
                     xmin = Math.min(xmin, x1);
                     xmax = Math.max(xmax, x1);
                     ymin = Math.min(ymin, y1);
                     ymax = Math.max(ymax, y1);
-                    externalEdges.add(new V2D_LineSegmentDouble(points[i - 1], points[i]));
-                }
-                V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon, points);
+                    externalEdges.add(new V2D_LineSegmentDouble(points[0], points[1]));
+                    for (int i = 2; i < n; i++) {
+                        x0 = x1;
+                        y0 = y1;
+                        points[0] = points[1];
+                        x1 = in.readInt();
+                        y1 = in.readInt();
+                        if (x0 > 180000000 && x1 < 180000000) {
+                            //System.out.println("Crossleft i = " + i);
+                            x1 = x1 + 360000000;
+                        }
+                        if (x0 < 180000000 && x1 > 180000000) {
+                            //System.out.println("Crossright i = " + i);
+                            x1 = x1 - 360000000;
+                        }
+                        points[i] = new V2D_PointDouble((double) x1 / 1000000d, (double) y1 / 1000000d);
+                        xmin = Math.min(xmin, x1);
+                        xmax = Math.max(xmax, x1);
+                        ymin = Math.min(ymin, y1);
+                        ymax = Math.max(ymax, y1);
+                        externalEdges.add(new V2D_LineSegmentDouble(points[i - 1], points[i]));
+                    }
+                    try {
+                    V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon, points);
+                    
 //                V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch);
 //                V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges,
 //                        externalHoles, internalEdges, internalHoles);
-                V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges,
-                        new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-                polygons.add(polygon);
+                    V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges,
+                            new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    //System.out.println(polygon.toString());
+                    polygons.add(polygon);
+                    } catch (Exception e) {
+                        int debug = 1;
+                        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon, points);
+                    }
+                }
                 data = in.readNBytes(4);
                 if (data.length == 0) {
                     break;
                 }
             }
             in.close();
+            System.out.println("xmin " + xmin);
+            System.out.println("xmax " + xmax);
+            System.out.println("ymin " + ymin);
+            System.out.println("ymax " + ymax);
         } catch (FileNotFoundException e) {
             System.err.println(e.getMessage());
         } catch (IOException e) {
