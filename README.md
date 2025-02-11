@@ -36,11 +36,11 @@ Two rotated triangles with a four triangle intersection:
 <img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons1.png" />
 * Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue
 <img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2.png" />
-* [Global Self-Consistent Hierarchical High-Resolution Shoreline (GSHHS) data](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution polygons. The heirarchy is ignored. The image shows lighter for the convex hull and darker for the external edges.
+* GSHHS low resolution land/sea polygons. The heirarchy is ignored. The image shows lighter for the convex hull and darker for the external edges.
 <img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3.png" />
 
 ## Development plans/ideas
-- Generate some example renderings of geographical data.
+- Generate some more example renderings of geographical data.
   - [Global Self-Consistent Hierarchical High-Resolution Shoreline (GSHHS) data](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/)
     - [GSHHG-GMT](https://github.com/GenericMappingTools/gshhg-gmt)
   - Surface elevation
