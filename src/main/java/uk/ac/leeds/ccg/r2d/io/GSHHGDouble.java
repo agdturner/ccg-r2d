@@ -85,7 +85,7 @@ public class GSHHGDouble {
                 int ancestor = in.readInt();
                 System.out.println("ancestor=" + ancestor);
                 V2D_PointDouble[] points = new V2D_PointDouble[n];
-                HashMap<Integer, V2D_LineSegmentDouble> externalEdges = new HashMap<>();
+                //HashMap<Integer, V2D_LineSegmentDouble> externalEdges = new HashMap<>();
                 int x0 = in.readInt();
                 int y0 = in.readInt();
                 if (n > 1) {
@@ -109,7 +109,7 @@ public class GSHHGDouble {
                     xmax = Math.max(xmax, x1);
                     ymin = Math.min(ymin, y1);
                     ymax = Math.max(ymax, y1);
-                    externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[0], points[1]));
+                    //externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[0], points[1]));
                     for (int i = 2; i < n; i++) {
                         x0 = x1;
                         y0 = y1;
@@ -129,29 +129,37 @@ public class GSHHGDouble {
                         xmax = Math.max(xmax, x1);
                         ymin = Math.min(ymin, y1);
                         ymax = Math.max(ymax, y1);
-                        externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[i - 1], points[i]));
+                        //externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[i - 1], points[i]));
                     }
                     try {
-                        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon, points);
-
-//                V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch);
-//                V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges,
-//                        externalHoles, internalEdges, internalHoles);
-                        V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(
-                                ch, externalEdges, new HashMap<Integer, V2D_PolygonNoInternalHolesDouble>());
-                        //System.out.println(polygon.toString());
-//                    if (ancestor == -1) {
-//                        polygons.put(id, polygon);
-//                    } else {
-//                        V2D_PolygonDouble ancestorPolygon = polygons.get(ancestor);
-//                        ancestorPolygon.add()
-//                    }
-                        HashMap<Integer, V2D_PolygonNoInternalHolesDouble> externalHoles = new HashMap<>();
-                        HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
-                        polygons.put(polygons.size(), new V2D_PolygonDouble(ch, externalEdges, externalHoles, internalHoles));
+                        V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points, epsilon);
+                        //V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon, points);
+//
+                        ////                V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch);
+////                V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges,
+////                        externalHoles, internalEdges, internalHoles);
+//
+//                        V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(
+//                                ch, externalEdges, new HashMap<Integer, V2D_PolygonNoInternalHolesDouble>());
+//                        //System.out.println(polygon.toString());
+//                        HashMap<Integer, V2D_PolygonNoInternalHolesDouble> externalHoles = new HashMap<>();
+                    //if (ancestor == -1) {
+                            HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
+                            polygons.put(polygons.size(), new V2D_PolygonDouble(polygon.ch, polygon.externalEdges, polygon.externalHoles, internalHoles));
+                    //    } else {
+                    //        V2D_PolygonDouble ancestorPolygon = polygons.get(ancestor);
+                    //        ancestorPolygon.internalHoles.put(ancestorPolygon.internalHoles.size(), polygon);
+                    //    }
                     } catch (Exception e) {
                         int debug = 1;
-                        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon, points);
+                        V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points, epsilon);
+                        if (ancestor == -1) {
+                            HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
+                            polygons.put(polygons.size(), new V2D_PolygonDouble(polygon.ch, polygon.externalEdges, polygon.externalHoles, internalHoles));
+                        } else {
+                            V2D_PolygonDouble ancestorPolygon = polygons.get(ancestor);
+                            ancestorPolygon.internalHoles.put(ancestorPolygon.internalHoles.size(), polygon);
+                        }
                     }
                 }
                 data = in.readNBytes(4);
