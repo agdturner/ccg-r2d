@@ -5,7 +5,7 @@ Example static renderings of data are shown below.
 
 This library is being used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d). Visualising inputs and outputs of geometrical operationa helps to show that algorithms work.
 
-The development of 2D spatial data libraries helps with developing the 3D spatial data libraries: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d).
+The development of these 2D spatial data libraries helps develop these 3D spatial data libraries: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d).
 
 ## Triangle rotations, colours and circumcircles
 * One triangle (one colour for the triangle and another for it's edge):
