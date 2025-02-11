@@ -25,11 +25,13 @@ import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import uk.ac.leeds.ccg.math.arithmetic.Math_BigRational;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_ConvexHull;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_LineSegment;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Point;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Polygon;
+import uk.ac.leeds.ccg.v2d.geometry.V2D_PolygonNoInternalHoles;
 
 public class GSHHG {
 
@@ -47,6 +49,23 @@ public class GSHHG {
             DataInputStream in = new DataInputStream(new FileInputStream(p.toFile()));
             byte[] data = in.readNBytes(4);
             while (data[0] != -1) {
+                /*
+                 * Global Self-consistent Hierarchical High-resolution Shorelines
+                 * int id; Unique polygon id number, starting at 0
+                 * int n; Number of points in this polygon
+                 * int flag; = level + version << 8 + greenwich << 16 + source << 24 + river << 25
+                 * flag contains 5 items, as follows:
+                 * low byte: level = flag & 255: Values: 1 land, 2 lake, 3 island_in_lake, 4 pond_in_island_in_lake
+                 * 2nd byte: version = (flag >> 8) & 255: Values: Should be 12 for GSHHG release 12 (i.e., version 2.2)
+                 * 3rd byte: greenwich = (flag >> 16) & 1: Values: Greenwich is 1 if Greenwich is crossed
+                 * 4th byte: source = (flag >> 24) & 1: Values: 0 = CIA WDBII, 1 = WVS
+                 * 4th byte: river = (flag >> 25) & 1: Values: 0 = not set, 1 = river-lake and level = 2
+                 * int west, east, south, north; min/max extent in micro-degrees
+                 * int area; Area of polygon in 1/10 km^2
+                 * int area_full; Area of original full-resolution polygon in 1/10 km^2
+                 * int container; Id of container polygon that encloses this polygon (-1 if none)
+                 * int ancestor; Id of ancestor polygon in the full resolution set that was the source of this polygon (-1 if none)
+                 */
                 int id = ByteBuffer.wrap(data).getInt();
                 System.out.println("Creating Polygon id=" + id);
                 int n = in.readInt();
@@ -70,7 +89,7 @@ public class GSHHG {
                 int ancestor = in.readInt();
                 System.out.println("ancestor=" + ancestor);
                 V2D_Point[] points = new V2D_Point[n];
-                ArrayList<V2D_LineSegment> externalEdges = new ArrayList<>();
+                HashMap<Integer, V2D_LineSegment> externalEdges = new HashMap<>();
                 int x0 = in.readInt();
                 int y0 = in.readInt();
                 if (n > 1) {
@@ -94,7 +113,7 @@ public class GSHHG {
                     xmax = Math.max(xmax, x1);
                     ymin = Math.min(ymin, y1);
                     ymax = Math.max(ymax, y1);
-                    externalEdges.add(new V2D_LineSegment(points[0], points[1], oom, rm));
+                    externalEdges.put(externalEdges.size(), new V2D_LineSegment(points[0], points[1], oom, rm));
                     for (int i = 2; i < n; i++) {
                         x0 = x1;
                         y0 = y1;
@@ -114,14 +133,15 @@ public class GSHHG {
                         xmax = Math.max(xmax, x1);
                         ymin = Math.min(ymin, y1);
                         ymax = Math.max(ymax, y1);
-                        externalEdges.add(new V2D_LineSegment(points[i - 1], points[i], oom, rm));
+                        externalEdges.put(externalEdges.size(), new V2D_LineSegment(points[i - 1], points[i], oom, rm));
                     }
                     V2D_ConvexHull ch = new V2D_ConvexHull(oom, rm, points);
 //                V2D_Polygon polygon = new V2D_Polygon(ch);
 //                V2D_Polygon polygon = new V2D_Polygon(ch, externalEdges,
 //                        externalHoles, internalEdges, internalHoles);
                     V2D_Polygon polygon = new V2D_Polygon(ch, externalEdges,
-                            new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                            new HashMap<Integer, V2D_PolygonNoInternalHoles>(),
+                            new HashMap<Integer, V2D_PolygonNoInternalHoles>());
                     //System.out.println(polygon.toString());
                     polygons.add(polygon);
                 }

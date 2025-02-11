@@ -22,18 +22,20 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_ConvexHullDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_LineSegmentDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PointDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonDouble;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonNoInternalHolesDouble;
 
 public class GSHHGDouble {
 
-    public ArrayList<V2D_PolygonDouble> polygons;
+    public HashMap<Integer, V2D_PolygonDouble> polygons;
 
     public GSHHGDouble(Path p, double epsilon) {
 
-        polygons = new ArrayList<>();
+        polygons = new HashMap<>();
 
         try {
             int xmin = Integer.MAX_VALUE;
@@ -43,6 +45,23 @@ public class GSHHGDouble {
             DataInputStream in = new DataInputStream(new FileInputStream(p.toFile()));
             byte[] data = in.readNBytes(4);
             while (data[0] != -1) {
+                /*
+                 * Global Self-consistent Hierarchical High-resolution Shorelines
+                 * int id; Unique polygon id number, starting at 0
+                 * int n; Number of points in this polygon
+                 * int flag; = level + version << 8 + greenwich << 16 + source << 24 + river << 25
+                 * flag contains 5 items, as follows:
+                 * low byte: level = flag & 255: Values: 1 land, 2 lake, 3 island_in_lake, 4 pond_in_island_in_lake
+                 * 2nd byte: version = (flag >> 8) & 255: Values: Should be 12 for GSHHG release 12 (i.e., version 2.2)
+                 * 3rd byte: greenwich = (flag >> 16) & 1: Values: Greenwich is 1 if Greenwich is crossed
+                 * 4th byte: source = (flag >> 24) & 1: Values: 0 = CIA WDBII, 1 = WVS
+                 * 4th byte: river = (flag >> 25) & 1: Values: 0 = not set, 1 = river-lake and level = 2
+                 * int west, east, south, north; min/max extent in micro-degrees
+                 * int area; Area of polygon in 1/10 km^2
+                 * int area_full; Area of original full-resolution polygon in 1/10 km^2
+                 * int container; Id of container polygon that encloses this polygon (-1 if none)
+                 * int ancestor; Id of ancestor polygon in the full resolution set that was the source of this polygon (-1 if none)
+                 */
                 int id = ByteBuffer.wrap(data).getInt();
                 System.out.println("Creating Polygon id=" + id);
                 int n = in.readInt();
@@ -66,7 +85,7 @@ public class GSHHGDouble {
                 int ancestor = in.readInt();
                 System.out.println("ancestor=" + ancestor);
                 V2D_PointDouble[] points = new V2D_PointDouble[n];
-                ArrayList<V2D_LineSegmentDouble> externalEdges = new ArrayList<>();
+                HashMap<Integer, V2D_LineSegmentDouble> externalEdges = new HashMap<>();
                 int x0 = in.readInt();
                 int y0 = in.readInt();
                 if (n > 1) {
@@ -90,7 +109,7 @@ public class GSHHGDouble {
                     xmax = Math.max(xmax, x1);
                     ymin = Math.min(ymin, y1);
                     ymax = Math.max(ymax, y1);
-                    externalEdges.add(new V2D_LineSegmentDouble(points[0], points[1]));
+                    externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[0], points[1]));
                     for (int i = 2; i < n; i++) {
                         x0 = x1;
                         y0 = y1;
@@ -110,7 +129,7 @@ public class GSHHGDouble {
                         xmax = Math.max(xmax, x1);
                         ymin = Math.min(ymin, y1);
                         ymax = Math.max(ymax, y1);
-                        externalEdges.add(new V2D_LineSegmentDouble(points[i - 1], points[i]));
+                        externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[i - 1], points[i]));
                     }
                     try {
                     V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon, points);
@@ -118,10 +137,15 @@ public class GSHHGDouble {
 //                V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch);
 //                V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges,
 //                        externalHoles, internalEdges, internalHoles);
-                    V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges,
-                            new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(
+                            ch, externalEdges, new HashMap<Integer, V2D_PolygonNoInternalHolesDouble>());
                     //System.out.println(polygon.toString());
-                    polygons.add(polygon);
+//                    if (ancestor == -1) {
+//                        polygons.put(id, polygon);
+//                    } else {
+//                        V2D_PolygonDouble ancestorPolygon = polygons.get(ancestor);
+//                        ancestorPolygon.add()
+//                    }
                     } catch (Exception e) {
                         int debug = 1;
                         V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon, points);
