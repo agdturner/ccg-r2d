@@ -20,13 +20,10 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
-import uk.ac.leeds.ccg.math.arithmetic.Math_BigRational;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_ConvexHull;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_LineSegment;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Point;
@@ -35,11 +32,11 @@ import uk.ac.leeds.ccg.v2d.geometry.V2D_PolygonNoInternalHoles;
 
 public class GSHHG {
 
-    public ArrayList<V2D_Polygon> polygons;
+    public HashMap<Integer, V2D_Polygon> polygons;
 
     public GSHHG(Path p, int oom, RoundingMode rm) {
 
-        polygons = new ArrayList<>();
+        polygons = new HashMap<>();
 
         try {
             int xmin = Integer.MAX_VALUE;
@@ -143,7 +140,7 @@ public class GSHHG {
                             new HashMap<Integer, V2D_PolygonNoInternalHoles>(),
                             new HashMap<Integer, V2D_PolygonNoInternalHoles>());
                     //System.out.println(polygon.toString());
-                    polygons.add(polygon);
+                    polygons.put(polygons.size(), polygon);
                 }
                 data = in.readNBytes(4);
                 if (data.length == 0) {
