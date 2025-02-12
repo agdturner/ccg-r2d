@@ -42,6 +42,7 @@ import uk.ac.leeds.ccg.r2d.grids.Colour_MapDouble;
 import uk.ac.leeds.ccg.r2d.io.GSHHGDouble;
 import uk.ac.leeds.ccg.r2d.io.IO;
 import uk.ac.leeds.ccg.stats.range.Stats_RangeDouble;
+import uk.ac.leeds.ccg.v2d.core.d.V2D_EnvironmentDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_ConvexHullDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_FiniteGeometryDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_LineSegmentDouble;
@@ -58,7 +59,12 @@ public class RenderImageDouble {
      * Universe.
      */
     UniverseDouble universe;
-
+    
+    /**
+     * The V2D_EnvironmentDouble
+     */
+    V2D_EnvironmentDouble env;
+    
     /**
      * The window onto the universe to render.
      */
@@ -165,12 +171,13 @@ public class RenderImageDouble {
      * @param universe The universe.
      * @param window The window onto the universe to render.
      */
-    public RenderImageDouble(UniverseDouble universe,
+    public RenderImageDouble(UniverseDouble universe, V2D_EnvironmentDouble env,
             V2D_RectangleDouble window, int nrows, int ncols, double epsilon,
             int oom, RoundingMode rm, boolean drawAxes, Grids_GridDouble grid,
             ArrayList<Colour_MapDouble> gridCMs, boolean drawTriangles,
             boolean drawCircumcircles, boolean drawPolygons) {
         this.universe = universe;
+        this.env = env;
         this.window = window;
         this.pqr = window.getPQR();
         this.rsp = window.getRSP();
@@ -208,22 +215,29 @@ public class RenderImageDouble {
         //double epsilon = 0d;
         int nrows = 180;
         int ncols = 540;
+//        int nrows = 360;
+//        int ncols = 1080;
 //        int nrows = 150;
 //        int ncols = 150;
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;
+        int ncolsd3 = ncols / 3;
+        int ncolssncolsd3 = ncols - ncolsd3;
         // Init universe
-        long m = 75;         // multiplication factor
+        // multiplication factor
+//        int m = 75;
+        int m = 1;
         V2D_VectorDouble offset = V2D_VectorDouble.ZERO;
+        V2D_EnvironmentDouble env = new V2D_EnvironmentDouble(epsilon);
 //        V2D_PointDouble lb = new V2D_PointDouble(offset, new V2D_VectorDouble(-m, -m));
 //        V2D_PointDouble lt = new V2D_PointDouble(offset, new V2D_VectorDouble(-m, m));
 //        V2D_PointDouble rt = new V2D_PointDouble(offset, new V2D_VectorDouble(m, m));
 //        V2D_PointDouble rb = new V2D_PointDouble(offset, new V2D_VectorDouble(m, -m));
-        V2D_PointDouble lb = new V2D_PointDouble(offset, new V2D_VectorDouble(-180, -nrowsd2));
-        V2D_PointDouble lt = new V2D_PointDouble(offset, new V2D_VectorDouble(-180, nrowsd2));
-        V2D_PointDouble rt = new V2D_PointDouble(offset, new V2D_VectorDouble(360, nrowsd2));
-        V2D_PointDouble rb = new V2D_PointDouble(offset, new V2D_VectorDouble(360, -nrowsd2));
-        V2D_RectangleDouble window = new V2D_RectangleDouble(lb, lt, rt, rb);
+        V2D_PointDouble lb = new V2D_PointDouble(offset, new V2D_VectorDouble((-ncolsd3 * m), (-nrowsd2 * m)));
+        V2D_PointDouble lt = new V2D_PointDouble(offset, new V2D_VectorDouble((-ncolsd3 * m), (nrowsd2 * m)));
+        V2D_PointDouble rt = new V2D_PointDouble(offset, new V2D_VectorDouble((ncolssncolsd3 * m), (nrowsd2 * m)));
+        V2D_PointDouble rb = new V2D_PointDouble(offset, new V2D_VectorDouble((ncolssncolsd3 * m), (-nrowsd2 * m)));
+        V2D_RectangleDouble window = new V2D_RectangleDouble(env, lb, lt, rt, rb);
         UniverseDouble universe = new UniverseDouble(window.getEnvelope());
         ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
         boolean addGrid = false;
@@ -241,11 +255,11 @@ public class RenderImageDouble {
 //            BigRational xMax = BigRational.valueOf(ncolsd2);
 //            BigRational yMin = BigRational.valueOf(-nrowsd2);
 //            BigRational yMax = BigRational.valueOf(nrowsd2);
-            BigRational xMin = BigRational.valueOf(-180);
-            BigRational xMax = BigRational.valueOf(360);
-            BigRational yMin = BigRational.valueOf(-nrowsd2);
-            BigRational yMax = BigRational.valueOf(nrowsd2);
-            BigRational cellsize = BigRational.valueOf(1);
+            BigRational xMin = BigRational.valueOf((-ncolsd3 * m));
+            BigRational xMax = BigRational.valueOf((ncolssncolsd3 * m));
+            BigRational yMin = BigRational.valueOf((-nrowsd2 * m));
+            BigRational yMax = BigRational.valueOf((nrowsd2 * m));
+            BigRational cellsize = BigRational.valueOf(1, m);
             Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
             grid = gdf.create(nrows, ncols, dimensions);
             if (addGrid) {
@@ -264,21 +278,21 @@ public class RenderImageDouble {
         int tt = 2;
         switch (tt) {
             case 0 ->
-                addTriangles0(universe, epsilon);
+                addTriangles0(universe, env);
             case 1 ->
-                addTriangles1(universe, epsilon);
+                addTriangles1(universe, env);
             case 2 ->
-                addTriangles2(universe, epsilon);
+                addTriangles2(universe, env);
             case 3 ->
-                addTriangles3(universe, epsilon);
+                addTriangles3(universe, env);
             case 4 ->
-                addTriangles4(universe, epsilon);
+                addTriangles4(universe, env);
             case 5 ->
-                addTriangles5(universe, epsilon);
+                addTriangles5(universe, env);
             case 6 ->
-                addTriangles6(universe, epsilon);
+                addTriangles6(universe, env);
             case 7 ->
-                addTriangles7(universe, epsilon);
+                addTriangles7(universe, env);
         }
         // Add polygons
         boolean drawPolygons = true;
@@ -286,20 +300,20 @@ public class RenderImageDouble {
         int pp = 3;
         switch (pp) {
             case 0 ->
-                addPolygons0(universe, epsilon);
+                addPolygons0(universe, env);
             case 1 ->
-                addPolygons1(universe, epsilon);
+                addPolygons1(universe, env);
             case 2 ->
-                addPolygons2(universe, epsilon);
+                addPolygons2(universe, env);
             case 3 ->
-                addPolygons3(universe, epsilon);
+                addPolygons3(universe, env);
         }
 
         // Draw circumcircles
         //boolean drawCircumcircles = false;
         boolean drawCircumcircles = true;
         // Render
-        RenderImageDouble ri = new RenderImageDouble(universe, window, nrows,
+        RenderImageDouble ri = new RenderImageDouble(universe, env, window, nrows,
                 ncols, epsilon, oom, rm, drawAxes, grid, gridCMs, drawTriangles,
                 drawCircumcircles, drawPolygons);
         String fname = "test";
@@ -389,13 +403,13 @@ public class RenderImageDouble {
     /**
      * One triangle.
      */
-    public static void addTriangles0(UniverseDouble universe, double epsilon) {
+    public static void addTriangles0(UniverseDouble universe, V2D_EnvironmentDouble env) {
         Color color = Color.gray;
         Color colorEdge = Color.blue;
         V2D_PointDouble p = new V2D_PointDouble(-50d, -50d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 50d);
         V2D_PointDouble r = new V2D_PointDouble(50d, -50d);
-        V2D_TriangleDouble t0 = new V2D_TriangleDouble(p, q, r);
+        V2D_TriangleDouble t0 = new V2D_TriangleDouble(env, p, q, r);
         //universe.addTriangle(t0);
         universe.addTriangle(t0, color, colorEdge);
     }
@@ -403,7 +417,7 @@ public class RenderImageDouble {
     /**
      * Three rotated overlapping large triangles.
      */
-    public static void addTriangles1(UniverseDouble universe, double epsilon) {
+    public static void addTriangles1(UniverseDouble universe, V2D_EnvironmentDouble env) {
         Color color = Color.gray;
         //Color colorEdge = Color.blue;
         Color colorPQ = Color.blue;
@@ -413,24 +427,24 @@ public class RenderImageDouble {
         V2D_PointDouble p = new V2D_PointDouble(-50d, -50d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 50d);
         V2D_PointDouble r = new V2D_PointDouble(50d, -50d);
-        V2D_TriangleDouble t0 = new V2D_TriangleDouble(p, q, r);
+        V2D_TriangleDouble t0 = new V2D_TriangleDouble(env, p, q, r);
         //universe.addTriangle(t0);
         universe.addTriangle(t0, color, colorPQ, colorQR, colorRP);
         double theta;
         V2D_PointDouble origin = new V2D_PointDouble(0d, 0d);
         // 1
         theta = Math.PI;
-        V2D_TriangleDouble t1 = t0.rotate(origin, theta, epsilon);
+        V2D_TriangleDouble t1 = t0.rotate(origin, theta, env.epsilon);
         //universe.addTriangle(t1);
         universe.addTriangle(t1, color, colorPQ, colorQR, colorRP);
         // 2
         theta = Math.PI / 2d;
-        V2D_TriangleDouble t2 = t0.rotate(p, theta, epsilon);
+        V2D_TriangleDouble t2 = t0.rotate(p, theta, env.epsilon);
         //universe.addTriangle(t2);
         universe.addTriangle(t2, color, colorPQ, colorQR, colorRP);
         // 3
         theta = 3d * Math.PI / 2d;
-        V2D_TriangleDouble t3 = t0.rotate(origin, theta, epsilon);
+        V2D_TriangleDouble t3 = t0.rotate(origin, theta, env.epsilon);
         //universe.addTriangle(t3);
         universe.addTriangle(t3, color, colorPQ, colorQR, colorRP);
     }
@@ -438,7 +452,8 @@ public class RenderImageDouble {
     /**
      * Multiple small rotated triangles some overlapping.
      */
-    public static void addTriangles2(UniverseDouble universe, double epsilon) {
+    public static void addTriangles2(UniverseDouble universe, V2D_EnvironmentDouble env) {
+        double epsilon = env.epsilon;
         Color color = Color.gray;
         //Color colorEdge = Color.blue;
         Color colorPQ = Color.blue;
@@ -448,7 +463,7 @@ public class RenderImageDouble {
         V2D_PointDouble p = new V2D_PointDouble(-10d, -10d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 10d);
         V2D_PointDouble r = new V2D_PointDouble(10d, -10d);
-        V2D_TriangleDouble t0 = new V2D_TriangleDouble(p, q, r);
+        V2D_TriangleDouble t0 = new V2D_TriangleDouble(env, p, q, r);
         universe.addTriangle(t0, color, colorPQ, colorQR, colorRP);
         double theta;
         V2D_PointDouble origin = new V2D_PointDouble(0d, 0d);
@@ -476,7 +491,7 @@ public class RenderImageDouble {
     /**
      * Triangle rotated 48 times with increasing angle.
      */
-    public static void addTriangles3(UniverseDouble universe, double epsilon) {
+    public static void addTriangles3(UniverseDouble universe, V2D_EnvironmentDouble env) {
         Color color = Color.gray;
         //Color colorEdge = Color.blue;
         Color colorPQ = Color.blue;
@@ -485,13 +500,13 @@ public class RenderImageDouble {
         V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
         V2D_PointDouble r = new V2D_PointDouble(20d, -20d);
-        V2D_TriangleDouble t0 = new V2D_TriangleDouble(p, q, r);
+        V2D_TriangleDouble t0 = new V2D_TriangleDouble(env, p, q, r);
         universe.addTriangle(t0);
         V2D_TriangleDouble t1 = t0;
         V2D_TriangleDouble t2 = null;
         double theta = Math.PI / 12d;
         for (int i = 1; i <= 48; i++) {
-            t2 = t1.rotate(t0.getR(), theta * (double) i, epsilon);
+            t2 = t1.rotate(t0.getR(), theta * (double) i, env.epsilon);
             universe.addTriangle(t2, color, colorPQ, colorQR, colorRP);
             t1 = t2;
         }
@@ -501,7 +516,7 @@ public class RenderImageDouble {
     /**
      * Triangle rotated a bit, then the result rotated a bit 48 times.
      */
-    public static void addTriangles4(UniverseDouble universe, double epsilon) {
+    public static void addTriangles4(UniverseDouble universe, V2D_EnvironmentDouble env) {
         Color color = Color.gray;
         //Color colorEdge = Color.blue;
         Color colorPQ = Color.blue;
@@ -510,13 +525,13 @@ public class RenderImageDouble {
         V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
         V2D_PointDouble r = new V2D_PointDouble(20d, -20d);
-        V2D_TriangleDouble t0 = new V2D_TriangleDouble(p, q, r);
+        V2D_TriangleDouble t0 = new V2D_TriangleDouble(env, p, q, r);
         universe.addTriangle(t0);
         V2D_TriangleDouble t1 = t0;
         V2D_TriangleDouble t2 = null;
         double theta = Math.PI / 12d;
         for (int i = 1; i <= 48; i++) {
-            t2 = t1.rotate(t0.getR(), theta, epsilon);
+            t2 = t1.rotate(t0.getR(), theta, env.epsilon);
             universe.addTriangle(t2, color, colorPQ, colorQR, colorRP);
             t0 = t1;
             t1 = t2;
@@ -527,11 +542,11 @@ public class RenderImageDouble {
     /**
      * Apply lots of rotations to rotate a triangle back to original position.
      */
-    public static void addTriangles5(UniverseDouble universe, double epsilon) {
+    public static void addTriangles5(UniverseDouble universe, V2D_EnvironmentDouble env) {
         V2D_PointDouble p = new V2D_PointDouble(-20d, -20d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 20d);
         V2D_PointDouble r = new V2D_PointDouble(20d, -20d);
-        V2D_TriangleDouble t0 = new V2D_TriangleDouble(p, q, r);
+        V2D_TriangleDouble t0 = new V2D_TriangleDouble(env, p, q, r);
         universe.addTriangle(t0);
         V2D_TriangleDouble t1 = t0;
         V2D_TriangleDouble t2 = null;
@@ -539,7 +554,7 @@ public class RenderImageDouble {
         //double n = 10000000d;
         double theta = Math.PI / (12d * n);
         for (int i = 1; i <= 48 * n; i++) {
-            t2 = t1.rotate(t0.getR(), theta, epsilon);
+            t2 = t1.rotate(t0.getR(), theta, env.epsilon);
             //universe.addTriangle(t2);
             t0 = t1;
             t1 = t2;
@@ -555,20 +570,20 @@ public class RenderImageDouble {
      * @param epsilon
      * @return The ids of the original triangles that are intersected.
      */
-    public static void addTriangles6(UniverseDouble universe, double epsilon) {
+    public static void addTriangles6(UniverseDouble universe, V2D_EnvironmentDouble env) {
         // 0
         V2D_PointDouble p = new V2D_PointDouble(-50d, -50d);
         V2D_PointDouble q = new V2D_PointDouble(0d, 50d);
         V2D_PointDouble r = new V2D_PointDouble(50d, -50d);
-        TriangleDouble t0 = universe.addTriangle(new V2D_TriangleDouble(p, q, r));
+        TriangleDouble t0 = universe.addTriangle(new V2D_TriangleDouble(env, p, q, r));
         double theta;
         V2D_PointDouble origin = new V2D_PointDouble(0d, 0d);
         // 1
         //theta = Math.PI;
         theta = Math.PI / 2d;
-        TriangleDouble t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, epsilon));
+        TriangleDouble t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, env.epsilon));
         // Calculate the intersection
-        V2D_FiniteGeometryDouble gi = t0.triangle.getIntersection(t1.triangle, epsilon);
+        V2D_FiniteGeometryDouble gi = t0.triangle.getIntersection(t1.triangle, env.epsilon);
         ArrayList<V2D_TriangleDouble> git = ((V2D_ConvexHullDouble) gi).getTriangles();
         for (int i = 0; i < git.size(); i++) {
             TriangleDouble t = universe.addTriangle(git.get(i));
@@ -584,16 +599,16 @@ public class RenderImageDouble {
      * @param epsilon
      * @return The ids of the original triangles that are intersected.
      */
-    public static void addTriangles7(UniverseDouble universe, double epsilon) {
+    public static void addTriangles7(UniverseDouble universe, V2D_EnvironmentDouble env) {
         V2D_PointDouble origin = new V2D_PointDouble(0d, 0d);
-        TriangleDouble t0 = universe.addTriangle(new V2D_TriangleDouble(
+        TriangleDouble t0 = universe.addTriangle(new V2D_TriangleDouble(env, 
                 new V2D_PointDouble(-30d, -30d),
                 new V2D_PointDouble(0d, 60d),
                 new V2D_PointDouble(30d, -30d)));
         double theta = Math.PI;
-        TriangleDouble t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, epsilon));
+        TriangleDouble t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, env.epsilon));
         // Calculate the intersection
-        V2D_FiniteGeometryDouble gi = t0.triangle.getIntersection(t1.triangle, epsilon);
+        V2D_FiniteGeometryDouble gi = t0.triangle.getIntersection(t1.triangle, env.epsilon);
         ArrayList<V2D_TriangleDouble> git = ((V2D_ConvexHullDouble) gi).getTriangles();
         for (int i = 0; i < git.size(); i++) {
             TriangleDouble t = universe.addTriangle(git.get(i));
@@ -608,7 +623,7 @@ public class RenderImageDouble {
      * @param epsilon
      * @return The ids of the original triangles that are intersected.
      */
-    public static void addPolygons0(UniverseDouble universe, double epsilon) {
+    public static void addPolygons0(UniverseDouble universe, V2D_EnvironmentDouble env) {
         V2D_PointDouble a = new V2D_PointDouble(-30d, -30d);
         V2D_PointDouble b = new V2D_PointDouble(-20d, 0d);
         V2D_PointDouble c = new V2D_PointDouble(-30d, 30d);
@@ -617,7 +632,7 @@ public class RenderImageDouble {
         V2D_PointDouble f = new V2D_PointDouble(20d, 0d);
         V2D_PointDouble g = new V2D_PointDouble(30d, -30d);
         V2D_PointDouble h = new V2D_PointDouble(0d, -20d);
-        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon,
+        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(env,
                 a, b, c, d, e, f, g, h);
         HashMap<Integer, V2D_LineSegmentDouble> edges = new HashMap<>();
         edges.put(edges.size(), new V2D_LineSegmentDouble(a, b));
@@ -629,10 +644,10 @@ public class RenderImageDouble {
         edges.put(edges.size(), new V2D_LineSegmentDouble(g, h));
         edges.put(edges.size(), new V2D_LineSegmentDouble(h, a));
         HashMap<Integer, V2D_PolygonNoInternalHolesDouble> holes = new HashMap<>();
-        holes.put(holes.size(), new V2D_PolygonNoInternalHolesDouble(new V2D_ConvexHullDouble(epsilon, a, b, c)));
-        holes.put(holes.size(), new V2D_PolygonNoInternalHolesDouble(new V2D_ConvexHullDouble(epsilon, c, d, e)));
-        holes.put(holes.size(), new V2D_PolygonNoInternalHolesDouble(new V2D_ConvexHullDouble(epsilon, e, f, g)));
-        holes.put(holes.size(), new V2D_PolygonNoInternalHolesDouble(new V2D_ConvexHullDouble(epsilon, g, h, a)));
+        holes.put(holes.size(), new V2D_PolygonNoInternalHolesDouble(new V2D_ConvexHullDouble(env, a, b, c)));
+        holes.put(holes.size(), new V2D_PolygonNoInternalHolesDouble(new V2D_ConvexHullDouble(env, c, d, e)));
+        holes.put(holes.size(), new V2D_PolygonNoInternalHolesDouble(new V2D_ConvexHullDouble(env, e, f, g)));
+        holes.put(holes.size(), new V2D_PolygonNoInternalHolesDouble(new V2D_ConvexHullDouble(env, g, h, a)));
         V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, edges, holes, new HashMap<Integer, V2D_PolygonNoInternalHolesDouble>());
         PolygonDouble p0 = universe.addPolygon(polygon);
     }
@@ -644,7 +659,7 @@ public class RenderImageDouble {
      * @param epsilon
      * @return The ids of the original triangles that are intersected.
      */
-    public static void addPolygons1(UniverseDouble universe, double epsilon) {
+    public static void addPolygons1(UniverseDouble universe, V2D_EnvironmentDouble env) {
         // Outer Points
         V2D_PointDouble a = new V2D_PointDouble(-48d, -48d);
         V2D_PointDouble b = new V2D_PointDouble(-48d, 48d);
@@ -659,11 +674,11 @@ public class RenderImageDouble {
         externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(d, e));
         externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(e, a));
         // Convex Hull
-        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon, a, b, c, d, e);
+        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(env, a, b, c, d, e);
         // External Holes
         HashMap<Integer, V2D_PolygonNoInternalHolesDouble> externalHoles = new HashMap<>();
         externalHoles.put(externalHoles.size(), new V2D_PolygonNoInternalHolesDouble(
-                new V2D_ConvexHullDouble(epsilon, b, c, d)));
+                new V2D_ConvexHullDouble(env, b, c, d)));
         // Internal Holes
         HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
         // Hole Points
@@ -686,11 +701,11 @@ public class RenderImageDouble {
         holeExternalEdges.put(holeExternalEdges.size(), new V2D_LineSegmentDouble(l, m));
         holeExternalEdges.put(holeExternalEdges.size(), new V2D_LineSegmentDouble(m, f));
         // Hole Convex Hull
-        V2D_ConvexHullDouble holeCh = new V2D_ConvexHullDouble(epsilon, f, g, h, i, j, k, l, m);
+        V2D_ConvexHullDouble holeCh = new V2D_ConvexHullDouble(env, f, g, h, i, j, k, l, m);
         // Hole externalHoles
         HashMap<Integer, V2D_PolygonNoInternalHolesDouble> holeExternalHoles = new HashMap<>();
         holeExternalHoles.put(holeExternalHoles.size(), new V2D_PolygonNoInternalHolesDouble(
-                new V2D_ConvexHullDouble(epsilon, h, i, j, k)));
+                new V2D_ConvexHullDouble(env, h, i, j, k)));
         internalHoles.put(internalHoles.size(), new V2D_PolygonNoInternalHolesDouble(holeCh, holeExternalEdges, holeExternalHoles));
         V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges, externalHoles, internalHoles);
         universe.addPolygon(polygon);
@@ -703,7 +718,7 @@ public class RenderImageDouble {
      * @param epsilon
      * @return The ids of the original triangles that are intersected.
      */
-    public static void addPolygons2(UniverseDouble universe, double epsilon) {
+    public static void addPolygons2(UniverseDouble universe, V2D_EnvironmentDouble env) {
         // Outer points
         V2D_PointDouble a = new V2D_PointDouble(-30d, -30d);
         V2D_PointDouble b = new V2D_PointDouble(-20d, 0d);
@@ -724,19 +739,19 @@ public class RenderImageDouble {
         externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(g, h));
         externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(h, a));
         // Convex Hull
-        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(epsilon, a, b, c, d, e, f, g, h);
+        V2D_ConvexHullDouble ch = new V2D_ConvexHullDouble(env, a, b, c, d, e, f, g, h);
         // External Holes
         HashMap<Integer, V2D_PolygonNoInternalHolesDouble> externalHoles = new HashMap<>();
         externalHoles.put(externalHoles.size(), new V2D_PolygonNoInternalHolesDouble(
-                new V2D_ConvexHullDouble(epsilon, a, b, c)));
+                new V2D_ConvexHullDouble(env, a, b, c)));
         externalHoles.put(externalHoles.size(), new V2D_PolygonNoInternalHolesDouble(
-                new V2D_ConvexHullDouble(epsilon, c, d, e)));
+                new V2D_ConvexHullDouble(env, c, d, e)));
         externalHoles.put(externalHoles.size(), new V2D_PolygonNoInternalHolesDouble(
-                new V2D_ConvexHullDouble(epsilon, e, f, g)));
+                new V2D_ConvexHullDouble(env, e, f, g)));
         externalHoles.put(externalHoles.size(), new V2D_PolygonNoInternalHolesDouble(
-                new V2D_ConvexHullDouble(epsilon, g, h, a)));
+                new V2D_ConvexHullDouble(env, g, h, a)));
         externalHoles.put(externalHoles.size(), new V2D_PolygonNoInternalHolesDouble(
-                new V2D_ConvexHullDouble(epsilon, g, h, a)));
+                new V2D_ConvexHullDouble(env, g, h, a)));
         // Internal holes
         HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
         // Hole Points
@@ -755,23 +770,23 @@ public class RenderImageDouble {
         holeExternalEdges.put(holeExternalEdges.size(), new V2D_LineSegmentDouble(m, n));
         holeExternalEdges.put(holeExternalEdges.size(), new V2D_LineSegmentDouble(n, i));
         // Hole Convex Hull
-        V2D_ConvexHullDouble holeCh = new V2D_ConvexHullDouble(epsilon, i, j, k, l, m, n);
+        V2D_ConvexHullDouble holeCh = new V2D_ConvexHullDouble(env, i, j, k, l, m, n);
         // Hole externalHoles
         HashMap<Integer, V2D_PolygonNoInternalHolesDouble> holeExternalHoles = new HashMap<>();
         holeExternalHoles.put(holeExternalHoles.size(), new V2D_PolygonNoInternalHolesDouble(
-                new V2D_ConvexHullDouble(epsilon, i, j, k)));
+                new V2D_ConvexHullDouble(env, i, j, k)));
         holeExternalHoles.put(holeExternalHoles.size(), new V2D_PolygonNoInternalHolesDouble(
-                new V2D_ConvexHullDouble(epsilon, l, m, n)));
+                new V2D_ConvexHullDouble(env, l, m, n)));
         internalHoles.put(internalHoles.size(), new V2D_PolygonNoInternalHolesDouble(holeCh, holeExternalEdges, holeExternalHoles));
         V2D_PolygonDouble polygon = new V2D_PolygonDouble(ch, externalEdges, externalHoles, internalHoles);
         universe.addPolygon(polygon, Color.lightGray, Color.red, Color.blue);
     }
 
-    public static void addPolygons3(UniverseDouble universe, double epsilon) {
+    public static void addPolygons3(UniverseDouble universe, V2D_EnvironmentDouble env) {
         Path outDataDir = Paths.get("data", "input", "gshhg-bin-2.3.7");
         Path filepath = Paths.get(outDataDir.toString(), "gshhs_c.b");
         V2D_PointDouble[] points = null;
-        GSHHGDouble gshhg = new GSHHGDouble(filepath, epsilon);
+        GSHHGDouble gshhg = new GSHHGDouble(filepath, env);
         HashMap<Integer, V2D_PolygonDouble> polygons = gshhg.polygons;
         for (V2D_PolygonDouble p : polygons.values()) {
             universe.addPolygon(p);
@@ -1029,7 +1044,7 @@ public class RenderImageDouble {
             externalEdgesArray[i] = externalEdges.get(i);
         }
         HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = poly.internalHoles;
-        V2D_PointDouble[] ePs = ch.getPoints();
+        V2D_PointDouble[] ePs = ch.getPointsArray();
         // Calculate the min and max row and col.
         int minr = getRow(ePs[0]);
         int maxr = getRow(ePs[0]);
@@ -1101,7 +1116,7 @@ public class RenderImageDouble {
         // s
         V2D_PointDouble pS = new V2D_PointDouble(p);
         pS.translate(pqv.multiply(row).add(qrv.multiply(col + 1)));
-        return new V2D_RectangleDouble(pP, pQ, pR, pS);
+        return new V2D_RectangleDouble(env, pP, pQ, pR, pS);
     }
 
     /**

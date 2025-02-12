@@ -24,8 +24,7 @@ import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.util.HashMap;
-import uk.ac.leeds.ccg.v2d.geometry.V2D_ConvexHull;
-import uk.ac.leeds.ccg.v2d.geometry.V2D_LineSegment;
+import java.util.HashSet;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Point;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Polygon;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_PolygonNoInternalHoles;
@@ -38,6 +37,17 @@ public class GSHHG {
 
         polygons = new HashMap<>();
 
+        /**
+         * For looking up polygons from their id. Key are id, values are 
+         * position in collection.
+         */
+        HashMap<Integer, Integer> lookup = new HashMap<>();
+
+        /**
+         * For storing the collection of contained polygons.
+         */
+        HashSet<Integer> contained = new HashSet<>();
+        
         try {
             int xmin = Integer.MAX_VALUE;
             int ymin = Integer.MAX_VALUE;
@@ -86,7 +96,7 @@ public class GSHHG {
                 int ancestor = in.readInt();
                 System.out.println("ancestor=" + ancestor);
                 V2D_Point[] points = new V2D_Point[n];
-                HashMap<Integer, V2D_LineSegment> externalEdges = new HashMap<>();
+                //HashMap<Integer, V2D_LineSegment> externalEdges = new HashMap<>();
                 int x0 = in.readInt();
                 int y0 = in.readInt();
                 if (n > 1) {
@@ -110,7 +120,7 @@ public class GSHHG {
                     xmax = Math.max(xmax, x1);
                     ymin = Math.min(ymin, y1);
                     ymax = Math.max(ymax, y1);
-                    externalEdges.put(externalEdges.size(), new V2D_LineSegment(points[0], points[1], oom, rm));
+                    //externalEdges.put(externalEdges.size(), new V2D_LineSegment(points[0], points[1], oom, rm));
                     for (int i = 2; i < n; i++) {
                         x0 = x1;
                         y0 = y1;
@@ -130,17 +140,33 @@ public class GSHHG {
                         xmax = Math.max(xmax, x1);
                         ymin = Math.min(ymin, y1);
                         ymax = Math.max(ymax, y1);
-                        externalEdges.put(externalEdges.size(), new V2D_LineSegment(points[i - 1], points[i], oom, rm));
+                        //externalEdges.put(externalEdges.size(), new V2D_LineSegment(points[i - 1], points[i], oom, rm));
                     }
-                    V2D_ConvexHull ch = new V2D_ConvexHull(oom, rm, points);
-//                V2D_Polygon polygon = new V2D_Polygon(ch);
-//                V2D_Polygon polygon = new V2D_Polygon(ch, externalEdges,
-//                        externalHoles, internalEdges, internalHoles);
-                    V2D_Polygon polygon = new V2D_Polygon(ch, externalEdges,
-                            new HashMap<Integer, V2D_PolygonNoInternalHoles>(),
-                            new HashMap<Integer, V2D_PolygonNoInternalHoles>());
-                    //System.out.println(polygon.toString());
-                    polygons.put(polygons.size(), polygon);
+                    try {
+                        V2D_PolygonNoInternalHoles polygon = new V2D_PolygonNoInternalHoles(points, oom, rm);
+                        if (container == -1 || contained.contains(container)) {
+                            if (contained.contains(container)) {
+                               int debug = 1; 
+                            }
+                            HashMap<Integer, V2D_PolygonNoInternalHoles> internalHoles = new HashMap<>();
+                            int id2 = polygons.size();
+                            lookup.put(id, id2);
+                            polygons.put(polygons.size(), new V2D_Polygon(polygon.ch, polygon.externalEdges, polygon.externalHoles, internalHoles));
+                        } else {
+                            int id2 = lookup.get(container);
+                            if (polygons.containsKey(id2)) {
+                                V2D_Polygon containerPolygon = polygons.get(container);
+                                containerPolygon.internalHoles.put(containerPolygon.internalHoles.size(), polygon);
+                                contained.add(id);
+                            } else {
+                                System.out.println("Container polygon not yet formulated!");
+                                // Store the polygon to be added as and when...
+                            }
+                        }
+                    } catch (Exception e) {
+                        int debug = 1;
+                        
+                    }
                 }
                 data = in.readNBytes(4);
                 if (data.length == 0) {
