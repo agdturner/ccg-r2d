@@ -26,7 +26,7 @@ The development of these 2D spatial data libraries helps develop these 3D spatia
 ## Triangle intersections
 * Two rotated triangles with a two triangle intersection
 <img alt="A first rendering of a triangle on a couple of randomly coloured grids" src="data/output/test/test6.png" />
-Two rotated triangles with a four triangle intersection:
+* Two rotated triangles with a four triangle intersection:
 <img alt="Two rotated triangles with a four triangle intersection" src="data/output/test/test7.png" />
 
 ## Polygon
@@ -37,7 +37,7 @@ Two rotated triangles with a four triangle intersection:
 * Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue
 <img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2.png" />
 * GSHHS low resolution land/sea polygons. The heirarchy is ignored. The image shows lighter for the convex hull and darker for the external edges.
-<img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3.png" />
+<img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_ch.png" />
 
 ## Development plans/ideas
 - Generate some more example renderings of geographical data.
