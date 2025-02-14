@@ -32,28 +32,35 @@ Triangle rotated a bit, then the result rotated a bit 48 times (the last triangl
 ## With grids
 
 A triangle on a couple of randomly coloured grids:
+
 <img alt="A triangle on a couple of randomly coloured grids" src="data/output/test/test0_grid.png" />
 
 ## Triangle intersections
 
-Two rotated triangles with a two triangle intersection
+Two rotated triangles with a two triangle intersection:
+
 <img alt="A first rendering of a triangle on a couple of randomly coloured grids" src="data/output/test/test6.png" />
 
 Two rotated triangles with a four triangle intersection:
+
 <img alt="Two rotated triangles with a four triangle intersection" src="data/output/test/test7.png" />
 
 ## Polygon
 
-Polygon that is not a convex hull with a darker outline
+Polygon that is not a convex hull with a darker outline:
+
 <img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons0.png" />
 
-Polygon that is not a convex hull with a darker outline and with a polygonal hole
+Polygon that is not a convex hull with a darker outline and with a polygonal hole:
+
 <img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons1.png" />
 
-Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue
+Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue:
+
 <img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2.png" />
 
-GSHHS low resolution land/sea polygons. The heirarchy is ignored. The image shows lighter for the convex hull and darker for the external edges.
+GSHHS low resolution land/sea polygons. The heirarchy is ignored. The image shows lighter for the convex hull and darker for the external edges:
+
 <img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_ch.png" />
 
 ## Development plans/ideas
