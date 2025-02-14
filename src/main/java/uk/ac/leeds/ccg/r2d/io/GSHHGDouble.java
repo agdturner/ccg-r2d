@@ -99,7 +99,7 @@ public class GSHHGDouble {
                     int x0 = in.readInt();
                     int y0 = in.readInt();
                     if (n > 1) {
-                        points[0] = new V2D_PointDouble((double) x0 / 1000000d, (double) y0 / 1000000d);
+                        points[0] = new V2D_PointDouble(env, (double) x0 / 1000000d, (double) y0 / 1000000d);
                         xmin = Math.min(xmin, x0);
                         xmax = Math.max(xmax, x0);
                         ymin = Math.min(ymin, y0);
@@ -114,7 +114,7 @@ public class GSHHGDouble {
                             //System.out.println("Crossright i = " + i);
                             x1 = x1 - 360000000;
                         }
-                        points[1] = new V2D_PointDouble((double) x1 / 1000000d, (double) y1 / 1000000d);
+                        points[1] = new V2D_PointDouble(env, (double) x1 / 1000000d, (double) y1 / 1000000d);
                         xmin = Math.min(xmin, x1);
                         xmax = Math.max(xmax, x1);
                         ymin = Math.min(ymin, y1);
@@ -134,7 +134,7 @@ public class GSHHGDouble {
                                 //System.out.println("Crossright i = " + i);
                                 x1 = x1 - 360000000;
                             }
-                            points[i] = new V2D_PointDouble((double) x1 / 1000000d, (double) y1 / 1000000d);
+                            points[i] = new V2D_PointDouble(env, (double) x1 / 1000000d, (double) y1 / 1000000d);
                             xmin = Math.min(xmin, x1);
                             xmax = Math.max(xmax, x1);
                             ymin = Math.min(ymin, y1);
@@ -142,7 +142,7 @@ public class GSHHGDouble {
                             //externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[i - 1], points[i]));
                         }
                         try {
-                            V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(env, points);
+                            V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points);
                             if (container == -1 || contained.contains(container)) {
                                 HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
                                 int id2 = polygons.size();

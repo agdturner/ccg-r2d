@@ -17,6 +17,7 @@ package uk.ac.leeds.ccg.r2d;
 
 import ch.obermuhlner.math.big.BigRational;
 import java.math.RoundingMode;
+import uk.ac.leeds.ccg.v2d.core.V2D_Environment;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Envelope;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_LineSegment;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Point;
@@ -37,14 +38,14 @@ public class Axes {
     /**
      * Create the axes.
      */
-    public Axes(V2D_Envelope e, int oom, RoundingMode rm) {
+    public Axes(V2D_Environment env, V2D_Envelope e, int oom, RoundingMode rm) {
         // Create x axis
-        xMin = new V2D_Point(e.getXMin(oom, rm), BigRational.ZERO);
-        xMax = new V2D_Point(e.getXMax(oom, rm), BigRational.ZERO);
+        xMin = new V2D_Point(env, e.getXMin(oom, rm), BigRational.ZERO);
+        xMax = new V2D_Point(env, e.getXMax(oom, rm), BigRational.ZERO);
         xAxis = new V2D_LineSegment(xMin, xMax, oom, rm);
         // Create y axis
-        yMin = new V2D_Point(BigRational.ZERO, e.getYMin(oom, rm));
-        yMax = new V2D_Point(BigRational.ZERO, e.getYMax(oom, rm));
+        yMin = new V2D_Point(env, BigRational.ZERO, e.getYMin(oom, rm));
+        yMax = new V2D_Point(env, BigRational.ZERO, e.getYMax(oom, rm));
         yAxis = new V2D_LineSegment(yMin, yMax, oom, rm);
     }
 

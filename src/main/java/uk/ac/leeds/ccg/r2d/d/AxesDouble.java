@@ -15,6 +15,7 @@
  */
 package uk.ac.leeds.ccg.r2d.d;
 
+import uk.ac.leeds.ccg.v2d.core.d.V2D_EnvironmentDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_EnvelopeDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_LineSegmentDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PointDouble;
@@ -35,14 +36,14 @@ public class AxesDouble {
     /**
      * Create the axes.
      */
-    public AxesDouble(V2D_EnvelopeDouble e) {
+    public AxesDouble(V2D_EnvironmentDouble env, V2D_EnvelopeDouble e) {
         // Create x axis
-        xMin = new V2D_PointDouble(e.getXMin(), 0d);
-        xMax = new V2D_PointDouble(e.getXMax(), 0d);
+        xMin = new V2D_PointDouble(env, e.getXMin(), 0d);
+        xMax = new V2D_PointDouble(env, e.getXMax(), 0d);
         xAxis = new V2D_LineSegmentDouble(xMin, xMax);
         // Create y axis
-        yMin = new V2D_PointDouble(0d, e.getYMin());
-        yMax = new V2D_PointDouble(0d, e.getYMax());
+        yMin = new V2D_PointDouble(env, 0d, e.getYMin());
+        yMax = new V2D_PointDouble(env, 0d, e.getYMax());
         yAxis = new V2D_LineSegmentDouble(yMin, yMax);
     }
 
