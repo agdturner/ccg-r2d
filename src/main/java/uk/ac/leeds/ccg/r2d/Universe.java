@@ -21,9 +21,11 @@ import java.util.ArrayList;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
 import uk.ac.leeds.ccg.r2d.entities.Polygon;
+import uk.ac.leeds.ccg.r2d.entities.PolygonNoInternalHoles;
 import uk.ac.leeds.ccg.r2d.entities.Triangle;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Envelope;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Polygon;
+import uk.ac.leeds.ccg.v2d.geometry.V2D_PolygonNoInternalHoles;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Triangle;
 
 /**
@@ -42,6 +44,11 @@ public class Universe {
      * The triangles to render.
      */
     public ArrayList<Triangle> triangles;
+    
+    /**
+     * The polygons with no internal holes.
+     */
+    public ArrayList<PolygonNoInternalHoles> pnih;
     
     /**
      * The polygons.
@@ -66,6 +73,7 @@ public class Universe {
     public Universe(V2D_Envelope envelope) {
         nextID = 0L;
         triangles = new ArrayList<>();
+        pnih = new ArrayList<>();
         polygons = new ArrayList<>();
         grids = new ArrayList<>();
         this.envelope = envelope;
@@ -127,6 +135,37 @@ public class Universe {
         triangles.add(t);
         envelope = envelope.union(triangle.getEnvelope(oom, rm), oom);
         return t;
+    }
+    
+    /**
+     * Adds the polygon and returns entity.
+     * @param polygon The polygon to add.
+     * @param oom The Order of Magnitude for the precision.
+     * @param rm The RoundingMode for any rounding.
+     * @return The Triangle.
+     */
+    public PolygonNoInternalHoles addPolygonNoInternalHoles(V2D_PolygonNoInternalHoles polygon, int oom, RoundingMode rm){
+        PolygonNoInternalHoles p = new PolygonNoInternalHoles(polygon, getNextID());
+        pnih.add(p);
+        envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
+        return p;
+    }
+    
+    /**
+     * Adds the polygon and returns entity.
+     * @param polygon The polygon to add.
+     * @return The Polygon.
+     * @param color The colour of the polygon.
+     * @param colorEdge The colour of the edge of the polygon.
+     * @param oom The Order of Magnitude for the precision.
+     * @param rm The RoundingMode for any rounding.
+     */
+    public PolygonNoInternalHoles addPolygon(V2D_PolygonNoInternalHoles polygon, int oom, RoundingMode rm,
+            Color color, Color colorEdge){
+        PolygonNoInternalHoles p = new PolygonNoInternalHoles(polygon, getNextID(), color, colorEdge);
+        pnih.add(p);
+        envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
+        return p;
     }
     
     /**

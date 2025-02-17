@@ -149,7 +149,7 @@ public class GSHHG {
                                 HashMap<Integer, V2D_PolygonNoInternalHoles> internalHoles = new HashMap<>();
                                 int id2 = polygons.size();
                                 lookup.put(id, id2);
-                                polygons.put(id2, new V2D_Polygon(polygon.ch, polygon.externalEdges, polygon.externalHoles, internalHoles));
+                                polygons.put(id2, new V2D_Polygon(polygon, oom, rm));
                             } else {
                                 int id2 = lookup.get(container);
                                 if (polygons.containsKey(id2)) {

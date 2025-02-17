@@ -35,7 +35,7 @@ public class Colour_MapDouble {
      * Create a new instance.
      */
     public Colour_MapDouble() {
-        cm = new TreeMap();
+        cm = new TreeMap<>();
     }
     
     /**

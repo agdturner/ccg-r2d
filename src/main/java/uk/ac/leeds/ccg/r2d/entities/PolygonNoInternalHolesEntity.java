@@ -23,21 +23,21 @@ import uk.ac.leeds.ccg.data.id.Data_ID_long;
  *
  * @author Andy Turner
  */
-public class PolygonEntity extends PolygonNoInternalHolesEntity {
+public class PolygonNoInternalHolesEntity extends Entity {
 
     private static final long serialVersionUID = 1L;
     
     /**
-     * For the colour of the internal edges.
+     * For the colour of the external edges.
      */
-    Color colorInternalEdge;
+    Color colorExternalEdge;
 
     /**
      * Create a new instance.
      *
      * @param id What {@link #id} is set to.
      */
-    public PolygonEntity(Data_ID_long id){
+    public PolygonNoInternalHolesEntity(Data_ID_long id){
         super(id);
     }
     
@@ -46,25 +46,12 @@ public class PolygonEntity extends PolygonNoInternalHolesEntity {
      *
      * @param id What {@link #id} is set to.
      * @param color What {@link #color} is set to.
-     * @param colorEdge What {@link #edgeColor} is set to.
-     */
-    public PolygonEntity(Data_ID_long id,
-            Color color, Color colorEdge){
-        super(id, color, colorEdge);
-    }
-    
-    /**
-     * Create a new instance.
-     *
-     * @param id What {@link #id} is set to.
-     * @param color What {@link #color} is set to.
      * @param colorExternalEdge What {@link #colorExternalEdge} is set to.
-     * @param colorInternalEdge What {@link #colorInternalEdge} is set to.
      */
-    public PolygonEntity(Data_ID_long id,
-            Color color, Color colorExternalEdge, Color colorInternalEdge) {
-        super(id, color, colorExternalEdge);
-        this.colorInternalEdge = colorInternalEdge;
+    public PolygonNoInternalHolesEntity(Data_ID_long id,
+            Color color, Color colorExternalEdge) {
+        super(id, color);
+        this.colorExternalEdge = colorExternalEdge;
     }
     
     /**
@@ -72,25 +59,26 @@ public class PolygonEntity extends PolygonNoInternalHolesEntity {
      * @param color The colour that is set.
      */
     public void setColor(Color color) {
-        super.setColor(color);
-        colorInternalEdge = null;
+        this.color = color;
+        colorExternalEdge = null;
+        this.colorEdge = color;
     }
     
     /**
-     * @return The colour of the QR Edge setting it first if it is null. 
+     * @return The colour of the colorExternalEdge setting it first if it is null. 
      */
-    public Color getColorInternalEdge() {
-        if (colorInternalEdge == null) {
-            colorInternalEdge = colorEdge;
+    public Color getColorExternalEdge() {
+        if (colorExternalEdge == null) {
+            colorExternalEdge = colorEdge;
         }
-        return colorInternalEdge;
+        return colorExternalEdge;
     }
     
     /**
-     * @param color What {@link #colorInternalEdge} is set to.
+     * @param color The colour to use in rendering the PQ Edge. 
      */
-    public void setColorInternalEdge(Color color) {
-        colorInternalEdge = color;
+    public void setColorExternalEdge(Color color) {
+        colorExternalEdge = color;
     }
     
 }

@@ -32,7 +32,12 @@ public class GSHHGDouble {
 
     public HashMap<Integer, V2D_PolygonDouble> polygons;
 
-    public GSHHGDouble(Path p, V2D_EnvironmentDouble env) {
+    /**
+     * 
+     * @param epsilon The tolerance within which two vectors are regarded as
+     * equal.
+     */
+    public GSHHGDouble(Path p, V2D_EnvironmentDouble env, double epsilon) {
 
         polygons = new HashMap<>();
 
@@ -121,6 +126,12 @@ public class GSHHGDouble {
                         ymax = Math.max(ymax, y1);
                         //externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[0], points[1]));
                         for (int i = 2; i < n; i++) {
+                            System.out.println("i=" + i + " out of " + n);
+                            
+                            if (n == 221 && i == 220) {
+                                int debug = 1;
+                            }
+                            
                             x0 = x1;
                             y0 = y1;
                             points[0] = points[1];
@@ -142,12 +153,12 @@ public class GSHHGDouble {
                             //externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[i - 1], points[i]));
                         }
                         try {
-                            V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points);
+                            V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points, epsilon);
                             if (container == -1 || contained.contains(container)) {
                                 HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
                                 int id2 = polygons.size();
                                 lookup.put(id, id2);
-                                polygons.put(id2, new V2D_PolygonDouble(polygon.ch, polygon.externalEdges, polygon.externalHoles, internalHoles));
+                                polygons.put(id2, new V2D_PolygonDouble(polygon, epsilon));
                             } else {
                                 int id2 = lookup.get(container);
                                 if (polygons.containsKey(id2)) {

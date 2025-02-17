@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
 import uk.ac.leeds.ccg.r2d.d.entities.PolygonDouble;
+import uk.ac.leeds.ccg.r2d.d.entities.PolygonNoInternalHolesDouble;
 import uk.ac.leeds.ccg.r2d.d.entities.TriangleDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_EnvelopeDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonDouble;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonNoInternalHolesDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_TriangleDouble;
 
 /**
@@ -41,6 +43,11 @@ public class UniverseDouble {
      * The triangles.
      */
     public ArrayList<TriangleDouble> triangles;
+    
+    /**
+     * The polygons with no internal holes.
+     */
+    public ArrayList<PolygonNoInternalHolesDouble> pnih;
     
     /**
      * The polygons.
@@ -65,6 +72,7 @@ public class UniverseDouble {
     public UniverseDouble(V2D_EnvelopeDouble envelope) {
         nextID = 0L;
         triangles = new ArrayList<>();
+        pnih = new ArrayList<>();
         polygons = new ArrayList<>();
         grids = new ArrayList<>();
         this.envelope = envelope;
@@ -123,6 +131,18 @@ public class UniverseDouble {
         return t;
     }
     
+    /**
+     * Adds the polygon and returns entity.
+     * @param polygon The polygon to add.
+     * @return The Triangle.
+     */
+    public PolygonNoInternalHolesDouble addPolygonNoInternalHoles(
+            V2D_PolygonNoInternalHolesDouble polygon){
+        PolygonNoInternalHolesDouble p = new PolygonNoInternalHolesDouble(polygon, getNextID());
+        pnih.add(p);
+        envelope = envelope.union(polygon.getEnvelope());
+        return p;
+    }
     
     /**
      * Adds the polygon and returns entity.
