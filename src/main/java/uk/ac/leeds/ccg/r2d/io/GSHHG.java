@@ -34,7 +34,7 @@ public class GSHHG {
 
     public HashMap<Integer, V2D_Polygon> polygons;
 
-    public GSHHG(Path p, V2D_Environment env, int oom, RoundingMode rm) {
+    public GSHHG(Path p, V2D_Environment env, int scale, int oom, RoundingMode rm) {
 
         polygons = new HashMap<>();
 
@@ -101,7 +101,7 @@ public class GSHHG {
                     int x0 = in.readInt();
                     int y0 = in.readInt();
                     if (n > 1) {
-                        points[0] = new V2D_Point(env, BigRational.valueOf(x0, 1000000), BigRational.valueOf(y0, 1000000));
+                        points[0] = new V2D_Point(env, BigRational.valueOf(x0 * scale, 1000000), BigRational.valueOf(y0 * scale, 1000000));
                         xmin = Math.min(xmin, x0);
                         xmax = Math.max(xmax, x0);
                         ymin = Math.min(ymin, y0);
@@ -116,7 +116,7 @@ public class GSHHG {
                             //System.out.println("Crossright i = " + i);
                             x1 = x1 - 360000000;
                         }
-                        points[1] = new V2D_Point(env, BigRational.valueOf(x1, 1000000), BigRational.valueOf(y1, 1000000));
+                        points[1] = new V2D_Point(env, BigRational.valueOf(x1 * scale, 1000000), BigRational.valueOf(y1 * scale, 1000000));
                         xmin = Math.min(xmin, x1);
                         xmax = Math.max(xmax, x1);
                         ymin = Math.min(ymin, y1);
@@ -136,7 +136,7 @@ public class GSHHG {
                                 //System.out.println("Crossright i = " + i);
                                 x1 = x1 - 360000000;
                             }
-                            points[i] = new V2D_Point(env, BigRational.valueOf(x1, 1000000), BigRational.valueOf(y1, 1000000));
+                            points[i] = new V2D_Point(env, BigRational.valueOf(x1 * scale, 1000000), BigRational.valueOf(y1 * scale, 1000000));
                             xmin = Math.min(xmin, x1);
                             xmax = Math.max(xmax, x1);
                             ymin = Math.min(ymin, y1);

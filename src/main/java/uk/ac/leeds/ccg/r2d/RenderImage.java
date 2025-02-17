@@ -226,41 +226,41 @@ public class RenderImage {
         int oom = -8;
         RoundingMode rm = RoundingMode.HALF_UP;
         V2D_Environment env = new V2D_Environment(oom, rm);
-        boolean gshhs = false;
-        //boolean gshhs = true;
+        //boolean gshhs = false;
+        boolean gshhs = true;
         int nrows;
         int ncols;
+        int scale;
         if (!gshhs) {
+            scale = 1;
             nrows = 150;
             ncols = 150;
         } else {
-            nrows = 180;
-            ncols = 540;
+            scale = 3;
+            nrows = 180 * scale;
+            ncols = 540 * scale;
         }
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;
         int ncolsd3 = ncols / 3;
         int ncolssncolsd3 = ncols - ncolsd3;
         // Init universe
-        // multiplication factor
-//        int m = 75;
-        int m = 1;
         V2D_Vector offset = V2D_Vector.ZERO;
-        V2D_Point lb;
-        V2D_Point lt;
-        V2D_Point rt;
-        V2D_Point rb;
+        int xmin;
+        int xmax;
+        int ymin = -nrowsd2;
+        int ymax = nrowsd2;
         if (!gshhs) {
-            lb = new V2D_Point(env, offset, new V2D_Vector((-ncolsd2 * m), (-nrowsd2 * m)));
-            lt = new V2D_Point(env, offset, new V2D_Vector((-ncolsd2 * m), (nrowsd2 * m)));
-            rt = new V2D_Point(env, offset, new V2D_Vector((ncolsd2 * m), (nrowsd2 * m)));
-            rb = new V2D_Point(env, offset, new V2D_Vector((ncolsd2 * m), (-nrowsd2 * m)));
+            xmin = -ncolsd2;
+            xmax = ncolsd2;
         } else {
-            lb = new V2D_Point(env, offset, new V2D_Vector((-ncolsd3 * m), (-nrowsd2 * m)));
-            lt = new V2D_Point(env, offset, new V2D_Vector((-ncolsd3 * m), (nrowsd2 * m)));
-            rt = new V2D_Point(env, offset, new V2D_Vector((ncolssncolsd3 * m), (nrowsd2 * m)));
-            rb = new V2D_Point(env, offset, new V2D_Vector((ncolssncolsd3 * m), (-nrowsd2 * m)));
+            xmin = -ncolsd3;
+            xmax = ncolssncolsd3;
         }
+        V2D_Point lb = new V2D_Point(env, offset, new V2D_Vector(xmin, ymin));
+        V2D_Point lt = new V2D_Point(env, offset, new V2D_Vector(xmin, ymax));
+        V2D_Point rt = new V2D_Point(env, offset, new V2D_Vector(xmax, ymax));
+        V2D_Point rb = new V2D_Point(env, offset, new V2D_Vector(xmax, ymin));
         V2D_Rectangle window = new V2D_Rectangle(lb, lt, rt, rb, oom, rm);
         Universe universe = new Universe(window.getEnvelope(oom, rm));
         ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
@@ -276,22 +276,11 @@ public class RenderImage {
             Grids_ChunkDoubleFactoryArray dgcdf = new Grids_ChunkDoubleFactoryArray();
             Grids_ChunkDoubleFactorySinglet gcdf = new Grids_ChunkDoubleFactorySinglet(0d);
             Grids_GridDoubleFactory gdf = new Grids_GridDoubleFactory(ge, ioc, gcdf, dgcdf, ncols, ncols);
-            BigRational xMin;
-            BigRational xMax;
-            BigRational yMin;
-            BigRational yMax;
-            if (!gshhs) {
-                xMin = BigRational.valueOf(-ncolsd2);
-                xMax = BigRational.valueOf(ncolsd2);
-                yMin = BigRational.valueOf(-nrowsd2);
-                yMax = BigRational.valueOf(nrowsd2);
-            } else {
-                xMin = BigRational.valueOf((-ncolsd3 * m));
-                xMax = BigRational.valueOf((ncolssncolsd3 * m));
-                yMin = BigRational.valueOf((-nrowsd2 * m));
-                yMax = BigRational.valueOf((nrowsd2 * m));
-            }
-            BigRational cellsize = BigRational.valueOf(1, m);
+            BigRational xMin = BigRational.valueOf(xmin);
+            BigRational xMax = BigRational.valueOf(xmax);
+            BigRational yMin = BigRational.valueOf(ymin);
+            BigRational yMax = BigRational.valueOf(ymax);
+            BigRational cellsize = BigRational.valueOf(1);
             Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
             grid = gdf.create(nrows, ncols, dimensions);
             if (addGrid) {
@@ -332,6 +321,11 @@ public class RenderImage {
         //boolean drawPolygons = false;
         boolean drawPolygonsNoInternalHoles = true;
         int pp = 2;
+        if (gshhs) {
+            pp = 3;
+        } else {
+            pp = 2;
+        }
         switch (pp) {
             case 0 ->
                 addPolygons0(universe, env, oom, rm);
@@ -340,7 +334,7 @@ public class RenderImage {
             case 2 ->
                 addPolygons2(universe, env, oom, rm);
             case 3 ->
-                addPolygons3(universe, env, oom, rm);
+                addPolygons3(universe, env, scale, oom, rm);
         }
 
         // Draw circumcircles
@@ -360,7 +354,7 @@ public class RenderImage {
         if (addGrid) {
             fname += "_grid";
         }
-        ri.output = Paths.get(dir.toString(), fname + ".png");
+        ri.output = Paths.get(dir.toString(), fname + "_nrows" + nrows + "_ncols" + ncols + ".png");
         System.out.println(ri.output.toString());
         ri.run();
     }
@@ -741,11 +735,11 @@ public class RenderImage {
         universe.addPolygon(polygon, oom, rm, Color.lightGray, Color.red, Color.blue);
     }
 
-    public static void addPolygons3(Universe universe, V2D_Environment env, int oom, RoundingMode rm) {
+    public static void addPolygons3(Universe universe, V2D_Environment env, int scale, int oom, RoundingMode rm) {
         Path outDataDir = Paths.get("data", "input", "gshhg-bin-2.3.7");
         Path filepath = Paths.get(outDataDir.toString(), "gshhs_c.b");
         V2D_Point[] points = null;
-        GSHHG gshhg = new GSHHG(filepath, env, oom, rm);
+        GSHHG gshhg = new GSHHG(filepath, env, scale, oom, rm);
         HashMap<Integer, V2D_Polygon> polygons = gshhg.polygons;
         for (V2D_Polygon p : polygons.values()) {
             universe.addPolygon(p, oom, rm);

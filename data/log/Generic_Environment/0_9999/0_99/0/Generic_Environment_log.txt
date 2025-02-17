@@ -1503,3 +1503,123 @@ Done chunkRow 0 out of 1
 LoggingLevel = FINE
 Initialising MemoryReserve size=6000000
 Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1
+LoggingLevel = FINE
+Initialising MemoryReserve size=6000000
+Done chunkRow 0 out of 1

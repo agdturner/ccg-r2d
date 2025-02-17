@@ -222,8 +222,8 @@ public class RenderImageDouble {
         double epsilon = 1d / 10000d;
         //double epsilon = 0d;
         V2D_EnvironmentDouble env = new V2D_EnvironmentDouble(epsilon);
-        //boolean gshhs = false;
-        boolean gshhs = true;
+        boolean gshhs = false;
+        //boolean gshhs = true;
         int nrows;
         int ncols;
         if (!gshhs) {
@@ -238,26 +238,24 @@ public class RenderImageDouble {
         int ncolsd3 = ncols / 3;
         int ncolssncolsd3 = ncols - ncolsd3;
         // Init universe
-        // multiplication factor
-//        int m = 75;
-        int m = 1;
         V2D_VectorDouble offset = V2D_VectorDouble.ZERO;
-        V2D_PointDouble lb;
-        V2D_PointDouble lt;
-        V2D_PointDouble rt;
-        V2D_PointDouble rb;
+                int xmin;
+        int xmax;
+        int ymin = -nrowsd2;
+        int ymax = nrowsd2;
         if (!gshhs) {
-            lb = new V2D_PointDouble(env, offset, new V2D_VectorDouble((-ncolsd2 * m), (-nrowsd2 * m)));
-            lt = new V2D_PointDouble(env, offset, new V2D_VectorDouble((-ncolsd2 * m), (nrowsd2 * m)));
-            rt = new V2D_PointDouble(env, offset, new V2D_VectorDouble((ncolsd2 * m), (nrowsd2 * m)));
-            rb = new V2D_PointDouble(env, offset, new V2D_VectorDouble((ncolsd2 * m), (-nrowsd2 * m)));
+            xmin = -ncolsd2;
+            xmax = ncolsd2;
         } else {
-            lb = new V2D_PointDouble(env, offset, new V2D_VectorDouble((-ncolsd3 * m), (-nrowsd2 * m)));
-            lt = new V2D_PointDouble(env, offset, new V2D_VectorDouble((-ncolsd3 * m), (nrowsd2 * m)));
-            rt = new V2D_PointDouble(env, offset, new V2D_VectorDouble((ncolssncolsd3 * m), (nrowsd2 * m)));
-            rb = new V2D_PointDouble(env, offset, new V2D_VectorDouble((ncolssncolsd3 * m), (-nrowsd2 * m)));
+            xmin = -ncolsd3;
+            xmax = ncolssncolsd3;
         }
-        V2D_RectangleDouble window = new V2D_RectangleDouble(lb, lt, rt, rb);
+        V2D_PointDouble lb = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmin, ymin));
+        V2D_PointDouble lt = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmin, ymax));
+        V2D_PointDouble rt = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmax, ymax));
+        V2D_PointDouble rb = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmax, ymin));
+
+                V2D_RectangleDouble window = new V2D_RectangleDouble(lb, lt, rt, rb);
         UniverseDouble universe = new UniverseDouble(window.getEnvelope());
         ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
 
@@ -272,22 +270,11 @@ public class RenderImageDouble {
             Grids_ChunkDoubleFactoryArray dgcdf = new Grids_ChunkDoubleFactoryArray();
             Grids_ChunkDoubleFactorySinglet gcdf = new Grids_ChunkDoubleFactorySinglet(0d);
             Grids_GridDoubleFactory gdf = new Grids_GridDoubleFactory(ge, ioc, gcdf, dgcdf, ncols, ncols);
-            BigRational xMin;
-            BigRational xMax;
-            BigRational yMin;
-            BigRational yMax;
-            if (!gshhs) {
-                xMin = BigRational.valueOf(-ncolsd2);
-                xMax = BigRational.valueOf(ncolsd2);
-                yMin = BigRational.valueOf(-nrowsd2);
-                yMax = BigRational.valueOf(nrowsd2);
-            } else {
-                xMin = BigRational.valueOf((-ncolsd3 * m));
-                xMax = BigRational.valueOf((ncolssncolsd3 * m));
-                yMin = BigRational.valueOf((-nrowsd2 * m));
-                yMax = BigRational.valueOf((nrowsd2 * m));
-            }
-            BigRational cellsize = BigRational.valueOf(1, m);
+            BigRational xMin = BigRational.valueOf(xmin);
+            BigRational xMax = BigRational.valueOf(xmax);
+            BigRational yMin = BigRational.valueOf(ymin);
+            BigRational yMax = BigRational.valueOf(ymax);
+            BigRational cellsize = BigRational.valueOf(1);
             Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
             grid = gdf.create(nrows, ncols, dimensions);
             if (addGrid) {
@@ -326,7 +313,12 @@ public class RenderImageDouble {
         boolean drawPolygons = true;
         //boolean drawPolygons = false;
         boolean drawPolygonsNoInternalHoles = true;
-        int pp = 3;
+        int pp;
+        if (gshhs) {
+            pp = 3;
+        } else {
+            pp = 1;
+        }
         switch (pp) {
             case 0 ->
                 addPolygons0(universe, env, epsilon);
@@ -675,22 +667,49 @@ public class RenderImageDouble {
      * @return The ids of the original triangles that are intersected.
      */
     public static void addPolygons1(UniverseDouble universe, V2D_EnvironmentDouble env, double epsilon) {
-        V2D_PointDouble[] pts = new V2D_PointDouble[14];
-        pts[0] = new V2D_PointDouble(env, -30d, -30d);
-        pts[1] = new V2D_PointDouble(env, -20d, 0d);
-        pts[2] = new V2D_PointDouble(env, -30d, 30d);
-        pts[3] = new V2D_PointDouble(env, -20d, 25d);
-        pts[4] = new V2D_PointDouble(env, -15d, 20d);
-        pts[5] = new V2D_PointDouble(env, -10d, 24d);
-        pts[6] = new V2D_PointDouble(env, 0d, 20d);
-        pts[7] = new V2D_PointDouble(env, 10d, 24d);
-        pts[8] = new V2D_PointDouble(env, 15d, 20d);
-        pts[9] = new V2D_PointDouble(env, 20d, 25d);
-        pts[10] = new V2D_PointDouble(env, 30d, 30d);
-        pts[11] = new V2D_PointDouble(env, 20d, 0d);
-        pts[12] = new V2D_PointDouble(env, 30d, -30d);
-        pts[13] = new V2D_PointDouble(env, 0d, -20d);
-        V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(pts, epsilon);
+        //V2D_PointDouble[] pts = new V2D_PointDouble[27];
+        ArrayList<V2D_PointDouble> pts = new ArrayList<>();
+        pts.add(new V2D_PointDouble(env, -30d, -30d));
+        
+        pts.add(new V2D_PointDouble(env, -25d, -20d));
+        pts.add(new V2D_PointDouble(env, -20d, -15d));
+        pts.add(new V2D_PointDouble(env, -24d, -10d));
+        pts.add(new V2D_PointDouble(env, -20d, 0d));
+        pts.add(new V2D_PointDouble(env, -24d, 10d));
+        pts.add(new V2D_PointDouble(env, -20d, 15d));
+        pts.add(new V2D_PointDouble(env, -25d, 20d));
+
+        pts.add(new V2D_PointDouble(env, -30d, 30d));
+
+        pts.add(new V2D_PointDouble(env, -20d, 25d));
+        pts.add(new V2D_PointDouble(env, -15d, 20d));
+        pts.add(new V2D_PointDouble(env, -10d, 24d));
+        pts.add(new V2D_PointDouble(env, 0d, 20d));
+        pts.add(new V2D_PointDouble(env, 10d, 24d));
+        pts.add(new V2D_PointDouble(env, 15d, 20d));
+        pts.add(new V2D_PointDouble(env, 20d, 25d));
+
+        pts.add(new V2D_PointDouble(env, 30d, 30d));
+
+        pts.add(new V2D_PointDouble(env, 25d, 20d));
+        pts.add(new V2D_PointDouble(env, 20d, 15d));
+        pts.add(new V2D_PointDouble(env, 24d, 10d));
+        pts.add(new V2D_PointDouble(env, 20d, 0d));
+        pts.add(new V2D_PointDouble(env, 24d, -10d));
+        pts.add(new V2D_PointDouble(env, 20d, -15d));
+        pts.add(new V2D_PointDouble(env, 25d, -20d));
+        
+        pts.add(new V2D_PointDouble(env, 30d, -30d));
+        
+        pts.add(new V2D_PointDouble(env, 20d, -25d));
+        pts.add(new V2D_PointDouble(env, 15d, -20d));
+        pts.add(new V2D_PointDouble(env, 10d, -24d));
+        pts.add(new V2D_PointDouble(env, 0d, -20d));
+        pts.add(new V2D_PointDouble(env, -10d, -24d));
+        pts.add(new V2D_PointDouble(env, -15d, -20d));
+        pts.add(new V2D_PointDouble(env, -20d, -25d));
+        
+        V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(pts.toArray(V2D_PointDouble[]::new), epsilon);
         universe.addPolygonNoInternalHoles(polygon);
     }
 
@@ -722,20 +741,34 @@ public class RenderImageDouble {
         HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
         // Hole Points
         V2D_PointDouble[] hole_pts = new V2D_PointDouble[14];
-        hole_pts[0] = new V2D_PointDouble(env, -15d, -15d);
-        hole_pts[1] = new V2D_PointDouble(env, -10d, 0d);
-        hole_pts[2] = new V2D_PointDouble(env, -15d, 15d);
-        hole_pts[3] = new V2D_PointDouble(env, -10d, 12.5d);
-        hole_pts[4] = new V2D_PointDouble(env, -7.5d, 10d);
-        hole_pts[5] = new V2D_PointDouble(env, -5d, 12d);
-        hole_pts[6] = new V2D_PointDouble(env, 0d, 10d);
-        hole_pts[7] = new V2D_PointDouble(env, 5d, 12d);
-        hole_pts[8] = new V2D_PointDouble(env, 7.5d, 10d);
-        hole_pts[9] = new V2D_PointDouble(env, 10d, 12.5d);
-        hole_pts[10] = new V2D_PointDouble(env, 15d, 15d);
-        hole_pts[11] = new V2D_PointDouble(env, 10d, 0d);
-        hole_pts[12] = new V2D_PointDouble(env, 15d, -15d);
-        hole_pts[13] = new V2D_PointDouble(env, 0d, -10d);
+//        hole_pts[0] = new V2D_PointDouble(env, -15d, -15d);
+//        hole_pts[1] = new V2D_PointDouble(env, -10d, 0d);
+//        hole_pts[2] = new V2D_PointDouble(env, -15d, 15d);
+//        hole_pts[3] = new V2D_PointDouble(env, -10d, 14.5d);
+//        hole_pts[4] = new V2D_PointDouble(env, -7.5d, 10d);
+//        hole_pts[5] = new V2D_PointDouble(env, -5d, 12d);
+//        hole_pts[6] = new V2D_PointDouble(env, 0d, 10d);
+//        hole_pts[7] = new V2D_PointDouble(env, 5d, 12d);
+//        hole_pts[8] = new V2D_PointDouble(env, 7.5d, 10d);
+//        hole_pts[9] = new V2D_PointDouble(env, 10d, 14.5d);
+//        hole_pts[10] = new V2D_PointDouble(env, 15d, 15d);
+//        hole_pts[11] = new V2D_PointDouble(env, 10d, 0d);
+//        hole_pts[12] = new V2D_PointDouble(env, 15d, -15d);
+//        hole_pts[13] = new V2D_PointDouble(env, 0d, -10d);
+        hole_pts[0] = new V2D_PointDouble(env, 0d, 10d);
+        hole_pts[1] = new V2D_PointDouble(env, 5d, 12d);
+        hole_pts[2] = new V2D_PointDouble(env, 7.5d, 10d);
+        hole_pts[3] = new V2D_PointDouble(env, 10d, 14.5d);
+        hole_pts[4] = new V2D_PointDouble(env, 15d, 15d);
+        hole_pts[5] = new V2D_PointDouble(env, 10d, 0d);
+        hole_pts[6] = new V2D_PointDouble(env, 15d, -15d);
+        hole_pts[7] = new V2D_PointDouble(env, 0d, -10d);
+        hole_pts[8] = new V2D_PointDouble(env, -15d, -15d);
+        hole_pts[9] = new V2D_PointDouble(env, -10d, 0d);
+        hole_pts[10] = new V2D_PointDouble(env, -15d, 15d);
+        hole_pts[11] = new V2D_PointDouble(env, -10d, 14.5d);
+        hole_pts[12] = new V2D_PointDouble(env, -7.5d, 10d);
+        hole_pts[13] = new V2D_PointDouble(env, -5d, 12d);
         internalHoles.put(internalHoles.size(), new V2D_PolygonNoInternalHolesDouble(hole_pts, epsilon));
         V2D_PolygonDouble polygon = new V2D_PolygonDouble(pts, internalHoles, epsilon);
         universe.addPolygon(polygon, Color.lightGray, Color.red, Color.blue);
@@ -1037,7 +1070,17 @@ public class RenderImageDouble {
             maxc = ncols - 1;
         }
         for (int r = minr; r <= maxr; r++) {
+            
+            if (r == 53) {
+                int debug = 1;
+            }
+                
             for (int c = minc; c <= maxc; c++) {
+                
+                
+            if (c == 85) {
+                int debug = 1;
+            }
                 V2D_RectangleDouble pixel = getPixel(r, c);
                 if (ch.isIntersectedBy(pixel, epsilon)) {
                     if (poly.isIntersectedBy(pixel, epsilon)) {
@@ -1092,7 +1135,18 @@ public class RenderImageDouble {
             maxc = ncols - 1;
         }
         for (int r = minr; r <= maxr; r++) {
+            
+            if (r == 40) {
+                int debug = 1;
+            }
+                
             for (int c = minc; c <= maxc; c++) {
+                
+                
+            if (c == 125) {
+                int debug = 1;
+            }
+            
                 V2D_RectangleDouble pixel = getPixel(r, c);
                 if (ch.isIntersectedBy(pixel, epsilon)) {
                     if (poly.isIntersectedBy(pixel, epsilon)) {
