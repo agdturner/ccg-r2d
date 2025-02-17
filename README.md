@@ -47,15 +47,15 @@ Two rotated triangles with a four triangle intersection:
 
 ## Polygon
 
-Polygon that is not a convex hull with a darker outline:
+Polygon that is not a convex hull with a darker outline. The external holes (parts between the convex hull and the polygon edge are all convex hulls):
 
 <img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons0.png" />
 
-Polygon that is not a convex hull with a darker outline and with a polygonal hole:
+Polygon that is not a convex hull with an external hole that is not a convex hull, but a polygon:
 
 <img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons1.png" />
 
-Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue:
+Polygon with a polygon internal hole. The external edge of the polygon is coloured red and the edge of the hole is coloured blue (Currently there is an issue with this as there are some pixels coloured grey on the wron side of the blue!):
 
 <img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2.png" />
 
@@ -63,8 +63,13 @@ GSHHS low resolution land/sea polygons. The heirarchy is ignored. The image show
 
 <img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_ch.png" />
 
+GSHHS low resolution land/sea polygons. (Although some parts of this look right, some of it does not!):
+
+<img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3.png" />
+
 ## Development plans/ideas
-- Generate some more example renderings of geographical data.
+- Fix issues.
+- Generate some more example renderings of geographical data:
   - [Global Self-Consistent Hierarchical High-Resolution Shoreline (GSHHS) data](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/)
     - [GSHHG-GMT](https://github.com/GenericMappingTools/gshhg-gmt)
   - Surface elevation
