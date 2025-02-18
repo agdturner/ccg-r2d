@@ -40,13 +40,13 @@ public class GSHHG {
      * @param scale The scale to multiply x coordinate values by.
      * @param oom The Order of Magnitude for the precision.
      * @param rm The RoundingMode for any rounding.
-    */
+     */
     public GSHHG(Path p, V2D_Environment env, int scale, int oom, RoundingMode rm) {
 
         polygons = new HashMap<>();
 
         /**
-         * For looking up polygons from their id. Key are id, values are 
+         * For looking up polygons from their id. Key are id, values are
          * position in collection.
          */
         HashMap<Integer, Integer> lookup = new HashMap<>();
@@ -55,7 +55,7 @@ public class GSHHG {
          * For storing the collection of contained polygons.
          */
         HashSet<Integer> contained = new HashSet<>();
-        
+
         try {
             int xmin = Integer.MAX_VALUE;
             int ymin = Integer.MAX_VALUE;
@@ -80,7 +80,7 @@ public class GSHHG {
                     * int area_full; Area of original full-resolution polygon in 1/10 km^2
                     * int container; Id of container polygon that encloses this polygon (-1 if none)
                     * int ancestor; Id of ancestor polygon in the full resolution set that was the source of this polygon (-1 if none)
-                    */
+                     */
                     int id = ByteBuffer.wrap(data).getInt();
                     System.out.println("Creating Polygon id=" + id);
                     int n = in.readInt();
@@ -135,7 +135,7 @@ public class GSHHG {
                             x0 = x1;
                             y0 = y1;
                             x1 = in.readInt();
-                            y1 = in.readInt(); 
+                            y1 = in.readInt();
                             if (x0 > 180000000 && x1 < 180000000) {
                                 //System.out.println("Crossleft i = " + i);
                                 x1 = x1 + 360000000;
@@ -151,29 +151,31 @@ public class GSHHG {
                             ymax = Math.max(ymax, y1);
                             //externalEdges.put(externalEdges.size(), new V2D_LineSegment(points[i - 1], points[i], oom, rm));
                         }
-                        try {
-                            V2D_PolygonNoInternalHoles polygon = new V2D_PolygonNoInternalHoles(points, oom, rm);
-                            if (container == -1 || contained.contains(container)) {
-                                HashMap<Integer, V2D_PolygonNoInternalHoles> internalHoles = new HashMap<>();
-                                int id2 = polygons.size();
-                                lookup.put(id, id2);
-                                polygons.put(id2, new V2D_Polygon(polygon, oom, rm));
-                            } else {
-                                int id2 = lookup.get(container);
-                                if (polygons.containsKey(id2)) {
-                                    V2D_Polygon containerPolygon = polygons.get(container);
-                                    containerPolygon.internalHoles.put(containerPolygon.internalHoles.size(), polygon);
-                                    contained.add(id);
+                        if (x1 != x00) {
+                            // This happens with the antarctic polygon.
+                            int debug = 1;
+                        } else {
+                            try {
+                                V2D_PolygonNoInternalHoles polygon = new V2D_PolygonNoInternalHoles(points, oom, rm);
+                                if (container == -1 || contained.contains(container)) {
+                                    HashMap<Integer, V2D_PolygonNoInternalHoles> internalHoles = new HashMap<>();
+                                    int id2 = polygons.size();
+                                    lookup.put(id, id2);
+                                    polygons.put(id2, new V2D_Polygon(polygon, oom, rm));
                                 } else {
-                                    System.out.println("Container polygon not yet formulated!");
-                                    // Store the polygon to be added as and when...
+                                    int id2 = lookup.get(container);
+                                    if (polygons.containsKey(id2)) {
+                                        V2D_Polygon containerPolygon = polygons.get(container);
+                                        containerPolygon.internalHoles.put(containerPolygon.internalHoles.size(), polygon);
+                                        contained.add(id);
+                                    } else {
+                                        System.out.println("Container polygon not yet formulated!");
+                                        // Store the polygon to be added as and when...
+                                    }
                                 }
+                            } catch (Exception e) {
+                                int debug = 1;
                             }
-                        } catch (Exception e) {
-                            int debug = 1;
-                        }
-                        if (x1 != x00 || y1 != y00) {
-                            int debug = 1;
                         }
                     }
                     data = in.readNBytes(4);

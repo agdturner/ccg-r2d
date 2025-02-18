@@ -232,7 +232,7 @@ public class RenderImageDouble {
             nrows = 150 * scale;
             ncols = 150 * scale;
         } else {
-            scale = 1;
+            scale = 10;
             nrows = 180 * scale;
             ncols = 540 * scale;
         }
@@ -587,7 +587,7 @@ public class RenderImageDouble {
     }
 
     /**
-     * Adds two triangles and interects these adding the triangular intersecting
+     * Adds two triangles and intersects these adding the triangular intersecting
      * parts that form a diamond.
      *
      * @param universe
@@ -616,7 +616,7 @@ public class RenderImageDouble {
     }
 
     /**
-     * Adds two triangles and interects these adding the triangular intersecting
+     * Adds two triangles and intersects these adding the triangular intersecting
      * parts that form a hexagon.
      *
      * @param universe

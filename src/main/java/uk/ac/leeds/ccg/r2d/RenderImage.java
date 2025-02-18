@@ -668,22 +668,42 @@ public class RenderImage {
      * @return The ids of the original triangles that are intersected.
      */
     public static void addPolygons1(Universe universe, V2D_Environment env, int oom, RoundingMode rm) {
-        V2D_Point[] pts = new V2D_Point[14];
-        pts[0] = new V2D_Point(env, -30d, -30d);
-        pts[1] = new V2D_Point(env, -20d, 0d);
-        pts[2] = new V2D_Point(env, -30d, 30d);
-        pts[3] = new V2D_Point(env, -20d, 25d);
-        pts[4] = new V2D_Point(env, -15d, 20d);
-        pts[5] = new V2D_Point(env, -10d, 24d);
-        pts[6] = new V2D_Point(env, 0d, 20d);
-        pts[7] = new V2D_Point(env, 10d, 24d);
-        pts[8] = new V2D_Point(env, 15d, 20d);
-        pts[9] = new V2D_Point(env, 20d, 25d);
-        pts[10] = new V2D_Point(env, 30d, 30d);
-        pts[11] = new V2D_Point(env, 20d, 0d);
-        pts[12] = new V2D_Point(env, 30d, -30d);
-        pts[13] = new V2D_Point(env, 0d, -20d);
-        V2D_PolygonNoInternalHoles polygon = new V2D_PolygonNoInternalHoles(pts, oom, rm);
+        ArrayList<V2D_Point> pts = new ArrayList<>();
+        pts.add(new V2D_Point(env, -30d, -30d));
+        pts.add(new V2D_Point(env, -25d, -20d));
+        pts.add(new V2D_Point(env, -20d, -15d));
+        pts.add(new V2D_Point(env, -24d, -10d));
+        pts.add(new V2D_Point(env, -20d, 0d));
+        pts.add(new V2D_Point(env, -24d, 10d));
+        pts.add(new V2D_Point(env, -20d, 15d));
+        pts.add(new V2D_Point(env, -25d, 20d));
+        pts.add(new V2D_Point(env, -30d, 30d));
+        pts.add(new V2D_Point(env, -20d, 25d));
+        pts.add(new V2D_Point(env, -15d, 20d));
+        pts.add(new V2D_Point(env, -10d, 24d));
+        pts.add(new V2D_Point(env, 0d, 20d));
+        pts.add(new V2D_Point(env, 10d, 24d));
+        pts.add(new V2D_Point(env, 15d, 20d));
+        pts.add(new V2D_Point(env, 20d, 25d));
+        pts.add(new V2D_Point(env, 30d, 30d));
+        pts.add(new V2D_Point(env, 25d, 20d));
+        pts.add(new V2D_Point(env, 20d, 15d));
+        pts.add(new V2D_Point(env, 24d, 10d));
+        pts.add(new V2D_Point(env, 20d, 0d));
+        pts.add(new V2D_Point(env, 24d, -10d));
+        pts.add(new V2D_Point(env, 20d, -15d));
+        pts.add(new V2D_Point(env, 25d, -20d));
+        pts.add(new V2D_Point(env, 30d, -30d));
+        pts.add(new V2D_Point(env, 20d, -25d));
+        pts.add(new V2D_Point(env, 15d, -20d));
+        pts.add(new V2D_Point(env, 10d, -24d));
+        pts.add(new V2D_Point(env, 0d, -20d));
+        pts.add(new V2D_Point(env, -10d, -24d));
+        pts.add(new V2D_Point(env, -15d, -20d));
+        pts.add(new V2D_Point(env, -20d, -25d));
+        V2D_PolygonNoInternalHoles polygon;
+        polygon = new V2D_PolygonNoInternalHoles(
+                pts.toArray(V2D_Point[]::new), oom, rm);
         universe.addPolygonNoInternalHoles(polygon, oom, rm);
     }
 
@@ -697,41 +717,82 @@ public class RenderImage {
      */
     public static void addPolygons2(Universe universe, V2D_Environment env, int oom, RoundingMode rm) {
         // Outer points
-        V2D_Point[] pts = new V2D_Point[14];
-        pts[0] = new V2D_Point(env, -30d, -30d);
-        pts[1] = new V2D_Point(env, -20d, 0d);
-        pts[2] = new V2D_Point(env, -30d, 30d);
-        pts[3] = new V2D_Point(env, -20d, 25d);
-        pts[4] = new V2D_Point(env, -15d, 20d);
-        pts[5] = new V2D_Point(env, -10d, 24d);
-        pts[6] = new V2D_Point(env, 0d, 20d);
-        pts[7] = new V2D_Point(env, 10d, 24d);
-        pts[8] = new V2D_Point(env, 15d, 20d);
-        pts[9] = new V2D_Point(env, 20d, 25d);
-        pts[10] = new V2D_Point(env, 30d, 30d);
-        pts[11] = new V2D_Point(env, 20d, 0d);
-        pts[12] = new V2D_Point(env, 30d, -30d);
-        pts[13] = new V2D_Point(env, 0d, -20d);
+        ArrayList<V2D_Point> pts = new ArrayList<>();
+        pts.add(new V2D_Point(env, -30d, -30d));
+        pts.add(new V2D_Point(env, -25d, -20d));
+        pts.add(new V2D_Point(env, -20d, -15d));
+        pts.add(new V2D_Point(env, -24d, -10d));
+        pts.add(new V2D_Point(env, -20d, 0d));
+        pts.add(new V2D_Point(env, -24d, 10d));
+        pts.add(new V2D_Point(env, -20d, 15d));
+        pts.add(new V2D_Point(env, -25d, 20d));
+        pts.add(new V2D_Point(env, -30d, 30d));
+        pts.add(new V2D_Point(env, -20d, 25d));
+        pts.add(new V2D_Point(env, -15d, 20d));
+        pts.add(new V2D_Point(env, -10d, 24d));
+        pts.add(new V2D_Point(env, 0d, 20d));
+        pts.add(new V2D_Point(env, 10d, 24d));
+        pts.add(new V2D_Point(env, 15d, 20d));
+        pts.add(new V2D_Point(env, 20d, 25d));
+        pts.add(new V2D_Point(env, 30d, 30d));
+        pts.add(new V2D_Point(env, 25d, 20d));
+        pts.add(new V2D_Point(env, 20d, 15d));
+        pts.add(new V2D_Point(env, 24d, 10d));
+        pts.add(new V2D_Point(env, 20d, 0d));
+        pts.add(new V2D_Point(env, 24d, -10d));
+        pts.add(new V2D_Point(env, 20d, -15d));
+        pts.add(new V2D_Point(env, 25d, -20d));
+        pts.add(new V2D_Point(env, 30d, -30d));
+        pts.add(new V2D_Point(env, 20d, -25d));
+        pts.add(new V2D_Point(env, 15d, -20d));
+        pts.add(new V2D_Point(env, 10d, -24d));
+        pts.add(new V2D_Point(env, 0d, -20d));
+        pts.add(new V2D_Point(env, -10d, -24d));
+        pts.add(new V2D_Point(env, -15d, -20d));
+        pts.add(new V2D_Point(env, -20d, -25d));
         // Internal Holes
         HashMap<Integer, V2D_PolygonNoInternalHoles> internalHoles = new HashMap<>();
         // Hole Points
-        V2D_Point[] hole_pts = new V2D_Point[14];
-        hole_pts[0] = new V2D_Point(env, -15d, -15d);
-        hole_pts[1] = new V2D_Point(env, -10d, 0d);
-        hole_pts[2] = new V2D_Point(env, -15d, 15d);
-        hole_pts[3] = new V2D_Point(env, -10d, 12.5d);
-        hole_pts[4] = new V2D_Point(env, -7.5d, 10d);
-        hole_pts[5] = new V2D_Point(env, -5d, 12d);
-        hole_pts[6] = new V2D_Point(env, 0d, 10d);
-        hole_pts[7] = new V2D_Point(env, 5d, 12d);
-        hole_pts[8] = new V2D_Point(env, 7.5d, 10d);
-        hole_pts[9] = new V2D_Point(env, 10d, 12.5d);
-        hole_pts[10] = new V2D_Point(env, 15d, 15d);
-        hole_pts[11] = new V2D_Point(env, 10d, 0d);
-        hole_pts[12] = new V2D_Point(env, 15d, -15d);
-        hole_pts[13] = new V2D_Point(env, 0d, -10d);
-        internalHoles.put(internalHoles.size(), new V2D_PolygonNoInternalHoles(hole_pts, oom, rm));
-        V2D_Polygon polygon = new V2D_Polygon(pts, internalHoles, oom, rm);
+        ArrayList<V2D_Point> hole_pts = new ArrayList<>();
+        hole_pts.add(new V2D_Point(env, -15d, -15d));
+        hole_pts.add(new V2D_Point(env, -12.5d, -10d));
+        hole_pts.add(new V2D_Point(env, -10d, -7.5d));
+        hole_pts.add(new V2D_Point(env, -12d, -5d));
+        hole_pts.add(new V2D_Point(env, -10d, 0d));
+        hole_pts.add(new V2D_Point(env, -12d, 5d));
+        hole_pts.add(new V2D_Point(env, -10d, 7.5d));
+        hole_pts.add(new V2D_Point(env, -12.5d, 10d));
+        hole_pts.add(new V2D_Point(env, -15d, 15d));
+        hole_pts.add(new V2D_Point(env, -10d, 12.5d));
+        hole_pts.add(new V2D_Point(env, -7.5d, 10d));
+        hole_pts.add(new V2D_Point(env, -5d, 12d));
+        hole_pts.add(new V2D_Point(env, 0d, 10d));
+        hole_pts.add(new V2D_Point(env, 5d, 12d));
+        hole_pts.add(new V2D_Point(env, 7.5d, 10d));
+        hole_pts.add(new V2D_Point(env, 10d, 12.5d));
+        hole_pts.add(new V2D_Point(env, 15d, 15d));
+        hole_pts.add(new V2D_Point(env, 12.5d, 10d));
+        hole_pts.add(new V2D_Point(env, 10d, 7.5d));
+        hole_pts.add(new V2D_Point(env, 12d, 5d));
+        hole_pts.add(new V2D_Point(env, 10d, 0d));
+        hole_pts.add(new V2D_Point(env, 12d, -5d));
+        hole_pts.add(new V2D_Point(env, 10d, -7.5d));
+        hole_pts.add(new V2D_Point(env, 12.5d, -10d));
+        hole_pts.add(new V2D_Point(env, 15d, -15d));
+        hole_pts.add(new V2D_Point(env, 10d, -12.5d));
+        hole_pts.add(new V2D_Point(env, 7.5d, -10d));
+        hole_pts.add(new V2D_Point(env, 5d, -12d));
+        hole_pts.add(new V2D_Point(env, 0d, -10d));
+        hole_pts.add(new V2D_Point(env, -5d, -12d));
+        hole_pts.add(new V2D_Point(env, -7.5d, -10d));
+        hole_pts.add(new V2D_Point(env, -10d, -12.5d));
+        internalHoles.put(internalHoles.size(), 
+                new V2D_PolygonNoInternalHoles(
+                        hole_pts.toArray(V2D_Point[]::new), oom, rm));
+        V2D_Polygon polygon = new V2D_Polygon(
+                new V2D_PolygonNoInternalHoles(
+                pts.toArray(V2D_Point[]::new), oom, rm), 
+                internalHoles, oom, rm);
         universe.addPolygon(polygon, oom, rm, Color.lightGray, Color.red, Color.blue);
     }
 
