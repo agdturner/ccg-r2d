@@ -34,6 +34,13 @@ public class GSHHG {
 
     public HashMap<Integer, V2D_Polygon> polygons;
 
+    /**
+     * @param p The path to the GSHHS file.
+     * @param env The environment.
+     * @param scale The scale to multiply x coordinate values by.
+     * @param oom The Order of Magnitude for the precision.
+     * @param rm The RoundingMode for any rounding.
+    */
     public GSHHG(Path p, V2D_Environment env, int scale, int oom, RoundingMode rm) {
 
         polygons = new HashMap<>();
@@ -98,8 +105,10 @@ public class GSHHG {
                     System.out.println("ancestor=" + ancestor);
                     V2D_Point[] points = new V2D_Point[n];
                     //HashMap<Integer, V2D_LineSegment> externalEdges = new HashMap<>();
-                    int x0 = in.readInt();
-                    int y0 = in.readInt();
+                    int x00 = in.readInt();
+                    int y00 = in.readInt();
+                    int x0 = x00;
+                    int y0 = y00;
                     if (n > 1) {
                         points[0] = new V2D_Point(env, BigRational.valueOf(x0 * scale, 1000000), BigRational.valueOf(y0 * scale, 1000000));
                         xmin = Math.min(xmin, x0);
@@ -125,7 +134,6 @@ public class GSHHG {
                         for (int i = 2; i < n; i++) {
                             x0 = x1;
                             y0 = y1;
-                            points[0] = points[1];
                             x1 = in.readInt();
                             y1 = in.readInt(); 
                             if (x0 > 180000000 && x1 < 180000000) {
@@ -162,6 +170,9 @@ public class GSHHG {
                                 }
                             }
                         } catch (Exception e) {
+                            int debug = 1;
+                        }
+                        if (x1 != x00 || y1 != y00) {
                             int debug = 1;
                         }
                     }

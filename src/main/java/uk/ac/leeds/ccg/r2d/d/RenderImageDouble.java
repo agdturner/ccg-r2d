@@ -226,12 +226,15 @@ public class RenderImageDouble {
         //boolean gshhs = true;
         int nrows;
         int ncols;
+        int scale;
         if (!gshhs) {
-            nrows = 150;
-            ncols = 150;
+            scale = 1;
+            nrows = 150 * scale;
+            ncols = 150 * scale;
         } else {
-            nrows = 180;
-            ncols = 540;
+            scale = 1;
+            nrows = 180 * scale;
+            ncols = 540 * scale;
         }
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;
@@ -317,7 +320,7 @@ public class RenderImageDouble {
         if (gshhs) {
             pp = 3;
         } else {
-            pp = 1;
+            pp = 2;
         }
         switch (pp) {
             case 0 ->
@@ -327,7 +330,7 @@ public class RenderImageDouble {
             case 2 ->
                 addPolygons2(universe, env, epsilon);
             case 3 ->
-                addPolygons3(universe, env, epsilon);
+                addPolygons3(universe, env, scale, epsilon);
         }
 
         // Draw circumcircles
@@ -347,7 +350,7 @@ public class RenderImageDouble {
         if (addGrid) {
             fname += "_grid";
         }
-        ri.output = Paths.get(dir.toString(), fname + ".png");
+        ri.output = Paths.get(dir.toString(), fname + "_nrows" + nrows + "_ncols" + ncols + ".png");
         System.out.println(ri.output.toString());
         ri.run();
     }
@@ -667,10 +670,8 @@ public class RenderImageDouble {
      * @return The ids of the original triangles that are intersected.
      */
     public static void addPolygons1(UniverseDouble universe, V2D_EnvironmentDouble env, double epsilon) {
-        //V2D_PointDouble[] pts = new V2D_PointDouble[27];
         ArrayList<V2D_PointDouble> pts = new ArrayList<>();
         pts.add(new V2D_PointDouble(env, -30d, -30d));
-        
         pts.add(new V2D_PointDouble(env, -25d, -20d));
         pts.add(new V2D_PointDouble(env, -20d, -15d));
         pts.add(new V2D_PointDouble(env, -24d, -10d));
@@ -678,9 +679,7 @@ public class RenderImageDouble {
         pts.add(new V2D_PointDouble(env, -24d, 10d));
         pts.add(new V2D_PointDouble(env, -20d, 15d));
         pts.add(new V2D_PointDouble(env, -25d, 20d));
-
         pts.add(new V2D_PointDouble(env, -30d, 30d));
-
         pts.add(new V2D_PointDouble(env, -20d, 25d));
         pts.add(new V2D_PointDouble(env, -15d, 20d));
         pts.add(new V2D_PointDouble(env, -10d, 24d));
@@ -688,9 +687,7 @@ public class RenderImageDouble {
         pts.add(new V2D_PointDouble(env, 10d, 24d));
         pts.add(new V2D_PointDouble(env, 15d, 20d));
         pts.add(new V2D_PointDouble(env, 20d, 25d));
-
         pts.add(new V2D_PointDouble(env, 30d, 30d));
-
         pts.add(new V2D_PointDouble(env, 25d, 20d));
         pts.add(new V2D_PointDouble(env, 20d, 15d));
         pts.add(new V2D_PointDouble(env, 24d, 10d));
@@ -698,9 +695,7 @@ public class RenderImageDouble {
         pts.add(new V2D_PointDouble(env, 24d, -10d));
         pts.add(new V2D_PointDouble(env, 20d, -15d));
         pts.add(new V2D_PointDouble(env, 25d, -20d));
-        
         pts.add(new V2D_PointDouble(env, 30d, -30d));
-        
         pts.add(new V2D_PointDouble(env, 20d, -25d));
         pts.add(new V2D_PointDouble(env, 15d, -20d));
         pts.add(new V2D_PointDouble(env, 10d, -24d));
@@ -708,8 +703,9 @@ public class RenderImageDouble {
         pts.add(new V2D_PointDouble(env, -10d, -24d));
         pts.add(new V2D_PointDouble(env, -15d, -20d));
         pts.add(new V2D_PointDouble(env, -20d, -25d));
-        
-        V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(pts.toArray(V2D_PointDouble[]::new), epsilon);
+        V2D_PolygonNoInternalHolesDouble polygon;
+        polygon = new V2D_PolygonNoInternalHolesDouble(
+                pts.toArray(V2D_PointDouble[]::new), epsilon);
         universe.addPolygonNoInternalHoles(polygon);
     }
 
@@ -720,65 +716,93 @@ public class RenderImageDouble {
      * @param epsilon
      * @return The ids of the original triangles that are intersected.
      */
-    public static void addPolygons2(UniverseDouble universe, V2D_EnvironmentDouble env, double epsilon) {
+    public static void addPolygons2(UniverseDouble universe, 
+            V2D_EnvironmentDouble env, double epsilon) {
         // Outer points
-        V2D_PointDouble[] pts = new V2D_PointDouble[14];
-        pts[0] = new V2D_PointDouble(env, -30d, -30d);
-        pts[1] = new V2D_PointDouble(env, -20d, 0d);
-        pts[2] = new V2D_PointDouble(env, -30d, 30d);
-        pts[3] = new V2D_PointDouble(env, -20d, 25d);
-        pts[4] = new V2D_PointDouble(env, -15d, 20d);
-        pts[5] = new V2D_PointDouble(env, -10d, 24d);
-        pts[6] = new V2D_PointDouble(env, 0d, 20d);
-        pts[7] = new V2D_PointDouble(env, 10d, 24d);
-        pts[8] = new V2D_PointDouble(env, 15d, 20d);
-        pts[9] = new V2D_PointDouble(env, 20d, 25d);
-        pts[10] = new V2D_PointDouble(env, 30d, 30d);
-        pts[11] = new V2D_PointDouble(env, 20d, 0d);
-        pts[12] = new V2D_PointDouble(env, 30d, -30d);
-        pts[13] = new V2D_PointDouble(env, 0d, -20d);
+        ArrayList<V2D_PointDouble> pts = new ArrayList<>();
+        pts.add(new V2D_PointDouble(env, -30d, -30d));
+        pts.add(new V2D_PointDouble(env, -25d, -20d));
+        pts.add(new V2D_PointDouble(env, -20d, -15d));
+        pts.add(new V2D_PointDouble(env, -24d, -10d));
+        pts.add(new V2D_PointDouble(env, -20d, 0d));
+        pts.add(new V2D_PointDouble(env, -24d, 10d));
+        pts.add(new V2D_PointDouble(env, -20d, 15d));
+        pts.add(new V2D_PointDouble(env, -25d, 20d));
+        pts.add(new V2D_PointDouble(env, -30d, 30d));
+        pts.add(new V2D_PointDouble(env, -20d, 25d));
+        pts.add(new V2D_PointDouble(env, -15d, 20d));
+        pts.add(new V2D_PointDouble(env, -10d, 24d));
+        pts.add(new V2D_PointDouble(env, 0d, 20d));
+        pts.add(new V2D_PointDouble(env, 10d, 24d));
+        pts.add(new V2D_PointDouble(env, 15d, 20d));
+        pts.add(new V2D_PointDouble(env, 20d, 25d));
+        pts.add(new V2D_PointDouble(env, 30d, 30d));
+        pts.add(new V2D_PointDouble(env, 25d, 20d));
+        pts.add(new V2D_PointDouble(env, 20d, 15d));
+        pts.add(new V2D_PointDouble(env, 24d, 10d));
+        pts.add(new V2D_PointDouble(env, 20d, 0d));
+        pts.add(new V2D_PointDouble(env, 24d, -10d));
+        pts.add(new V2D_PointDouble(env, 20d, -15d));
+        pts.add(new V2D_PointDouble(env, 25d, -20d));
+        pts.add(new V2D_PointDouble(env, 30d, -30d));
+        pts.add(new V2D_PointDouble(env, 20d, -25d));
+        pts.add(new V2D_PointDouble(env, 15d, -20d));
+        pts.add(new V2D_PointDouble(env, 10d, -24d));
+        pts.add(new V2D_PointDouble(env, 0d, -20d));
+        pts.add(new V2D_PointDouble(env, -10d, -24d));
+        pts.add(new V2D_PointDouble(env, -15d, -20d));
+        pts.add(new V2D_PointDouble(env, -20d, -25d));
         // Internal Holes
         HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
         // Hole Points
-        V2D_PointDouble[] hole_pts = new V2D_PointDouble[14];
-//        hole_pts[0] = new V2D_PointDouble(env, -15d, -15d);
-//        hole_pts[1] = new V2D_PointDouble(env, -10d, 0d);
-//        hole_pts[2] = new V2D_PointDouble(env, -15d, 15d);
-//        hole_pts[3] = new V2D_PointDouble(env, -10d, 14.5d);
-//        hole_pts[4] = new V2D_PointDouble(env, -7.5d, 10d);
-//        hole_pts[5] = new V2D_PointDouble(env, -5d, 12d);
-//        hole_pts[6] = new V2D_PointDouble(env, 0d, 10d);
-//        hole_pts[7] = new V2D_PointDouble(env, 5d, 12d);
-//        hole_pts[8] = new V2D_PointDouble(env, 7.5d, 10d);
-//        hole_pts[9] = new V2D_PointDouble(env, 10d, 14.5d);
-//        hole_pts[10] = new V2D_PointDouble(env, 15d, 15d);
-//        hole_pts[11] = new V2D_PointDouble(env, 10d, 0d);
-//        hole_pts[12] = new V2D_PointDouble(env, 15d, -15d);
-//        hole_pts[13] = new V2D_PointDouble(env, 0d, -10d);
-        hole_pts[0] = new V2D_PointDouble(env, 0d, 10d);
-        hole_pts[1] = new V2D_PointDouble(env, 5d, 12d);
-        hole_pts[2] = new V2D_PointDouble(env, 7.5d, 10d);
-        hole_pts[3] = new V2D_PointDouble(env, 10d, 14.5d);
-        hole_pts[4] = new V2D_PointDouble(env, 15d, 15d);
-        hole_pts[5] = new V2D_PointDouble(env, 10d, 0d);
-        hole_pts[6] = new V2D_PointDouble(env, 15d, -15d);
-        hole_pts[7] = new V2D_PointDouble(env, 0d, -10d);
-        hole_pts[8] = new V2D_PointDouble(env, -15d, -15d);
-        hole_pts[9] = new V2D_PointDouble(env, -10d, 0d);
-        hole_pts[10] = new V2D_PointDouble(env, -15d, 15d);
-        hole_pts[11] = new V2D_PointDouble(env, -10d, 14.5d);
-        hole_pts[12] = new V2D_PointDouble(env, -7.5d, 10d);
-        hole_pts[13] = new V2D_PointDouble(env, -5d, 12d);
-        internalHoles.put(internalHoles.size(), new V2D_PolygonNoInternalHolesDouble(hole_pts, epsilon));
-        V2D_PolygonDouble polygon = new V2D_PolygonDouble(pts, internalHoles, epsilon);
+        ArrayList<V2D_PointDouble> hole_pts = new ArrayList<>();
+        hole_pts.add(new V2D_PointDouble(env, -15d, -15d));
+        hole_pts.add(new V2D_PointDouble(env, -12.5d, -10d));
+        hole_pts.add(new V2D_PointDouble(env, -10d, -7.5d));
+        hole_pts.add(new V2D_PointDouble(env, -12d, -5d));
+        hole_pts.add(new V2D_PointDouble(env, -10d, 0d));
+        hole_pts.add(new V2D_PointDouble(env, -12d, 5d));
+        hole_pts.add(new V2D_PointDouble(env, -10d, 7.5d));
+        hole_pts.add(new V2D_PointDouble(env, -12.5d, 10d));
+        hole_pts.add(new V2D_PointDouble(env, -15d, 15d));
+        hole_pts.add(new V2D_PointDouble(env, -10d, 12.5d));
+        hole_pts.add(new V2D_PointDouble(env, -7.5d, 10d));
+        hole_pts.add(new V2D_PointDouble(env, -5d, 12d));
+        hole_pts.add(new V2D_PointDouble(env, 0d, 10d));
+        hole_pts.add(new V2D_PointDouble(env, 5d, 12d));
+        hole_pts.add(new V2D_PointDouble(env, 7.5d, 10d));
+        hole_pts.add(new V2D_PointDouble(env, 10d, 12.5d));
+        hole_pts.add(new V2D_PointDouble(env, 15d, 15d));
+        hole_pts.add(new V2D_PointDouble(env, 12.5d, 10d));
+        hole_pts.add(new V2D_PointDouble(env, 10d, 7.5d));
+        hole_pts.add(new V2D_PointDouble(env, 12d, 5d));
+        hole_pts.add(new V2D_PointDouble(env, 10d, 0d));
+        hole_pts.add(new V2D_PointDouble(env, 12d, -5d));
+        hole_pts.add(new V2D_PointDouble(env, 10d, -7.5d));
+        hole_pts.add(new V2D_PointDouble(env, 12.5d, -10d));
+        hole_pts.add(new V2D_PointDouble(env, 15d, -15d));
+        hole_pts.add(new V2D_PointDouble(env, 10d, -12.5d));
+        hole_pts.add(new V2D_PointDouble(env, 7.5d, -10d));
+        hole_pts.add(new V2D_PointDouble(env, 5d, -12d));
+        hole_pts.add(new V2D_PointDouble(env, 0d, -10d));
+        hole_pts.add(new V2D_PointDouble(env, -5d, -12d));
+        hole_pts.add(new V2D_PointDouble(env, -7.5d, -10d));
+        hole_pts.add(new V2D_PointDouble(env, -10d, -12.5d));
+        internalHoles.put(internalHoles.size(), 
+                new V2D_PolygonNoInternalHolesDouble(
+                        hole_pts.toArray(V2D_PointDouble[]::new), epsilon));
+        V2D_PolygonDouble polygon = new V2D_PolygonDouble(
+                new V2D_PolygonNoInternalHolesDouble(
+                pts.toArray(V2D_PointDouble[]::new), epsilon), 
+                internalHoles, epsilon);
         universe.addPolygon(polygon, Color.lightGray, Color.red, Color.blue);
     }
 
-    public static void addPolygons3(UniverseDouble universe, V2D_EnvironmentDouble env, double epsilon) {
+    public static void addPolygons3(UniverseDouble universe, V2D_EnvironmentDouble env, int scale, double epsilon) {
         Path outDataDir = Paths.get("data", "input", "gshhg-bin-2.3.7");
         Path filepath = Paths.get(outDataDir.toString(), "gshhs_c.b");
         V2D_PointDouble[] points = null;
-        GSHHGDouble gshhg = new GSHHGDouble(filepath, env, epsilon);
+        GSHHGDouble gshhg = new GSHHGDouble(filepath, env, scale, epsilon);
         HashMap<Integer, V2D_PolygonDouble> polygons = gshhg.polygons;
         for (V2D_PolygonDouble p : polygons.values()) {
             universe.addPolygon(p);

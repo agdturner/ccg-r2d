@@ -33,25 +33,27 @@ public class GSHHGDouble {
     public HashMap<Integer, V2D_PolygonDouble> polygons;
 
     /**
-     * 
+     * @param p The path to the GSHHS file.
+     * @param env The environment.
+     * @param scale The scale to multiply x coordinate values by.
      * @param epsilon The tolerance within which two vectors are regarded as
      * equal.
      */
-    public GSHHGDouble(Path p, V2D_EnvironmentDouble env, double epsilon) {
+    public GSHHGDouble(Path p, V2D_EnvironmentDouble env, int scale, double epsilon) {
 
         polygons = new HashMap<>();
 
         /**
-         * For looking up polygons from their id. Key are id, values are 
+         * For looking up polygons from their id. Key are id, values are
          * position in collection.
          */
         HashMap<Integer, Integer> lookup = new HashMap<>();
-        
+
         /**
          * For storing the collection of contained polygons.
          */
         HashSet<Integer> contained = new HashSet<>();
-        
+
         try {
             int xmin = Integer.MAX_VALUE;
             int ymin = Integer.MAX_VALUE;
@@ -76,7 +78,7 @@ public class GSHHGDouble {
                     * int area_full; Area of original full-resolution polygon in 1/10 km^2
                     * int container; Id of container polygon that encloses this polygon (-1 if none)
                     * int ancestor; Id of ancestor polygon in the full resolution set that was the source of this polygon (-1 if none)
-                    */
+                     */
                     int id = ByteBuffer.wrap(data).getInt();
                     System.out.println("Creating Polygon id=" + id);
                     int n = in.readInt();
@@ -101,10 +103,12 @@ public class GSHHGDouble {
                     System.out.println("ancestor=" + ancestor);
                     V2D_PointDouble[] points = new V2D_PointDouble[n];
                     //HashMap<Integer, V2D_LineSegmentDouble> externalEdges = new HashMap<>();
-                    int x0 = in.readInt();
-                    int y0 = in.readInt();
+                    int x00 = in.readInt();
+                    int y00 = in.readInt();
+                    int x0 = x00;
+                    int y0 = y00;
                     if (n > 1) {
-                        points[0] = new V2D_PointDouble(env, (double) x0 / 1000000d, (double) y0 / 1000000d);
+                        points[0] = new V2D_PointDouble(env, (double) (x0 * scale) / 1000000d, (double) (y0 * scale) / 1000000d);
                         xmin = Math.min(xmin, x0);
                         xmax = Math.max(xmax, x0);
                         ymin = Math.min(ymin, y0);
@@ -119,22 +123,19 @@ public class GSHHGDouble {
                             //System.out.println("Crossright i = " + i);
                             x1 = x1 - 360000000;
                         }
-                        points[1] = new V2D_PointDouble(env, (double) x1 / 1000000d, (double) y1 / 1000000d);
+                        points[1] = new V2D_PointDouble(env, (double) (x1 * scale) / 1000000d, (double) (y1 * scale) / 1000000d);
                         xmin = Math.min(xmin, x1);
                         xmax = Math.max(xmax, x1);
                         ymin = Math.min(ymin, y1);
                         ymax = Math.max(ymax, y1);
                         //externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[0], points[1]));
                         for (int i = 2; i < n; i++) {
-                            System.out.println("i=" + i + " out of " + n);
-                            
-                            if (n == 221 && i == 220) {
-                                int debug = 1;
-                            }
-                            
+//                            System.out.println("i=" + i + " out of " + n);
+//                            if (n == 221 && i == 220) {
+//                                int debug = 1;
+//                            }
                             x0 = x1;
                             y0 = y1;
-                            points[0] = points[1];
                             x1 = in.readInt();
                             y1 = in.readInt();
                             if (x0 > 180000000 && x1 < 180000000) {
@@ -145,35 +146,41 @@ public class GSHHGDouble {
                                 //System.out.println("Crossright i = " + i);
                                 x1 = x1 - 360000000;
                             }
-                            points[i] = new V2D_PointDouble(env, (double) x1 / 1000000d, (double) y1 / 1000000d);
+                            points[i] = new V2D_PointDouble(env, (double) (x1 * scale) / 1000000d, (double) (y1 * scale) / 1000000d);
                             xmin = Math.min(xmin, x1);
                             xmax = Math.max(xmax, x1);
                             ymin = Math.min(ymin, y1);
                             ymax = Math.max(ymax, y1);
                             //externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[i - 1], points[i]));
                         }
-                        try {
-                            V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points, epsilon);
-                            if (container == -1 || contained.contains(container)) {
-                                HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
-                                int id2 = polygons.size();
-                                lookup.put(id, id2);
-                                polygons.put(id2, new V2D_PolygonDouble(polygon, epsilon));
-                            } else {
-                                int id2 = lookup.get(container);
-                                if (polygons.containsKey(id2)) {
-                                    V2D_PolygonDouble containerPolygon = polygons.get(id2);
-                                    containerPolygon.internalHoles.put(containerPolygon.internalHoles.size(), polygon);
-                                    contained.add(id);
-                                } else {
-                                    System.out.println("Container polygon not yet formulated!");
-                                    // Store the polygon to be added as and when...
-                                }
-                            }
-                        } catch (Exception e) {
+                        if (x1 != x00) {
+                            // This happens with the antarctic polygon.
                             int debug = 1;
+                        } else {
+                            try {
+                                V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points, epsilon);
+                                if (container == -1 || contained.contains(container)) {
+                                    HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
+                                    int id2 = polygons.size();
+                                    lookup.put(id, id2);
+                                    polygons.put(id2, new V2D_PolygonDouble(polygon, epsilon));
+                                } else {
+                                    int id2 = lookup.get(container);
+                                    if (polygons.containsKey(id2)) {
+                                        V2D_PolygonDouble containerPolygon = polygons.get(id2);
+                                        containerPolygon.internalHoles.put(containerPolygon.internalHoles.size(), polygon);
+                                        contained.add(id);
+                                    } else {
+                                        System.out.println("Container polygon not yet formulated!");
+                                        // Store the polygon to be added as and when...
+                                    }
+                                }
+                            } catch (Exception e) {
+                                int debug = 1;
+                            }
                         }
                     }
+
                     data = in.readNBytes(4);
                     if (data.length == 0) {
                         break;

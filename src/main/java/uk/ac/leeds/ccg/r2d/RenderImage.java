@@ -233,8 +233,8 @@ public class RenderImage {
         int scale;
         if (!gshhs) {
             scale = 1;
-            nrows = 150;
-            ncols = 150;
+            nrows = 150 * scale;
+            ncols = 150 * scale;
         } else {
             scale = 3;
             nrows = 180 * scale;
