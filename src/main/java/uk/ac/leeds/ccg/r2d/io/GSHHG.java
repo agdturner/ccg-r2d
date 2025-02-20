@@ -151,10 +151,10 @@ public class GSHHG {
                             ymax = Math.max(ymax, y1);
                             //externalEdges.put(externalEdges.size(), new V2D_LineSegment(points[i - 1], points[i], oom, rm));
                         }
-                        if (x1 != x00) {
-                            // This happens with the antarctic polygon.
-                            int debug = 1;
-                        } else {
+//                        if (x1 != x00) {
+//                            // This happens with the antarctic polygon.
+//                            int debug = 1;
+//                        } else {
                             try {
                                 V2D_PolygonNoInternalHoles polygon = new V2D_PolygonNoInternalHoles(points, oom, rm);
                                 if (container == -1 || contained.contains(container)) {
@@ -176,7 +176,7 @@ public class GSHHG {
                             } catch (Exception e) {
                                 int debug = 1;
                             }
-                        }
+                        //}
                     }
                     data = in.readNBytes(4);
                     if (data.length == 0) {

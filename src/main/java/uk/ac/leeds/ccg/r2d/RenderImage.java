@@ -236,9 +236,11 @@ public class RenderImage {
             nrows = 150 * scale;
             ncols = 150 * scale;
         } else {
-            scale = 3;
-            nrows = 180 * scale;
-            ncols = 540 * scale;
+            scale = 1;
+            //nrows = 180 * scale;
+            //ncols = 540 * scale;
+            nrows = 165 * scale;
+            ncols = 400 * scale;
         }
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;
@@ -254,8 +256,12 @@ public class RenderImage {
             xmin = -ncolsd2;
             xmax = ncolsd2;
         } else {
-            xmin = -ncolsd3;
-            xmax = ncolssncolsd3;
+//            xmin = -ncolsd3;
+//            xmax = ncolssncolsd3;
+            ymin = -75 * scale;
+            ymax = 90 * scale;
+            xmin = -20 * scale;
+            xmax = 380 * scale;
         }
         V2D_Point lb = new V2D_Point(env, offset, new V2D_Vector(xmin, ymin));
         V2D_Point lt = new V2D_Point(env, offset, new V2D_Vector(xmin, ymax));
@@ -320,7 +326,7 @@ public class RenderImage {
         boolean drawPolygons = true;
         //boolean drawPolygons = false;
         boolean drawPolygonsNoInternalHoles = true;
-        int pp = 2;
+        int pp;
         if (gshhs) {
             pp = 3;
         } else {
@@ -1055,13 +1061,14 @@ public class RenderImage {
      * @param l The polygon to render.
      * @param pix The image.
      */
-    public void renderPolygonNoInternalHoles(PolygonNoInternalHoles polygon, int[] pix) {
+    public void renderPolygonNoInternalHoles(PolygonNoInternalHoles polygon, 
+            int[] pix) {
         V2D_PolygonNoInternalHoles poly = polygon.polygon;
         V2D_ConvexHull ch = poly.getConvexHull(oom, rm);
-        HashMap<Integer, V2D_LineSegment> externalEdges = poly.getExternalEdges();
-        V2D_LineSegment[] externalEdgesArray = new V2D_LineSegment[externalEdges.size()];
-        for (int i = 0; i < externalEdgesArray.length; i++) {
-            externalEdgesArray[i] = externalEdges.get(i);
+        HashMap<Integer, V2D_LineSegment> edges = poly.getEdges(oom, rm);
+        V2D_LineSegment[] edgesArray = new V2D_LineSegment[edges.size()];
+        for (int i = 0; i < edgesArray.length; i++) {
+            edgesArray[i] = edges.get(i);
         }
         V2D_Point[] ePs = ch.getPointsArray(oom, rm);
         // Calculate the min and max row and col.
@@ -1090,11 +1097,11 @@ public class RenderImage {
         for (int r = minr; r <= maxr; r++) {
             for (int c = minc; c <= maxc; c++) {
                 V2D_Rectangle pixel = getPixel(r, c);
-                if (ch.isIntersectedBy(pixel, oom, rm)) {
-                    if (poly.isIntersectedBy(pixel, oom, rm)) {
+                if (ch.intersects(pixel, oom, rm)) {
+                    if (poly.intersects(pixel, oom, rm)) {
                         render(pix, r, c, polygon.color);
                     }
-                    if (pixel.isIntersectedBy(oom, rm, externalEdgesArray)) {
+                    if (pixel.intersects(oom, rm, edgesArray)) {
                         render(pix, r, c, polygon.getColorExternalEdge());
                     }
                 }
@@ -1112,11 +1119,11 @@ public class RenderImage {
     public void renderPolygon(Polygon polygon, int[] pix) {
         V2D_Polygon poly = polygon.polygon;
         V2D_ConvexHull ch = poly.getConvexHull(oom, rm);
-        HashMap<Integer, V2D_LineSegment> externalEdges = poly.getExternalEdges();
-        V2D_LineSegment[] externalEdgesArray = new V2D_LineSegment[externalEdges.size()];
-        for (int i = 0; i < externalEdgesArray.length; i++) {
-            externalEdgesArray[i] = externalEdges.get(i);
-        }
+        HashMap<Integer, V2D_LineSegment> edges = poly.getEdges(oom, rm);
+//        V2D_LineSegment[] edgesArray = new V2D_LineSegment[edges.size()];
+//        for (int i = 0; i < edgesArray.length; i++) {
+//            edgesArray[i] = edges.get(i);
+//        }
         HashMap<Integer, V2D_PolygonNoInternalHoles> internalHoles = poly.internalHoles;
         V2D_Point[] ePs = ch.getPointsArray(oom, rm);
         // Calculate the min and max row and col.
@@ -1145,15 +1152,15 @@ public class RenderImage {
         for (int r = minr; r <= maxr; r++) {
             for (int c = minc; c <= maxc; c++) {
                 V2D_Rectangle pixel = getPixel(r, c);
-                if (ch.isIntersectedBy(pixel, oom, rm)) {
-                    if (poly.isIntersectedBy(pixel, oom, rm)) {
+                if (ch.intersects(pixel, oom, rm)) {
+                    if (poly.intersects(pixel, oom, rm)) {
                         render(pix, r, c, polygon.color);
                     }
-                    if (pixel.isIntersectedBy(oom, rm, externalEdgesArray)) {
+                    if (pixel.intersects(oom, rm, edges.values())) {
                         render(pix, r, c, polygon.getColorExternalEdge());
                     }
                     for (var x : internalHoles.values()) {
-                        if (pixel.isIntersectedBy(oom, rm, x.externalEdges.values())) {
+                        if (pixel.intersects(oom, rm, x.getEdges(oom, rm).values())) {
                             render(pix, r, c, polygon.getColorInternalEdge());
                         }
                     }

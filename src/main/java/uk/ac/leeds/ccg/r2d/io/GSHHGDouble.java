@@ -130,10 +130,9 @@ public class GSHHGDouble {
                         ymax = Math.max(ymax, y1);
                         //externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[0], points[1]));
                         for (int i = 2; i < n; i++) {
-//                            System.out.println("i=" + i + " out of " + n);
-//                            if (n == 221 && i == 220) {
-//                                int debug = 1;
-//                            }
+                            //if (id == 2 || id == 6) {
+                            //    System.out.println("i=" + i + " out of " + n);
+                           // }
                             x0 = x1;
                             y0 = y1;
                             x1 = in.readInt();
@@ -157,7 +156,10 @@ public class GSHHGDouble {
                             // This happens with the antarctic polygon.
                             int debug = 1;
                         } else {
-                            try {
+                           if (id == 2) {
+                            int debug = 1;
+                           }
+                             try {
                                 V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points, epsilon);
                                 if (container == -1 || contained.contains(container)) {
                                     HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
@@ -173,6 +175,7 @@ public class GSHHGDouble {
                                     } else {
                                         System.out.println("Container polygon not yet formulated!");
                                         // Store the polygon to be added as and when...
+                                        int debug = 1;
                                     }
                                 }
                             } catch (Exception e) {
@@ -180,7 +183,8 @@ public class GSHHGDouble {
                             }
                         }
                     }
-
+                    //in.readInt();
+                    //in.readInt();
                     data = in.readNBytes(4);
                     if (data.length == 0) {
                         break;

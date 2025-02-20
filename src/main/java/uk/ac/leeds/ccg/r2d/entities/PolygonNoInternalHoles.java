@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Centre for Computational Geography.
+ * Copyright 2025 Centre for Computational Geography.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@ import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_PolygonNoInternalHoles;
 
 /**
- * For representing a polygon entity.
+ * For representing a polygon with no internal holes. External holes are similar
+ * polygons that share some part of an edge with the convex hull.
  *
  * @author Andy Turner
+ * @version 2.0
  */
 public class PolygonNoInternalHoles extends PolygonNoInternalHolesEntity {
 
