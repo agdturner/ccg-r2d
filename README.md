@@ -9,15 +9,11 @@ The development of these 2D spatial data libraries helps develop these 3D spatia
 
 ## Triangle rotations, colours and circumcircles
 
-One triangle (one colour for the triangle and another for it's edge):
-
-<img alt="One triangle" src="data/output/test/test0.png" />
-
 Three rotated overlapping large triangles (one colour for the triangle and a different colour for each respective edge):
 
 <img alt="Three rotated overlapping large triangles" src="data/output/test/test1.png" />
 
-Multiple small rotated triangles some overlapping with their circumcircle outlines drawn in white (one colour for all triangles and generally a different colour for each respective edge:
+Multiple small rotated triangles some overlapping with their circumcircle outlines drawn in white (one colour for all triangles and a different colour for each respective edge:
 
 <img alt="Multiple small rotated triangles some overlapping with their circumcircle outlines drawn in white" src="data/output/test/test2.png" />
 
@@ -25,13 +21,13 @@ Triangle rotated 48 times with increasing angle (the last triangle draw has just
 
 <img alt="Triangle rotated 48 times with increasing angle" src="data/output/test/test3.png" />
 
-Triangle rotated a bit, then the result rotated a bit 48 times (the last triangle has just one colour for it's edge):
+Triangle rotated a bit, then the result rotated a bit - 48 times (the last triangle has just one colour for it's edge):
 
-<img alt="Triangle rotated a bit, then the result rotated a bit 48 times" src="data/output/test/test4.png" />
+<img alt="Triangle rotated a bit, then the result rotated a bit - 48 times" src="data/output/test/test4.png" />
 
 ## With grids
 
-A triangle on a couple of randomly coloured grids:
+A triangle on a couple of randomly coloured grids (one grid underlies the other, the top grid is located in the upper right of the image):
 
 <img alt="A triangle on a couple of randomly coloured grids" src="data/output/test/test0_grid.png" />
 
@@ -63,9 +59,9 @@ GSHHS low resolution land/sea polygons. The heirarchy is ignored. The image show
 
 <img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_ch.png" />
 
-GSHHS low resolution land/sea polygons. (Although some parts of this look right, some of it does not!):
+GSHHS low resolution land/sea polygons. (This is shifted a bit compared with the image showing the convex hulls):
 
-<img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3.png" />
+<img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_nrows165_ncols400.png" />
 
 ## Development plans/ideas
 - Fix issues.
