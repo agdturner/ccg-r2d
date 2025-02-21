@@ -1,11 +1,7 @@
 # [ccg-r2d](https://github.com/agdturner/ccg-r2d)
 A Java library for rendering 2D Euclidean spatial data using [ccg-v2d](https://github.com/agdturner/ccg-v2d) for vectors and [ccg-grids](https://github.com/agdturner/ccg-grids) for rasters.
 
-Example static renderings of data are shown below.
-
-This library is being used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d). Visualising inputs and outputs of geometrical operationa helps to show that algorithms work.
-
-The development of these 2D spatial data libraries helps develop these 3D spatial data libraries: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d).
+This library is being used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d). Visualising inputs and outputs of geometrical operationa helps to show that algorithms work. The development of the 2D spatial data libraries helps develop these 3D spatial data libraries: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d). Some example static renderings of data are shown below.
 
 ## Triangle rotations, colours and circumcircles
 
@@ -43,28 +39,21 @@ Two rotated triangles with a four triangle intersection:
 
 ## Polygon
 
-Polygon that is not a convex hull with a darker outline. The external holes (parts between the convex hull and the polygon edge are all convex hulls):
+Polygon with a polygon internal hole. The external edge of the polygon is coloured red and the edge of the hole is coloured blue:
 
-<img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons0.png" />
+<img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2_nrows150_ncols150.png" />
 
-Polygon that is not a convex hull with an external hole that is not a convex hull, but a polygon:
-
-<img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons1.png" />
-
-Polygon with a polygon internal hole. The external edge of the polygon is coloured red and the edge of the hole is coloured blue (Currently there is an issue with this as there are some pixels coloured grey on the wron side of the blue!):
-
-<img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2.png" />
-
-GSHHS low resolution land/sea polygons. The heirarchy is ignored. The image shows lighter for the convex hull and darker for the external edges:
+[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons. The heirarchy is ignored. The image shows lighter for the convex hull and darker for the external edges:
 
 <img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_ch.png" />
 
-GSHHS low resolution land/sea polygons. (This is shifted a bit compared with the image showing the convex hulls):
+[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons. (This is shifted a bit compared with the image showing the convex hulls):
 
 <img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_nrows165_ncols400.png" />
 
 ## Development plans/ideas
-- Fix issues.
+- Calculate and show some example polygon-polygon intersections.
+- Create some animations with geometries moving relative to others. 
 - Generate some more example renderings of geographical data:
   - [Global Self-Consistent Hierarchical High-Resolution Shoreline (GSHHS) data](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/)
     - [GSHHG-GMT](https://github.com/GenericMappingTools/gshhg-gmt)
@@ -75,13 +64,19 @@ GSHHS low resolution land/sea polygons. (This is shifted a bit compared with the
   - National boundaries and human population
 - Make a versioned release on Maven Central.
 - Investigate ways to speed up rendering.
+- Community development:
+  - Raise awareness
+  - Develop use cases
+  - Reach out to GeoSpatial librabry developers ([Apache SIS](https://github.com/apache/sis), [JTS](https://github.com/locationtech/jts), [GeoTools](https://github.com/geotools/geotools)).
 
-## Contributions welcome
-- Please submit issues.
+## Contributing
+- Thanks for thinking about this.
+- If this is to form into a collaborative project, it could do with a code of conduct and contributor guidelines based on something like this: [Open Source Guide](https://opensource.guide/) 
 
-## LICENSE
+## LICENCE
 - [APACHE LICENSE, VERSION 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+- If you want this licensed differently, then this could be considered...
 
 ## Acknowledgements and thanks
-- The [University of Leeds](http://www.leeds.ac.uk) and some externally funded research grants have supported the development of libraries dependencies.
+- The [University of Leeds](http://www.leeds.ac.uk) is my employer and I have used work time to help develop some of the code in this repository and in libraries dependencies.
 - Thank you Eric for the [BigMath](https://github.com/eobermuhlner/big-math) library.
