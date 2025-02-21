@@ -47,9 +47,13 @@ Polygon with a polygon internal hole. The external edge of the polygon is colour
 
 <img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_ch.png" />
 
-[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons. (This is shifted a bit compared with the image showing the convex hulls):
+[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 165 x 400. (This is shifted a bit compared with the image showing the convex hulls):
 
 <img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_nrows165_ncols400.png" />
+
+[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 660 x 1600. (This is shifted a bit compared with the image showing the convex hulls):
+
+<img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_nrows660_ncols1600.png" />
 
 ## Development plans/ideas
 - Calculate and show some example polygon-polygon intersections.
