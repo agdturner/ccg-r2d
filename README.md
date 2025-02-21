@@ -39,17 +39,9 @@ Two rotated triangles with a four triangle intersection:
 
 ## Polygon
 
-Polygon that is not a convex hull with a darker outline. The external holes (parts between the convex hull and the polygon edge are all convex hulls):
+Polygon with a polygon internal hole. The external edge of the polygon is coloured red and the edge of the hole is coloured blue:
 
-<img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons0.png" />
-
-Polygon that is not a convex hull with an external hole that is not a convex hull, but a polygon:
-
-<img alt="Polygon that is not a convex hull with a darker outline" src="data/output/test/test_polygons1.png" />
-
-Polygon with a polygon internal hole. The external edge of the polygon is coloured red and the edge of the hole is coloured blue (Currently there is an issue with this as there are some pixels coloured grey on the wron side of the blue!):
-
-<img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2.png" />
+<img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2_nrows150_ncols150.png" />
 
 GSHHS low resolution land/sea polygons. The heirarchy is ignored. The image shows lighter for the convex hull and darker for the external edges:
 
