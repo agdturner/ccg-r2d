@@ -236,7 +236,7 @@ public class RenderImage {
             nrows = 150 * scale;
             ncols = 150 * scale;
         } else {
-            scale = 1;
+            scale = 4;
             //nrows = 180 * scale;
             //ncols = 540 * scale;
             nrows = 165 * scale;

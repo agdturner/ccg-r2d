@@ -232,7 +232,7 @@ public class RenderImageDouble {
             nrows = 150 * scale;
             ncols = 150 * scale;
         } else {
-            scale = 4;
+            scale = 2;
             //nrows = 180 * scale;
             //ncols = 540 * scale;
             nrows = 165 * scale;

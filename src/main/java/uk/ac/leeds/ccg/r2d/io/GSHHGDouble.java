@@ -152,10 +152,10 @@ public class GSHHGDouble {
                             ymax = Math.max(ymax, y1);
                             //externalEdges.put(externalEdges.size(), new V2D_LineSegmentDouble(points[i - 1], points[i]));
                         }
-                        if (x1 != x00) {
-                            // This happens with the antarctic polygon.
-                            int debug = 1;
-                        } else {
+//                        if (x1 != x00) {
+//                            // This happens with the antarctic polygon.
+//                            int debug = 1;
+//                        } else {
                            if (id == 2) {
                             int debug = 1;
                            }
@@ -181,7 +181,7 @@ public class GSHHGDouble {
                             } catch (Exception e) {
                                 int debug = 1;
                             }
-                        }
+//                        }
                     }
                     //in.readInt();
                     //in.readInt();
