@@ -47,9 +47,18 @@ Polygon with a polygon internal hole. The external edge of the polygon is colour
 
 <img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_ch.png" />
 
-[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons. (This is shifted a bit compared with the image showing the convex hulls):
+[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 165 x 400. (This is shifted a bit compared with the image showing the convex hulls):
 
 <img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_nrows165_ncols400.png" />
+
+[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 660 x 1600. (This is shifted a bit compared with the image showing the convex hulls):
+
+<img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_nrows660_ncols1600.png" />
+
+## Dependencies
+- [Java SE 21](https://en.wikipedia.org/wiki/Java_version_history#Java_SE_21)
+- Mainly [ccg-v2d](https://github.com/agdturner/ccg-v2d) for vectors and [ccg-grids](https://github.com/agdturner/ccg-grids) for rasters. Both of thesehave few light weight dependencies.
+- Please see the [POM](https://github.com/agdturner/ccg-r2d/blob/master/pom.xml) for details.
 
 ## Development plans/ideas
 - Calculate and show some example polygon-polygon intersections.
@@ -75,8 +84,8 @@ Polygon with a polygon internal hole. The external edge of the polygon is colour
 
 ## LICENCE
 - [APACHE LICENSE, VERSION 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- If you want this licensed differently, then this could be considered...
+- Other licences are possible!
 
 ## Acknowledgements and thanks
-- The [University of Leeds](http://www.leeds.ac.uk) is my employer and I have used work time to help develop some of the code in this repository and in libraries dependencies.
+- The [University of Leeds](http://www.leeds.ac.uk) has indirectly supported this work by employing me over the years and encouraging me to develop the skills necessary to produce this library.
 - Thank you Eric for the [BigMath](https://github.com/eobermuhlner/big-math) library.
