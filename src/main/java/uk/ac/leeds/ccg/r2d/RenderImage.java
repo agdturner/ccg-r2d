@@ -218,8 +218,8 @@ public class RenderImage {
      * Edit to add/remove grid background and render different triangles.
      */
     public static void main(String[] args) {
-        Path inDataDir = Paths.get("data", "input");
-        Path outDataDir = Paths.get("data", "output");
+        Path inDataDir = Paths.get(args[1], "data", "input");
+        Path outDataDir = Paths.get(args[1], "data", "output");
         Path dir = Paths.get(outDataDir.toString(), "test");
         //boolean drawAxes = true;
         boolean drawAxes = false;
@@ -236,7 +236,7 @@ public class RenderImage {
             nrows = 150 * scale;
             ncols = 150 * scale;
         } else {
-            scale = 4;
+            scale = Integer.valueOf(args[2]);
             //nrows = 180 * scale;
             //ncols = 540 * scale;
             nrows = 165 * scale;

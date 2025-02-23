@@ -210,8 +210,8 @@ public class RenderImageDouble {
      * Edit to add/remove grid background and render different triangles.
      */
     public static void main(String[] args) {
-        Path inDataDir = Paths.get("data", "input");
-        Path outDataDir = Paths.get("data", "output", "d");
+        Path inDataDir = Paths.get(args[1], "data", "input");
+        Path outDataDir = Paths.get(args[1], "data", "output", "d");
         Path dir = Paths.get(outDataDir.toString(), "test");
         //boolean drawAxes = true;
         boolean drawAxes = false;
@@ -232,7 +232,7 @@ public class RenderImageDouble {
             nrows = 150 * scale;
             ncols = 150 * scale;
         } else {
-            scale = 2;
+            scale = Integer.valueOf(args[2]);
             //nrows = 180 * scale;
             //ncols = 540 * scale;
             nrows = 165 * scale;
