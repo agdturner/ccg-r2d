@@ -76,11 +76,12 @@ Polygon with a polygon internal hole. The external edge of the polygon is colour
 - Community development:
   - Raise awareness
   - Develop use cases
-  - Reach out to GeoSpatial librabry developers ([Apache SIS](https://github.com/apache/sis), [JTS](https://github.com/locationtech/jts), [GeoTools](https://github.com/geotools/geotools)).
+  - Reach out to developers of ([GMT](https://github.com/GenericMappingTools/gmt), [Apache SIS](https://github.com/apache/sis), [JTS](https://github.com/locationtech/jts)).
 
 ## Contributing
 - Thanks for thinking about this.
-- If this is to form into a collaborative project, it could do with a code of conduct and contributor guidelines based on something like this: [Open Source Guide](https://opensource.guide/) 
+- For a collaborative project, there should be a Code of Conduct and Contributor Guide based on something like this: [Open Source Guide](https://opensource.guide/)
+- Meanwhile if you want instructions or there is an issue, please report this in the usual way :)
 
 ## LICENCE
 - [APACHE LICENSE, VERSION 2.0](https://www.apache.org/licenses/LICENSE-2.0)
