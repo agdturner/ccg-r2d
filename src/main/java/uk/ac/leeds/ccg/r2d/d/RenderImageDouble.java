@@ -224,6 +224,7 @@ public class RenderImageDouble {
         V2D_EnvironmentDouble env = new V2D_EnvironmentDouble(epsilon);
         //boolean gshhs = false;
         boolean gshhs = true;
+        String name;
         int nrows;
         int ncols;
         int scale;
@@ -231,12 +232,21 @@ public class RenderImageDouble {
             scale = 1;
             nrows = 150 * scale;
             ncols = 150 * scale;
+            name = "test_";
         } else {
             scale = Integer.valueOf(args[2]);
-            //nrows = 180 * scale;
-            //ncols = 540 * scale;
-            nrows = 165 * scale;
-            ncols = 400 * scale;
+//            // Global          
+//            nrows = 180 * scale;
+//            ncols = 540 * scale;
+//            name = "gshhs_g_";
+//            // Global less far south          
+//            nrows = 165 * scale;
+//            ncols = 400 * scale;
+//            name = "gshhs_g_";
+            // GB
+            nrows = 15 * scale;
+            ncols = 14 * scale;
+            name = "gshhs_gb_";
         }
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;
@@ -244,7 +254,7 @@ public class RenderImageDouble {
         int ncolssncolsd3 = ncols - ncolsd3;
         // Init universe
         V2D_VectorDouble offset = V2D_VectorDouble.ZERO;
-                int xmin;
+        int xmin;
         int xmax;
         int ymin = -nrowsd2;
         int ymax = nrowsd2;
@@ -252,19 +262,25 @@ public class RenderImageDouble {
             xmin = -ncolsd2;
             xmax = ncolsd2;
         } else {
+//            // Global          
 //            xmin = -ncolsd3;
-//            xmax = ncolssncolsd3;
-            ymin = -75 * scale;
-            ymax = 90 * scale;
-            xmin = -20 * scale;
-            xmax = 380 * scale;
+//            xmax = ncolssncolsd3;      
+//            ymin = -75 * scale;
+//            ymax = 90 * scale;
+//            // Global less far south          
+//            xmin = -20 * scale;
+//            xmax = 380 * scale;
+            // GB
+            ymin = 47 * scale;
+            ymax = 62 * scale;
+            xmin = -10 * scale;
+            xmax = 4 * scale;
         }
         V2D_PointDouble lb = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmin, ymin));
         V2D_PointDouble lt = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmin, ymax));
         V2D_PointDouble rt = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmax, ymax));
         V2D_PointDouble rb = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmax, ymin));
-
-                V2D_RectangleDouble window = new V2D_RectangleDouble(lb, lt, rt, rb);
+        V2D_RectangleDouble window = new V2D_RectangleDouble(lb, lt, rt, rb);
         UniverseDouble universe = new UniverseDouble(window.getEnvelope());
         ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
 
@@ -348,7 +364,7 @@ public class RenderImageDouble {
         RenderImageDouble ri = new RenderImageDouble(universe, env, window, nrows,
                 ncols, epsilon, drawAxes, grid, gridCMs, drawTriangles,
                 drawCircumcircles, drawPolygonsNoInternalHoles, drawPolygons);
-        String fname = "test";
+        String fname = name;
         if (drawTriangles) {
             fname += "_triangles" + tt;
         }
@@ -574,7 +590,7 @@ public class RenderImageDouble {
     /**
      * Apply lots of rotations to rotate a triangle back to original position.
      */
-    public static void addTriangles5(UniverseDouble universe, 
+    public static void addTriangles5(UniverseDouble universe,
             V2D_EnvironmentDouble env) {
         V2D_PointDouble p = new V2D_PointDouble(env, -20d, -20d);
         V2D_PointDouble q = new V2D_PointDouble(env, 0d, 20d);
@@ -596,8 +612,8 @@ public class RenderImageDouble {
     }
 
     /**
-     * Adds two triangles and intersects these adding the triangular intersecting
-     * parts that form a diamond.
+     * Adds two triangles and intersects these adding the triangular
+     * intersecting parts that form a diamond.
      *
      * @param universe
      * @param epsilon
@@ -625,8 +641,8 @@ public class RenderImageDouble {
     }
 
     /**
-     * Adds two triangles and intersects these adding the triangular intersecting
-     * parts that form a hexagon.
+     * Adds two triangles and intersects these adding the triangular
+     * intersecting parts that form a hexagon.
      *
      * @param universe
      * @param epsilon
@@ -725,7 +741,7 @@ public class RenderImageDouble {
      * @param epsilon
      * @return The ids of the original triangles that are intersected.
      */
-    public static void addPolygons2(UniverseDouble universe, 
+    public static void addPolygons2(UniverseDouble universe,
             V2D_EnvironmentDouble env, double epsilon) {
         // Outer points
         ArrayList<V2D_PointDouble> pts = new ArrayList<>();
@@ -797,12 +813,12 @@ public class RenderImageDouble {
         hole_pts.add(new V2D_PointDouble(env, -5d, -12d));
         hole_pts.add(new V2D_PointDouble(env, -7.5d, -10d));
         hole_pts.add(new V2D_PointDouble(env, -10d, -12.5d));
-        internalHoles.put(internalHoles.size(), 
+        internalHoles.put(internalHoles.size(),
                 new V2D_PolygonNoInternalHolesDouble(
                         hole_pts.toArray(V2D_PointDouble[]::new), epsilon));
         V2D_PolygonDouble polygon = new V2D_PolygonDouble(
                 new V2D_PolygonNoInternalHolesDouble(
-                pts.toArray(V2D_PointDouble[]::new), epsilon), 
+                        pts.toArray(V2D_PointDouble[]::new), epsilon),
                 internalHoles, epsilon);
         universe.addPolygon(polygon, Color.lightGray, Color.red, Color.blue);
     }
@@ -817,7 +833,7 @@ public class RenderImageDouble {
             universe.addPolygon(p);
         }
     }
-    
+
     /**
      * One polygon that is not a convex hull and that has other holes.
      *
@@ -825,7 +841,7 @@ public class RenderImageDouble {
      * @param epsilon
      * @return The ids of the original triangles that are intersected.
      */
-    public static void addPolygons4(UniverseDouble universe, 
+    public static void addPolygons4(UniverseDouble universe,
             V2D_EnvironmentDouble env, double epsilon) {
         // Outer points
         ArrayList<V2D_PointDouble> pts = new ArrayList<>();
@@ -897,12 +913,12 @@ public class RenderImageDouble {
         hole_pts.add(new V2D_PointDouble(env, -5d, -12d));
         hole_pts.add(new V2D_PointDouble(env, -7.5d, -10d));
         hole_pts.add(new V2D_PointDouble(env, -10d, -12.5d));
-        internalHoles.put(internalHoles.size(), 
+        internalHoles.put(internalHoles.size(),
                 new V2D_PolygonNoInternalHolesDouble(
                         hole_pts.toArray(V2D_PointDouble[]::new), epsilon));
         V2D_PolygonDouble polygon = new V2D_PolygonDouble(
                 new V2D_PolygonNoInternalHolesDouble(
-                pts.toArray(V2D_PointDouble[]::new), epsilon), 
+                        pts.toArray(V2D_PointDouble[]::new), epsilon),
                 internalHoles, epsilon);
         universe.addPolygon(polygon, Color.lightGray, Color.red, Color.blue);
     }
@@ -1192,17 +1208,16 @@ public class RenderImageDouble {
             maxc = ncols - 1;
         }
         for (int r = minr; r <= maxr; r++) {
-            
+
             if (r == 53) {
                 int debug = 1;
             }
-                
+
             for (int c = minc; c <= maxc; c++) {
-                
-                
-            if (c == 85) {
-                int debug = 1;
-            }
+
+                if (c == 85) {
+                    int debug = 1;
+                }
                 V2D_RectangleDouble pixel = getPixel(r, c);
                 if (ch.intersects(pixel, epsilon)) {
                     if (poly.intersects(pixel, epsilon)) {
@@ -1257,18 +1272,17 @@ public class RenderImageDouble {
             maxc = ncols - 1;
         }
         for (int r = minr; r <= maxr; r++) {
-            
+
             if (r == 75) {
                 int debug = 1;
             }
-                
+
             for (int c = minc; c <= maxc; c++) {
-                
-                
-            if (c == 52) {
-                int debug = 1;
-            }
-            
+
+                if (c == 52) {
+                    int debug = 1;
+                }
+
                 V2D_RectangleDouble pixel = getPixel(r, c);
                 if (ch.intersects(pixel, epsilon)) {
                     if (poly.intersects(pixel, epsilon)) {

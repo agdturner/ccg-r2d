@@ -237,10 +237,15 @@ public class RenderImage {
             ncols = 150 * scale;
         } else {
             scale = Integer.valueOf(args[2]);
+            // Global
             //nrows = 180 * scale;
             //ncols = 540 * scale;
-            nrows = 165 * scale;
-            ncols = 400 * scale;
+            // Global less far south
+//            nrows = 165 * scale;
+//            ncols = 400 * scale;
+            // For GB
+            nrows = 15 * scale;
+            ncols = 14 * scale;
         }
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;
@@ -256,12 +261,19 @@ public class RenderImage {
             xmin = -ncolsd2;
             xmax = ncolsd2;
         } else {
+            // Global
 //            xmin = -ncolsd3;
 //            xmax = ncolssncolsd3;
-            ymin = -75 * scale;
-            ymax = 90 * scale;
-            xmin = -20 * scale;
-            xmax = 380 * scale;
+//            // Global less far south            
+//            ymin = -75 * scale;
+//            ymax = 90 * scale;
+//            xmin = -20 * scale;
+//            xmax = 380 * scale;
+            // GB
+            ymin = 47 * scale;
+            ymax = 62 * scale;
+            xmin = -10 * scale;
+            xmax = 4 * scale;
         }
         V2D_Point lb = new V2D_Point(env, offset, new V2D_Vector(xmin, ymin));
         V2D_Point lt = new V2D_Point(env, offset, new V2D_Vector(xmin, ymax));
