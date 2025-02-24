@@ -3,10 +3,9 @@ A Java library for rendering 2D Euclidean spatial data using [ccg-v2d](https://g
 
 Visualising geometry helps develop [ccg-v2d](https://github.com/agdturner/ccg-v2d).  This 2D Euclidean geometry helps develop 3D geometry libraries: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d). Some example static renderings of data are shown below.
 
-[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 990 x 2400:
+[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 825 x 2000:
 
-<img alt="GSHHS c Global 990 x 2400" src="data/output/test/gshhs_g_polygons3_nrows990_ncols2400.png" />
-
+<img alt="GSHHS c Global 825 x 2000" src="data/output/test/gshhs_g_polygons3_nrows825_ncols2000.png" />
 
 ## Triangle rotations, colours and circumcircles
 
@@ -69,10 +68,6 @@ Without some of antarctica revealing holes:
 825 x 2000:
 
 <img alt="GSHHS c Global 825 x 2000" src="data/output/test/gshhs_g_polygons3_nrows825_ncols2000.png" />
-
-990 x 2400:
-
-<img alt="GSHHS c Global 990 x 2400" src="data/output/test/gshhs_g_polygons3_nrows990_ncols2400.png" />
 
 #### Great Britain
 
