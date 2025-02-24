@@ -232,21 +232,21 @@ public class RenderImageDouble {
             scale = 1;
             nrows = 150 * scale;
             ncols = 150 * scale;
-            name = "test_";
+            name = "test";
         } else {
             scale = Integer.valueOf(args[2]);
 //            // Global          
 //            nrows = 180 * scale;
 //            ncols = 540 * scale;
-//            name = "gshhs_g_";
+//            name = "gshhs_g";
 //            // Global less far south          
 //            nrows = 165 * scale;
 //            ncols = 400 * scale;
-//            name = "gshhs_g_";
+//            name = "gshhs_g";
             // GB
             nrows = 15 * scale;
             ncols = 14 * scale;
-            name = "gshhs_gb_";
+            name = "gshhs_gb";
         }
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;

@@ -257,23 +257,28 @@ public class RenderImage {
         int xmax;
         int ymin = -nrowsd2;
         int ymax = nrowsd2;
+        String name;
         if (!gshhs) {
             xmin = -ncolsd2;
             xmax = ncolsd2;
+            name = "test";
         } else {
             // Global
 //            xmin = -ncolsd3;
 //            xmax = ncolssncolsd3;
+//            name = "gshhs_g_";
 //            // Global less far south            
 //            ymin = -75 * scale;
 //            ymax = 90 * scale;
 //            xmin = -20 * scale;
 //            xmax = 380 * scale;
+//            name = "gshhs_g_";
             // GB
             ymin = 47 * scale;
             ymax = 62 * scale;
             xmin = -10 * scale;
             xmax = 4 * scale;
+            name = "gshhs_gb";
         }
         V2D_Point lb = new V2D_Point(env, offset, new V2D_Vector(xmin, ymin));
         V2D_Point lt = new V2D_Point(env, offset, new V2D_Vector(xmin, ymax));
@@ -362,7 +367,7 @@ public class RenderImage {
         RenderImage ri = new RenderImage(universe, env, window, nrows, ncols, oom,
                 rm, drawAxes, grid, gridCMs, drawTriangles, drawCircumcircles,
                 drawPolygonsNoInternalHoles, drawPolygons);
-        String fname = "test";
+        String fname = "name";
         if (drawTriangles) {
             fname += "_triangles" + tt;
         }
