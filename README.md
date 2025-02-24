@@ -1,7 +1,12 @@
 # [ccg-r2d](https://github.com/agdturner/ccg-r2d)
-A Java library for rendering 2D Euclidean spatial data using [ccg-v2d](https://github.com/agdturner/ccg-v2d) for vectors and [ccg-grids](https://github.com/agdturner/ccg-grids) for rasters.
+A Java library for rendering 2D Euclidean spatial data using [ccg-v2d](https://github.com/agdturner/ccg-v2d) for vector (point, line, polygon) data and [ccg-grids](https://github.com/agdturner/ccg-grids) for raster data.
 
-This library is being used to help develop [ccg-v2d](https://github.com/agdturner/ccg-v2d). Visualising inputs and outputs of geometrical operationa helps to show that algorithms work. The development of the 2D spatial data libraries helps develop these 3D spatial data libraries: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d). Some example static renderings of data are shown below.
+Visualising geometry helps develop [ccg-v2d](https://github.com/agdturner/ccg-v2d).  This 2D Euclidean geometry helps develop 3D geometry libraries: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d). Some example static renderings of data are shown below.
+
+[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 990 x 2400:
+
+<img alt="GSHHS c Global 990 x 2400" src="data/output/test/gshhs_g_polygons3_nrows990_ncols2400.png" />
+
 
 ## Triangle rotations, colours and circumcircles
 
@@ -43,17 +48,73 @@ Polygon with a polygon internal hole. The external edge of the polygon is colour
 
 <img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2_nrows150_ncols150.png" />
 
-[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons. The heirarchy is ignored. The image shows lighter for the convex hull and darker for the external edges:
+### [GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons
 
-<img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_ch.png" />
+#### Global
 
-[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 165 x 400. (This is shifted a bit compared with the image showing the convex hulls):
+Heirarchy ignored revealing the convex hulls with darker shade for edges:
 
-<img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_nrows165_ncols400.png" />
+<img alt="GSHHS c global with convex hull darker gray edges" src="data/output/test/gshhs_g_polygons3_ch.png" />
 
-[GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 660 x 1600. (This is shifted a bit compared with the image showing the convex hulls):
+Without some of antarctica revealing holes:
 
-<img alt="GSHHS with light gray for the convex hull and darker gray for the external edges" src="data/output/test/test_polygons3_nrows660_ncols1600.png" />
+165 x 400:
+
+<img alt="GSHHS c Global 165 x 400" src="data/output/test/gshhs_g_polygons3_nrows165_ncols400.png" />
+
+660 x 1600:
+
+<img alt="GSHHS c Global 660 x 1600" src="data/output/test/gshhs_g_polygons3_nrows660_ncols1600.png" />
+
+825 x 2000:
+
+<img alt="GSHHS c Global 825 x 2000" src="data/output/test/gshhs_g_polygons3_nrows825_ncols2000.png" />
+
+990 x 2400:
+
+<img alt="GSHHS c Global 990 x 2400" src="data/output/test/gshhs_g_polygons3_nrows990_ncols2400.png" />
+
+#### Great Britain
+
+15 x 14:
+
+<img alt="GSHHS c Great Britain 15 x 14" src="data/output/test/gshhs_gb_polygons3_nrows15_ncols14.png" />
+
+30 x 28:
+
+<img alt="GSHHS c Great Britain 30 x 28" src="data/output/test/gshhs_gb_polygons3_nrows30_ncols28.png" />
+
+45 x 42:
+
+<img alt="GSHHS c Great Britain 45 x 42" src="data/output/test/gshhs_gb_polygons3_nrows45_ncols42.png" />
+
+60 x 56:
+
+<img alt="GSHHS c Great Britain 60 x 56" src="data/output/test/gshhs_gb_polygons3_nrows60_ncols56.png" />
+
+75 x 70:
+
+<img alt="GSHHS c Great Britain 75 x 70" src="data/output/test/gshhs_gb_polygons3_nrows75_ncols70.png" />
+
+90 x 84:
+
+<img alt="GSHHS c Great Britain 90 x 84" src="data/output/test/gshhs_gb_polygons3_nrows90_ncols84.png" />
+
+105 x 98:
+
+<img alt="GSHHS c Great Britain 105 x 98" src="data/output/test/gshhs_gb_polygons3_nrows105_ncols98.png" />
+
+120 x 112:
+
+<img alt="GSHHS c Great Britain 120 x 112" src="data/output/test/gshhs_gb_polygons3_nrows120_ncols112.png" />
+
+135 x 126:
+
+<img alt="GSHHS c Great Britain 135 x 126" src="data/output/test/gshhs_gb_polygons3_nrows135_ncols126.png" />
+
+150 x 140:
+
+<img alt="GSHHS c Great Britain 150 x 140" src="data/output/test/gshhs_gb_polygons3_nrows150_ncols140.png" />
 
 ## Dependencies
 - [Java SE 21](https://en.wikipedia.org/wiki/Java_version_history#Java_SE_21)
