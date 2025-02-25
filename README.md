@@ -5,7 +5,7 @@ Visualising geometry helps develop [ccg-v2d](https://github.com/agdturner/ccg-v2
 
 [GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 825 x 2000:
 
-<img alt="GSHHS c Global 825 x 2000" src="data/output/test/gshhs_g_polygons3_nrows825_ncols2000.png" />
+<img alt="GSHHS c Global 825 x 2000" src="data/output/test/gshhs_c_g_polygons3_nrows825_ncols2000.png" />
 
 ## Triangle rotations, colours and circumcircles
 
@@ -47,69 +47,86 @@ Polygon with a polygon internal hole. The external edge of the polygon is colour
 
 <img alt="Polygon that is not a convex hull with a darker outline and with a polygonal hole with the external edge coloured red and the internal edge coloured blue" src="data/output/test/test_polygons2_nrows150_ncols150.png" />
 
-### [GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons
+### [GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) land polygons
+
+The geography data come in five resolutions:
+1. **f**ull resolution: Original (full) data resolution.
+2. **h**igh resolution: About 80 % reduction in size and quality.
+3. **i**ntermediate resolution: Another ~80 % reduction.
+4. **l**ow resolution: Another ~80 % reduction.
+5. **c**rude resolution: Another ~80 % reduction.
 
 #### Global
 
+##### Crude resolution
+
 Heirarchy ignored revealing the convex hulls with darker shade for edges:
 
-<img alt="GSHHS c global with convex hull darker gray edges" src="data/output/test/gshhs_g_polygons3_ch.png" />
+<img alt="GSHHS c global with convex hull darker gray edges" src="data/output/test/gshhs_c_g_ch.png" />
 
 Without some of antarctica revealing holes:
 
 165 x 400:
 
-<img alt="GSHHS c Global 165 x 400" src="data/output/test/gshhs_g_polygons3_nrows165_ncols400.png" />
+<img alt="GSHHS c Global 165 x 400" src="data/output/test/gshhs_c_g_nrows165_ncols400.png" />
 
 660 x 1600:
 
-<img alt="GSHHS c Global 660 x 1600" src="data/output/test/gshhs_g_polygons3_nrows660_ncols1600.png" />
+<img alt="GSHHS c Global 660 x 1600" src="data/output/test/gshhs_c_g_nrows660_ncols1600.png" />
 
 825 x 2000:
 
-<img alt="GSHHS c Global 825 x 2000" src="data/output/test/gshhs_g_polygons3_nrows825_ncols2000.png" />
+<img alt="GSHHS c Global 825 x 2000" src="data/output/test/gshhs_c_g_nrows825_ncols2000.png" />
 
 #### Great Britain
 
+##### Crude resolution
+
 15 x 14:
 
-<img alt="GSHHS c Great Britain 15 x 14" src="data/output/test/gshhs_gb_polygons3_nrows15_ncols14.png" />
+<img alt="GSHHS c Great Britain 15 x 14" src="data/output/test/gshhs_c_gb_nrows15_ncols14.png" />
 
 30 x 28:
 
-<img alt="GSHHS c Great Britain 30 x 28" src="data/output/test/gshhs_gb_polygons3_nrows30_ncols28.png" />
+<img alt="GSHHS c Great Britain 30 x 28" src="data/output/test/gshhs_c_gb_nrows30_ncols28.png" />
 
 45 x 42:
 
-<img alt="GSHHS c Great Britain 45 x 42" src="data/output/test/gshhs_gb_polygons3_nrows45_ncols42.png" />
+<img alt="GSHHS c Great Britain 45 x 42" src="data/output/test/gshhs_c_gb_nrows45_ncols42.png" />
 
 60 x 56:
 
-<img alt="GSHHS c Great Britain 60 x 56" src="data/output/test/gshhs_gb_polygons3_nrows60_ncols56.png" />
+<img alt="GSHHS c Great Britain 60 x 56" src="data/output/test/gshhs_c_gb_nrows60_ncols56.png" />
 
 75 x 70:
 
-<img alt="GSHHS c Great Britain 75 x 70" src="data/output/test/gshhs_gb_polygons3_nrows75_ncols70.png" />
+<img alt="GSHHS c Great Britain 75 x 70" src="data/output/test/gshhs_c_gb_nrows75_ncols70.png" />
 
 90 x 84:
 
-<img alt="GSHHS c Great Britain 90 x 84" src="data/output/test/gshhs_gb_polygons3_nrows90_ncols84.png" />
+<img alt="GSHHS c Great Britain 90 x 84" src="data/output/test/gshhs_c_gb_nrows90_ncols84.png" />
 
 105 x 98:
 
-<img alt="GSHHS c Great Britain 105 x 98" src="data/output/test/gshhs_gb_polygons3_nrows105_ncols98.png" />
+<img alt="GSHHS c Great Britain 105 x 98" src="data/output/test/gshhs_c_gb_nrows105_ncols98.png" />
 
 120 x 112:
 
-<img alt="GSHHS c Great Britain 120 x 112" src="data/output/test/gshhs_gb_polygons3_nrows120_ncols112.png" />
+<img alt="GSHHS c Great Britain 120 x 112" src="data/output/test/gshhs_c_gb_nrows120_ncols112.png" />
 
 135 x 126:
 
-<img alt="GSHHS c Great Britain 135 x 126" src="data/output/test/gshhs_gb_polygons3_nrows135_ncols126.png" />
+<img alt="GSHHS c Great Britain 135 x 126" src="data/output/test/gshhs_c_gb_nrows135_ncols126.png" />
 
 150 x 140:
 
-<img alt="GSHHS c Great Britain 150 x 140" src="data/output/test/gshhs_gb_polygons3_nrows150_ncols140.png" />
+<img alt="GSHHS c Great Britain 150 x 140" src="data/output/test/gshhs_c_gb_nrows150_ncols140.png" />
+
+##### Low lesolution
+
+150 x 140:
+
+<img alt="GSHHS l Great Britain 150 x 140" src="data/output/test/gshhs_l_gb_nrows150_ncols140.png" />
 
 ## Dependencies
 - [Java SE 21](https://en.wikipedia.org/wiki/Java_version_history#Java_SE_21)
