@@ -161,7 +161,17 @@ public class GSHHGDouble {
                            }
                              try {
                                 V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points, epsilon);
+                                V2D_PointDouble pP0P52 = new V2D_PointDouble(env, 0, 52);
+                                if (polygon.contains(pP0P52, epsilon)) {
+                                    System.out.println("id=" + id);
+                                }
+
                                 if (container == -1 || contained.contains(container)) {
+                                    
+                                    if (container == 15) {
+                                        System.out.println("GB contains id=" + id);
+                                    }
+                                    
                                     HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
                                     int id2 = polygons.size();
                                     lookup.put(id, id2);

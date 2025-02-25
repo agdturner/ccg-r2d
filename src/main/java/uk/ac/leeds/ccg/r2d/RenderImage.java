@@ -258,6 +258,11 @@ public class RenderImage {
         int ymin = -nrowsd2;
         int ymax = nrowsd2;
         String name;
+        //String gshhs_name = "gshhs_c";
+        //String gshhs_name = "gshhs_l";
+        //String gshhs_name = "gshhs_i";
+        //String gshhs_name = "gshhs_h";
+        String gshhs_name = "gshhs_f";
         if (!gshhs) {
             xmin = -ncolsd2;
             xmax = ncolsd2;
@@ -266,19 +271,19 @@ public class RenderImage {
             // Global
 //            xmin = -ncolsd3;
 //            xmax = ncolssncolsd3;
-//            name = "gshhs_g_";
+//            name = gshhs_name + "_g";
 //            // Global less far south            
 //            ymin = -75 * scale;
 //            ymax = 90 * scale;
 //            xmin = -20 * scale;
 //            xmax = 380 * scale;
-//            name = "gshhs_g_";
+//            name = gshhs_name + "_g";
             // GB
             ymin = 47 * scale;
             ymax = 62 * scale;
             xmin = -10 * scale;
             xmax = 4 * scale;
-            name = "gshhs_gb";
+            name = gshhs_name + "_gb";
         }
         V2D_Point lb = new V2D_Point(env, offset, new V2D_Vector(xmin, ymin));
         V2D_Point lt = new V2D_Point(env, offset, new V2D_Vector(xmin, ymax));
@@ -357,7 +362,7 @@ public class RenderImage {
             case 2 ->
                 addPolygons2(universe, env, oom, rm);
             case 3 ->
-                addPolygons3(universe, env, scale, oom, rm);
+                addPolygons3(universe, env, gshhs_name, scale, oom, rm);
         }
 
         // Draw circumcircles
@@ -367,7 +372,7 @@ public class RenderImage {
         RenderImage ri = new RenderImage(universe, env, window, nrows, ncols, oom,
                 rm, drawAxes, grid, gridCMs, drawTriangles, drawCircumcircles,
                 drawPolygonsNoInternalHoles, drawPolygons);
-        String fname = "name";
+        String fname = name;
         if (drawTriangles) {
             fname += "_triangles" + tt;
         }
@@ -819,9 +824,10 @@ public class RenderImage {
         universe.addPolygon(polygon, oom, rm, Color.lightGray, Color.red, Color.blue);
     }
 
-    public static void addPolygons3(Universe universe, V2D_Environment env, int scale, int oom, RoundingMode rm) {
+    public static void addPolygons3(Universe universe, V2D_Environment env, 
+            String gshhs_name, int scale, int oom, RoundingMode rm) {
         Path outDataDir = Paths.get("data", "input", "gshhg-bin-2.3.7");
-        Path filepath = Paths.get(outDataDir.toString(), "gshhs_c.b");
+        Path filepath = Paths.get(outDataDir.toString(), gshhs_name + ".b");
         V2D_Point[] points = null;
         GSHHG gshhg = new GSHHG(filepath, env, scale, oom, rm);
         HashMap<Integer, V2D_Polygon> polygons = gshhg.polygons;

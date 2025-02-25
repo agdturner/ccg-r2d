@@ -225,6 +225,11 @@ public class RenderImageDouble {
         //boolean gshhs = false;
         boolean gshhs = true;
         String name;
+        //String gshhs_name = "gshhs_c";
+        //String gshhs_name = "gshhs_l";
+        //String gshhs_name = "gshhs_i";
+        //String gshhs_name = "gshhs_h";
+        String gshhs_name = "gshhs_f";
         int nrows;
         int ncols;
         int scale;
@@ -238,15 +243,15 @@ public class RenderImageDouble {
 //            // Global          
 //            nrows = 180 * scale;
 //            ncols = 540 * scale;
-//            name = "gshhs_g";
+//            name = gshhs_name + "_g";
 //            // Global less far south          
 //            nrows = 165 * scale;
 //            ncols = 400 * scale;
-//            name = "gshhs_g";
+//            name = gshhs_name + "_g";
             // GB
             nrows = 15 * scale;
             ncols = 14 * scale;
-            name = "gshhs_gb";
+            name = gshhs_name + "_gb";
         }
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;
@@ -352,7 +357,7 @@ public class RenderImageDouble {
             case 2 ->
                 addPolygons2(universe, env, epsilon);
             case 3 ->
-                addPolygons3(universe, env, scale, epsilon);
+                addPolygons3(universe, env, gshhs_name, scale, epsilon);
             case 4 ->
                 addPolygons4(universe, env, epsilon);
         }
@@ -823,9 +828,10 @@ public class RenderImageDouble {
         universe.addPolygon(polygon, Color.lightGray, Color.red, Color.blue);
     }
 
-    public static void addPolygons3(UniverseDouble universe, V2D_EnvironmentDouble env, int scale, double epsilon) {
+    public static void addPolygons3(UniverseDouble universe, 
+            V2D_EnvironmentDouble env, String gshhs_name, int scale, double epsilon) {
         Path outDataDir = Paths.get("data", "input", "gshhg-bin-2.3.7");
-        Path filepath = Paths.get(outDataDir.toString(), "gshhs_c.b");
+        Path filepath = Paths.get(outDataDir.toString(), gshhs_name + ".b");
         V2D_PointDouble[] points = null;
         GSHHGDouble gshhg = new GSHHGDouble(filepath, env, scale, epsilon);
         HashMap<Integer, V2D_PolygonDouble> polygons = gshhg.polygons;
