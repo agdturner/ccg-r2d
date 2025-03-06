@@ -82,6 +82,7 @@ Without some of antarctica revealing holes:
 
 ##### Crude resolution
 
+<!--
 15 x 14:
 
 <img alt="GSHHS c Great Britain 15 x 14" src="data/output/test/gshhs_c_gb_nrows15_ncols14.png" />
@@ -89,11 +90,12 @@ Without some of antarctica revealing holes:
 30 x 28:
 
 <img alt="GSHHS c Great Britain 30 x 28" src="data/output/test/gshhs_c_gb_nrows30_ncols28.png" />
-
+-->
 45 x 42:
 
 <img alt="GSHHS c Great Britain 45 x 42" src="data/output/test/gshhs_c_gb_nrows45_ncols42.png" />
 
+<!--
 60 x 56:
 
 <img alt="GSHHS c Great Britain 60 x 56" src="data/output/test/gshhs_c_gb_nrows60_ncols56.png" />
@@ -101,11 +103,12 @@ Without some of antarctica revealing holes:
 75 x 70:
 
 <img alt="GSHHS c Great Britain 75 x 70" src="data/output/test/gshhs_c_gb_nrows75_ncols70.png" />
-
+-->
 90 x 84:
 
 <img alt="GSHHS c Great Britain 90 x 84" src="data/output/test/gshhs_c_gb_nrows90_ncols84.png" />
 
+<!--
 105 x 98:
 
 <img alt="GSHHS c Great Britain 105 x 98" src="data/output/test/gshhs_c_gb_nrows105_ncols98.png" />
@@ -117,7 +120,7 @@ Without some of antarctica revealing holes:
 135 x 126:
 
 <img alt="GSHHS c Great Britain 135 x 126" src="data/output/test/gshhs_c_gb_nrows135_ncols126.png" />
-
+-->
 150 x 140:
 
 <img alt="GSHHS c Great Britain 150 x 140" src="data/output/test/gshhs_c_gb_nrows150_ncols140.png" />
@@ -132,6 +135,7 @@ Without some of antarctica revealing holes:
 
 ##### Intermediate resolution
 
+<!--
 40 x 53
 
 <img alt="GSHHS l Isle of Man 40 x 53" src="data/output/test/gshhs_i_iom_nrows40_ncols53.png" />
@@ -139,7 +143,7 @@ Without some of antarctica revealing holes:
 80 x 106
 
 <img alt="GSHHS l Isle of Man 80 x 106" src="data/output/test/gshhs_i_iom_nrows80_ncols106.png" />
-
+-->
 160 x 212
 
 <img alt="GSHHS l Isle of Man 160 x 212" src="data/output/test/gshhs_i_iom_nrows160_ncols212.png" />
