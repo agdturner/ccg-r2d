@@ -207,7 +207,17 @@ public class RenderImageDouble {
     }
 
     /**
-     * Edit to add/remove grid background and render different triangles.
+     * The main method. Edit to configure details.
+     *
+     * @param args The arguments:
+     * <ul>
+     * <li>args[0] "d"</li>
+     * <li>args[1] path to the data directory</li>
+     * <li>args[2] the filename for the gshhs data set ("gshhs_c", "gshhs_l,
+     * "gshhs_i", "gshhs_h", "gshhs_f")</li>
+     * <li>args[3] the scale</li>
+     * <li>args[4] the place ("ga", "g", "gb", "iom")</li>
+     * </ul>
      */
     public static void main(String[] args) {
         Path inDataDir = Paths.get(args[1], "data", "input");
@@ -229,7 +239,8 @@ public class RenderImageDouble {
         //String gshhs_name = "gshhs_l";
         //String gshhs_name = "gshhs_i";
         //String gshhs_name = "gshhs_h";
-        String gshhs_name = "gshhs_f";
+        //String gshhs_name = "gshhs_f";
+        String gshhs_name = args[2];
         int nrows;
         int ncols;
         int scale;
@@ -239,19 +250,26 @@ public class RenderImageDouble {
             ncols = 150 * scale;
             name = "test";
         } else {
-            scale = Integer.valueOf(args[2]);
-//            // Global          
-//            nrows = 180 * scale;
-//            ncols = 540 * scale;
-//            name = gshhs_name + "_g";
-//            // Global less far south          
-//            nrows = 165 * scale;
-//            ncols = 400 * scale;
-//            name = gshhs_name + "_g";
-            // GB
-            nrows = 15 * scale;
-            ncols = 14 * scale;
-            name = gshhs_name + "_gb";
+            scale = Integer.valueOf(args[3]);
+            if (args[4].equalsIgnoreCase("ga")) {
+                // Global all         
+                nrows = 180 * scale;
+                ncols = 540 * scale;
+            } else if (args[4].equalsIgnoreCase("g")) {
+                // Global less far south          
+                nrows = 165 * scale;
+                ncols = 400 * scale;
+            } else if (args[4].equalsIgnoreCase("gb")) {
+                // GB
+                nrows = 15 * scale;
+                ncols = 14 * scale;
+            } else {
+                //args[4].equalsIgnoreCase("iom")
+                // IOM
+                nrows = 40 * scale;
+                ncols = 53 * scale;
+            }
+            name = gshhs_name + "_" + args[4];
         }
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;
@@ -259,27 +277,38 @@ public class RenderImageDouble {
         int ncolssncolsd3 = ncols - ncolsd3;
         // Init universe
         V2D_VectorDouble offset = V2D_VectorDouble.ZERO;
-        int xmin;
-        int xmax;
-        int ymin = -nrowsd2;
-        int ymax = nrowsd2;
+        double xmin;
+        double xmax;
+        double ymin = -nrowsd2;
+        double ymax = nrowsd2;
         if (!gshhs) {
             xmin = -ncolsd2;
             xmax = ncolsd2;
         } else {
-//            // Global          
-//            xmin = -ncolsd3;
-//            xmax = ncolssncolsd3;      
-//            ymin = -75 * scale;
-//            ymax = 90 * scale;
-//            // Global less far south          
-//            xmin = -20 * scale;
-//            xmax = 380 * scale;
-            // GB
-            ymin = 47 * scale;
-            ymax = 62 * scale;
-            xmin = -10 * scale;
-            xmax = 4 * scale;
+            if (args[4].equalsIgnoreCase("ga")) {
+                // Global all          
+                xmin = -ncolsd3;
+                xmax = ncolssncolsd3;
+                ymin = -75 * scale;
+                ymax = 90 * scale;
+            } else if (args[4].equalsIgnoreCase("g")) {
+                // Global less far south         
+                xmin = -20 * scale;
+                xmax = 380 * scale;
+            } else if (args[4].equalsIgnoreCase("gb")) {
+                // GB
+                ymin = 47 * scale;
+                ymax = 62 * scale;
+                xmin = -10 * scale;
+                xmax = 4 * scale;
+            } else {
+                //args[4].equalsIgnoreCase("iom")
+                // IOM
+                ymin = 54.03d * scale;
+                ymax = 54.43d * scale;
+                xmin = (360d -4.82) * scale;
+                xmax = (360d -4.29) * scale;
+            }
         }
         V2D_PointDouble lb = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmin, ymin));
         V2D_PointDouble lt = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmin, ymax));
@@ -374,7 +403,9 @@ public class RenderImageDouble {
             fname += "_triangles" + tt;
         }
         if (drawPolygons) {
-            fname += "_polygons" + pp;
+            if (!gshhs) {
+                fname += "_polygons" + pp;
+            }
         }
         if (addGrid) {
             fname += "_grid";
@@ -828,7 +859,7 @@ public class RenderImageDouble {
         universe.addPolygon(polygon, Color.lightGray, Color.red, Color.blue);
     }
 
-    public static void addPolygons3(UniverseDouble universe, 
+    public static void addPolygons3(UniverseDouble universe,
             V2D_EnvironmentDouble env, String gshhs_name, int scale, double epsilon) {
         Path outDataDir = Paths.get("data", "input", "gshhg-bin-2.3.7");
         Path filepath = Paths.get(outDataDir.toString(), gshhs_name + ".b");

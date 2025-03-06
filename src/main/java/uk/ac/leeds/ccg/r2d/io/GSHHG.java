@@ -103,7 +103,22 @@ public class GSHHG {
                     System.out.println("container=" + container);
                     int ancestor = in.readInt();
                     System.out.println("ancestor=" + ancestor);
+                    
+                    // Skip some polygons
+                    //if (//west > 4300000 || east < -4800000 || 
+                    //        south > 55000000 || north < 54000000 || id == 0) {
+                    if (id != 464) {
+                    for (int i = 0; i < n; i ++) {
+                            in.readInt();
+                            in.readInt();
+                        }
+                    } else {
+                    
                     V2D_Point[] points = new V2D_Point[n];
+                    
+                    
+                    
+                    
                     //HashMap<Integer, V2D_LineSegment> externalEdges = new HashMap<>();
                     int x00 = in.readInt();
                     int y00 = in.readInt();
@@ -177,6 +192,7 @@ public class GSHHG {
                                 int debug = 1;
                             }
                         //}
+                    }
                     }
                     data = in.readNBytes(4);
                     if (data.length == 0) {

@@ -101,8 +101,19 @@ public class GSHHGDouble {
                     System.out.println("container=" + container);
                     int ancestor = in.readInt();
                     System.out.println("ancestor=" + ancestor);
-                    V2D_PointDouble[] points = new V2D_PointDouble[n];
-                    //HashMap<Integer, V2D_LineSegmentDouble> externalEdges = new HashMap<>();
+                    
+                    // Skip some polygons
+                    //if (//west > 4300000 || east < -4800000 || 
+                    //        south > 55000000 || north < 54000000 || id == 0) {
+                    if (id != 464) {
+                    for (int i = 0; i < n; i ++) {
+                            in.readInt();
+                            in.readInt();
+                        }
+                    } else {
+                        
+                        
+                    V2D_PointDouble[] points = new V2D_PointDouble[n];                        
                     int x00 = in.readInt();
                     int y00 = in.readInt();
                     int x0 = x00;
@@ -161,9 +172,16 @@ public class GSHHGDouble {
                            }
                              try {
                                 V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points, epsilon);
-                                V2D_PointDouble pP0P52 = new V2D_PointDouble(env, 0, 52);
-                                if (polygon.contains(pP0P52, epsilon)) {
-                                    System.out.println("id=" + id);
+//                                // GB
+//                                V2D_PointDouble pP0P52 = new V2D_PointDouble(env, 0, 52);
+//                                if (polygon.contains(pP0P52, epsilon)) {
+//                                    System.out.println("gb id=" + id);
+//                                }
+
+                                // IOM
+                                V2D_PointDouble pN4520083P54239143 = new V2D_PointDouble(env, 360d -4.520083d, 54.239143);
+                                if (polygon.contains(pN4520083P54239143, epsilon)) {
+                                    System.out.println("iom id=" + id);
                                 }
 
                                 if (container == -1 || contained.contains(container)) {
@@ -192,6 +210,7 @@ public class GSHHGDouble {
                                 int debug = 1;
                             }
 //                        }
+                    }
                     }
                     //in.readInt();
                     //in.readInt();

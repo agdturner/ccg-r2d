@@ -215,7 +215,17 @@ public class RenderImage {
     }
 
     /**
-     * Edit to add/remove grid background and render different triangles.
+     * The main method.
+     * Edit to configure details.
+     * 
+     * @param args The arguments:
+     * <ul>
+     * <li>args[0] "br"</li>
+     * <li>args[1] path to the data directory</li>
+     * <li>args[2] the filename for the gshhs data set ("gshhs_c", "gshhs_l, "gshhs_i", "gshhs_h", "gshhs_f")</li>
+     * <li>args[3] the scale</li>
+     * <li>args[4] the place ("ga", "g", "gb", "iom")</li>
+     * </ul>
      */
     public static void main(String[] args) {
         Path inDataDir = Paths.get(args[1], "data", "input");
@@ -228,6 +238,13 @@ public class RenderImage {
         V2D_Environment env = new V2D_Environment(oom, rm);
         //boolean gshhs = false;
         boolean gshhs = true;
+        String name;
+        //String gshhs_name = "gshhs_c";
+        //String gshhs_name = "gshhs_l";
+        //String gshhs_name = "gshhs_i";
+        //String gshhs_name = "gshhs_h";
+        //String gshhs_name = "gshhs_f";
+        String gshhs_name = args[2];
         int nrows;
         int ncols;
         int scale;
@@ -235,17 +252,28 @@ public class RenderImage {
             scale = 1;
             nrows = 150 * scale;
             ncols = 150 * scale;
+            name = "test";
         } else {
-            scale = Integer.valueOf(args[2]);
-            // Global
-            //nrows = 180 * scale;
-            //ncols = 540 * scale;
-            // Global less far south
-//            nrows = 165 * scale;
-//            ncols = 400 * scale;
-            // For GB
-            nrows = 15 * scale;
-            ncols = 14 * scale;
+            scale = Integer.valueOf(args[3]);
+            if (args[4].equalsIgnoreCase("ga")) {
+                // Global all         
+                nrows = 180 * scale;
+                ncols = 540 * scale;
+            } else if (args[4].equalsIgnoreCase("g")) {
+                // Global less far south          
+                nrows = 165 * scale;
+                ncols = 400 * scale;
+            } else if (args[4].equalsIgnoreCase("gb")) {
+                // GB
+                nrows = 15 * scale;
+                ncols = 14 * scale;
+            } else {
+                //args[4].equalsIgnoreCase("iom")
+                // IOM
+                nrows = 40 * scale;
+                ncols = 53 * scale;
+            }
+            name = gshhs_name + "_" + args[4];
         }
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;
@@ -253,37 +281,39 @@ public class RenderImage {
         int ncolssncolsd3 = ncols - ncolsd3;
         // Init universe
         V2D_Vector offset = V2D_Vector.ZERO;
-        int xmin;
-        int xmax;
-        int ymin = -nrowsd2;
-        int ymax = nrowsd2;
-        String name;
-        //String gshhs_name = "gshhs_c";
-        //String gshhs_name = "gshhs_l";
-        //String gshhs_name = "gshhs_i";
-        //String gshhs_name = "gshhs_h";
-        String gshhs_name = "gshhs_f";
+        BigRational xmin;
+        BigRational xmax;
+        BigRational ymin = BigRational.valueOf(-nrowsd2);
+        BigRational ymax = BigRational.valueOf(nrowsd2);
         if (!gshhs) {
-            xmin = -ncolsd2;
-            xmax = ncolsd2;
+            xmin = BigRational.valueOf(-ncolsd2);
+            xmax = BigRational.valueOf(ncolsd2);
             name = "test";
         } else {
-            // Global
-//            xmin = -ncolsd3;
-//            xmax = ncolssncolsd3;
-//            name = gshhs_name + "_g";
-//            // Global less far south            
-//            ymin = -75 * scale;
-//            ymax = 90 * scale;
-//            xmin = -20 * scale;
-//            xmax = 380 * scale;
-//            name = gshhs_name + "_g";
-            // GB
-            ymin = 47 * scale;
-            ymax = 62 * scale;
-            xmin = -10 * scale;
-            xmax = 4 * scale;
-            name = gshhs_name + "_gb";
+            if (args[4].equalsIgnoreCase("ga")) {
+                // Global all          
+                xmin = BigRational.valueOf(-ncolsd3);
+                xmax = BigRational.valueOf(ncolssncolsd3);
+                ymin = BigRational.valueOf(-75 * scale);
+                ymax = BigRational.valueOf(90 * scale);
+            } else if (args[4].equalsIgnoreCase("g")) {
+                // Global less far south         
+                xmin = BigRational.valueOf(-20 * scale);
+                xmax = BigRational.valueOf(380 * scale);
+            } else if (args[4].equalsIgnoreCase("gb")) {
+                // GB
+                ymin = BigRational.valueOf(47 * scale);
+                ymax = BigRational.valueOf(62 * scale);
+                xmin = BigRational.valueOf(-10 * scale);
+                xmax = BigRational.valueOf(4 * scale);
+            } else {
+                //args[4].equalsIgnoreCase("iom")
+                // IOM
+                ymin = BigRational.valueOf(54.03d * scale);
+                ymax = BigRational.valueOf(54.43d * scale);
+                xmin = BigRational.valueOf((360d -4.82) * scale);
+                xmax = BigRational.valueOf((360d -4.29) * scale);
+            }
         }
         V2D_Point lb = new V2D_Point(env, offset, new V2D_Vector(xmin, ymin));
         V2D_Point lt = new V2D_Point(env, offset, new V2D_Vector(xmin, ymax));
@@ -304,12 +334,8 @@ public class RenderImage {
             Grids_ChunkDoubleFactoryArray dgcdf = new Grids_ChunkDoubleFactoryArray();
             Grids_ChunkDoubleFactorySinglet gcdf = new Grids_ChunkDoubleFactorySinglet(0d);
             Grids_GridDoubleFactory gdf = new Grids_GridDoubleFactory(ge, ioc, gcdf, dgcdf, ncols, ncols);
-            BigRational xMin = BigRational.valueOf(xmin);
-            BigRational xMax = BigRational.valueOf(xmax);
-            BigRational yMin = BigRational.valueOf(ymin);
-            BigRational yMax = BigRational.valueOf(ymax);
             BigRational cellsize = BigRational.valueOf(1);
-            Grids_Dimensions dimensions = new Grids_Dimensions(xMin, xMax, yMin, yMax, cellsize);
+            Grids_Dimensions dimensions = new Grids_Dimensions(xmin, xmax, ymin, ymax, cellsize);
             grid = gdf.create(nrows, ncols, dimensions);
             if (addGrid) {
                 // Add grid 1
@@ -377,7 +403,9 @@ public class RenderImage {
             fname += "_triangles" + tt;
         }
         if (drawPolygons) {
-            fname += "_polygons" + pp;
+            if (!gshhs) {
+                fname += "_polygons" + pp;
+            }
         }
         if (addGrid) {
             fname += "_grid";
