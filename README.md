@@ -5,7 +5,7 @@ Visualising geometry helps develop [ccg-v2d](https://github.com/agdturner/ccg-v2
 
 [GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 825 x 2000:
 
-<img alt="GSHHS c Global 825 x 2000" src="data/output/test/gshhs_c_g_polygons3_nrows825_ncols2000.png" />
+<img alt="GSHHS c Global 825 x 2000" src="data/output/test/gshhs_c_g_nrows825_ncols2000.png" />
 
 ## Triangle rotations, colours and circumcircles
 
@@ -127,6 +127,28 @@ Without some of antarctica revealing holes:
 150 x 140:
 
 <img alt="GSHHS l Great Britain 150 x 140" src="data/output/test/gshhs_l_gb_nrows150_ncols140.png" />
+
+#### Isle of Man
+
+##### Intermediate resolution
+
+40 x 53
+
+<img alt="GSHHS l Isle of Man 40 x 53" src="data/output/test/gshhs_i_iom_nrows40_ncols53.png" />
+
+80 x 106
+
+<img alt="GSHHS l Isle of Man 80 x 106" src="data/output/test/gshhs_i_iom_nrows80_ncols106.png" />
+
+160 x 212
+
+<img alt="GSHHS l Isle of Man 160 x 212" src="data/output/test/gshhs_i_iom_nrows160_ncols212.png" />
+
+##### Full resolution
+
+160 x 212
+
+<img alt="GSHHS l Isle of Man 80 x 106" src="data/output/test/gshhs_f_iom_nrows160_ncols212.png" />
 
 ## Dependencies
 - [Java SE 21](https://en.wikipedia.org/wiki/Java_version_history#Java_SE_21)
