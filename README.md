@@ -125,7 +125,7 @@ Without some of antarctica revealing holes:
 
 <img alt="GSHHS c Great Britain 150 x 140" src="data/output/test/gshhs_c_gb_nrows150_ncols140.png" />
 
-##### Low lesolution
+##### Low resolution
 
 150 x 140:
 
