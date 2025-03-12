@@ -22,7 +22,7 @@ import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
 import uk.ac.leeds.ccg.r2d.d.entities.PolygonDouble;
 import uk.ac.leeds.ccg.r2d.d.entities.PolygonNoInternalHolesDouble;
 import uk.ac.leeds.ccg.r2d.d.entities.TriangleDouble;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_EnvelopeDouble;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_AABBDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonNoInternalHolesDouble;
 import uk.ac.leeds.ccg.v2d.geometry.d.V2D_TriangleDouble;
@@ -35,9 +35,9 @@ import uk.ac.leeds.ccg.v2d.geometry.d.V2D_TriangleDouble;
 public class UniverseDouble {
 
     /**
-     * Envelope
+     * AABB
      */
-    V2D_EnvelopeDouble envelope;
+    V2D_AABBDouble envelope;
 
     /**
      * The triangles.
@@ -69,7 +69,7 @@ public class UniverseDouble {
      *
      * @param envelope The initial envelope.
      */
-    public UniverseDouble(V2D_EnvelopeDouble envelope) {
+    public UniverseDouble(V2D_AABBDouble envelope) {
         nextID = 0L;
         triangles = new ArrayList<>();
         pnih = new ArrayList<>();
@@ -95,7 +95,7 @@ public class UniverseDouble {
     public TriangleDouble addTriangle(V2D_TriangleDouble triangle){
         TriangleDouble t = new TriangleDouble(triangle, getNextID());
         triangles.add(t);
-        envelope = envelope.union(triangle.getEnvelope());
+        envelope = envelope.union(triangle.getAABB());
         return t;
     }
     
@@ -109,7 +109,7 @@ public class UniverseDouble {
     public TriangleDouble addTriangle(V2D_TriangleDouble triangle, Color color, Color colorEdge){
         TriangleDouble t = new TriangleDouble(triangle, getNextID(), color, colorEdge);
         triangles.add(t);
-        envelope = envelope.union(triangle.getEnvelope());
+        envelope = envelope.union(triangle.getAABB());
         return t;
     }
     
@@ -127,7 +127,7 @@ public class UniverseDouble {
         TriangleDouble t = new TriangleDouble(triangle, getNextID(), color, 
                 colorPQ, colorQR, colorRP);
         triangles.add(t);
-        envelope = envelope.union(triangle.getEnvelope());
+        envelope = envelope.union(triangle.getAABB());
         return t;
     }
     
@@ -140,7 +140,7 @@ public class UniverseDouble {
             V2D_PolygonNoInternalHolesDouble polygon){
         PolygonNoInternalHolesDouble p = new PolygonNoInternalHolesDouble(polygon, getNextID());
         pnih.add(p);
-        envelope = envelope.union(polygon.getEnvelope());
+        envelope = envelope.union(polygon.getAABB());
         return p;
     }
     
@@ -152,7 +152,7 @@ public class UniverseDouble {
     public PolygonDouble addPolygon(V2D_PolygonDouble polygon){
         PolygonDouble t = new PolygonDouble(polygon, getNextID());
         polygons.add(t);
-        envelope = envelope.union(polygon.getEnvelope());
+        envelope = envelope.union(polygon.getAABB());
         return t;
     }
     
@@ -166,7 +166,7 @@ public class UniverseDouble {
     public PolygonDouble addPolygon(V2D_PolygonDouble polygon, Color color, Color colorEdge){
         PolygonDouble t = new PolygonDouble(polygon, getNextID(), color, colorEdge);
         polygons.add(t);
-        envelope = envelope.union(polygon.getEnvelope());
+        envelope = envelope.union(polygon.getAABB());
         return t;
     }
     
@@ -183,7 +183,7 @@ public class UniverseDouble {
         PolygonDouble t = new PolygonDouble(polygon, getNextID(), color, 
                 colorInternalEdge, colorExternalEdge);
         polygons.add(t);
-        envelope = envelope.union(polygon.getEnvelope());
+        envelope = envelope.union(polygon.getAABB());
         return t;
     }
     

@@ -320,7 +320,7 @@ public class RenderImage {
         V2D_Point rt = new V2D_Point(env, offset, new V2D_Vector(xmax, ymax));
         V2D_Point rb = new V2D_Point(env, offset, new V2D_Vector(xmax, ymin));
         V2D_Rectangle window = new V2D_Rectangle(lb, lt, rt, rb, oom, rm);
-        Universe universe = new Universe(window.getEnvelope(oom, rm));
+        Universe universe = new Universe(window.getAABB(oom, rm));
         ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
 
         boolean addGrid = false;

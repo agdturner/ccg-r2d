@@ -23,7 +23,7 @@ import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
 import uk.ac.leeds.ccg.r2d.entities.Polygon;
 import uk.ac.leeds.ccg.r2d.entities.PolygonNoInternalHoles;
 import uk.ac.leeds.ccg.r2d.entities.Triangle;
-import uk.ac.leeds.ccg.v2d.geometry.V2D_Envelope;
+import uk.ac.leeds.ccg.v2d.geometry.V2D_AABB;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Polygon;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_PolygonNoInternalHoles;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Triangle;
@@ -36,9 +36,9 @@ import uk.ac.leeds.ccg.v2d.geometry.V2D_Triangle;
 public class Universe {
 
     /**
-     * Envelope
+     * AABB
      */
-    V2D_Envelope envelope;
+    V2D_AABB envelope;
 
     /**
      * The triangles to render.
@@ -70,7 +70,7 @@ public class Universe {
      *
      * @param envelope The initial envelope.
      */
-    public Universe(V2D_Envelope envelope) {
+    public Universe(V2D_AABB envelope) {
         nextID = 0L;
         triangles = new ArrayList<>();
         pnih = new ArrayList<>();
@@ -98,7 +98,7 @@ public class Universe {
     public Triangle addTriangle(V2D_Triangle triangle, int oom, RoundingMode rm){
         Triangle t = new Triangle(triangle, getNextID());
         triangles.add(t);
-        envelope = envelope.union(triangle.getEnvelope(oom, rm), oom);
+        envelope = envelope.union(triangle.getAABB(oom, rm), oom);
         return t;
     }
     
@@ -114,7 +114,7 @@ public class Universe {
     public Triangle addTriangle(V2D_Triangle triangle, int oom, RoundingMode rm, Color color, Color colorEdge){
         Triangle t = new Triangle(triangle, getNextID(), color, colorEdge);
         triangles.add(t);
-        envelope = envelope.union(triangle.getEnvelope(oom, rm), oom);
+        envelope = envelope.union(triangle.getAABB(oom, rm), oom);
         return t;
     }
     
@@ -133,7 +133,7 @@ public class Universe {
             Color colorPQ, Color colorQR, Color colorRP){
         Triangle t = new Triangle(triangle, getNextID(), color, colorPQ, colorQR, colorRP);
         triangles.add(t);
-        envelope = envelope.union(triangle.getEnvelope(oom, rm), oom);
+        envelope = envelope.union(triangle.getAABB(oom, rm), oom);
         return t;
     }
     
@@ -147,7 +147,7 @@ public class Universe {
     public PolygonNoInternalHoles addPolygonNoInternalHoles(V2D_PolygonNoInternalHoles polygon, int oom, RoundingMode rm){
         PolygonNoInternalHoles p = new PolygonNoInternalHoles(polygon, getNextID());
         pnih.add(p);
-        envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
+        envelope = envelope.union(polygon.getAABB(oom, rm), oom);
         return p;
     }
     
@@ -164,7 +164,7 @@ public class Universe {
             Color color, Color colorEdge){
         PolygonNoInternalHoles p = new PolygonNoInternalHoles(polygon, getNextID(), color, colorEdge);
         pnih.add(p);
-        envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
+        envelope = envelope.union(polygon.getAABB(oom, rm), oom);
         return p;
     }
     
@@ -178,7 +178,7 @@ public class Universe {
     public Polygon addPolygon(V2D_Polygon polygon, int oom, RoundingMode rm){
         Polygon t = new Polygon(polygon, getNextID());
         polygons.add(t);
-        envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
+        envelope = envelope.union(polygon.getAABB(oom, rm), oom);
         return t;
     }
     
@@ -195,7 +195,7 @@ public class Universe {
             Color color, Color colorEdge){
         Polygon t = new Polygon(polygon, getNextID(), color, colorEdge);
         polygons.add(t);
-        envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
+        envelope = envelope.union(polygon.getAABB(oom, rm), oom);
         return t;
     }
     
@@ -213,7 +213,7 @@ public class Universe {
         Polygon t = new Polygon(polygon, getNextID(), color, 
                 colorInternalEdge, colorExternalEdge);
         polygons.add(t);
-        envelope = envelope.union(polygon.getEnvelope(oom, rm), oom);
+        envelope = envelope.union(polygon.getAABB(oom, rm), oom);
         return t;
     }
     

@@ -315,7 +315,7 @@ public class RenderImageDouble {
         V2D_PointDouble rt = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmax, ymax));
         V2D_PointDouble rb = new V2D_PointDouble(env, offset, new V2D_VectorDouble(xmax, ymin));
         V2D_RectangleDouble window = new V2D_RectangleDouble(lb, lt, rt, rb);
-        UniverseDouble universe = new UniverseDouble(window.getEnvelope());
+        UniverseDouble universe = new UniverseDouble(window.getAABB());
         ArrayList<Colour_MapDouble> gridCMs = new ArrayList<>();
 
         boolean addGrid = false;
