@@ -1,7 +1,7 @@
 # [ccg-r2d](https://github.com/agdturner/ccg-r2d)
 A Java library for rendering 2D Euclidean spatial data using [ccg-v2d](https://github.com/agdturner/ccg-v2d) for vector (point, line, polygon) data and [ccg-grids](https://github.com/agdturner/ccg-grids) for raster data.
 
-Visualising geometry helps develop [ccg-v2d](https://github.com/agdturner/ccg-v2d).  This 2D Euclidean geometry helps develop 3D geometry libraries: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d). Some example static renderings of data are shown below.
+Visualising geometry helps develop [ccg-v2d](https://github.com/agdturner/ccg-v2d).  The work in 2D is helping develop 3D geometry libraries: [ccg-v3d](https://github.com/agdturner/ccg-v3d) and [ccg-r3d](https://github.com/agdturner/ccg-r3d). Some example static renderings of data are shown below.
 
 [GSHHS](https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/) low resolution land/sea polygons, 825 x 2000:
 
