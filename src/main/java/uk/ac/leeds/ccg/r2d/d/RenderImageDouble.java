@@ -668,7 +668,7 @@ public class RenderImageDouble {
         theta = Math.PI / 2d;
         TriangleDouble t1 = universe.addTriangle(t0.triangle.rotate(origin, theta));
         // Calculate the intersection
-        V2D_FiniteGeometryDouble gi = t0.triangle.getIntersection(t1.triangle, env.epsilon);
+        V2D_FiniteGeometryDouble gi = t0.triangle.getIntersect(t1.triangle, env.epsilon);
         ArrayList<V2D_TriangleDouble> git = ((V2D_ConvexHullDouble) gi).getTriangles();
         for (int i = 0; i < git.size(); i++) {
             TriangleDouble t = universe.addTriangle(git.get(i));
@@ -693,7 +693,7 @@ public class RenderImageDouble {
         double theta = Math.PI;
         TriangleDouble t1 = universe.addTriangle(t0.triangle.rotate(origin, theta));
         // Calculate the intersection
-        V2D_FiniteGeometryDouble gi = t0.triangle.getIntersection(t1.triangle, env.epsilon);
+        V2D_FiniteGeometryDouble gi = t0.triangle.getIntersect(t1.triangle, env.epsilon);
         ArrayList<V2D_TriangleDouble> git = ((V2D_ConvexHullDouble) gi).getTriangles();
         for (int i = 0; i < git.size(); i++) {
             TriangleDouble t = universe.addTriangle(git.get(i));
@@ -1122,7 +1122,7 @@ public class RenderImageDouble {
         for (int r = minr; r <= maxr; r++) {
             for (int c = minc; c <= maxc; c++) {
                 V2D_RectangleDouble pixel = getPixel(r, c);
-                V2D_FiniteGeometryDouble pil = pixel.getIntersection(l, epsilon);
+                V2D_FiniteGeometryDouble pil = pixel.getIntersect(l, epsilon);
                 if (pil != null) {
                     render(pix, r, c, color);
                 }
@@ -1174,7 +1174,7 @@ public class RenderImageDouble {
         for (int r = minr; r <= maxr; r++) {
             for (int c = minc; c <= maxc; c++) {
                 V2D_RectangleDouble pixel = getPixel(r, c);
-                V2D_FiniteGeometryDouble pit = pixel.getIntersection(t, epsilon);
+                V2D_FiniteGeometryDouble pit = pixel.getIntersect(t, epsilon);
                 if (pit != null) {
                     render(pix, r, c, triangle.color);
                     // Edge
@@ -1184,17 +1184,17 @@ public class RenderImageDouble {
                      * columns.
                      */
                     // PQ
-                    V2D_FiniteGeometryDouble pipq = pixel.getIntersection(t.getPQ(), epsilon);
+                    V2D_FiniteGeometryDouble pipq = pixel.getIntersect(t.getPQ(), epsilon);
                     if (pipq != null) {
                         render(pix, r, c, triangle.getColorPQ());
                     }
                     // QR
-                    V2D_FiniteGeometryDouble piqr = pixel.getIntersection(t.getQR(), epsilon);
+                    V2D_FiniteGeometryDouble piqr = pixel.getIntersect(t.getQR(), epsilon);
                     if (piqr != null) {
                         render(pix, r, c, triangle.getColorQR());
                     }
                     // RP
-                    V2D_FiniteGeometryDouble pirp = pixel.getIntersection(t.getRP(), epsilon);
+                    V2D_FiniteGeometryDouble pirp = pixel.getIntersect(t.getRP(), epsilon);
                     if (pirp != null) {
                         render(pix, r, c, triangle.getColorRP());
                     }
