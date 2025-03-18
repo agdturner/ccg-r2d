@@ -46,7 +46,7 @@ import uk.ac.leeds.ccg.r2d.io.GSHHG;
 import uk.ac.leeds.ccg.r2d.io.IO;
 import uk.ac.leeds.ccg.stats.range.Stats_RangeDouble;
 import uk.ac.leeds.ccg.v2d.core.V2D_Environment;
-import uk.ac.leeds.ccg.v2d.geometry.V2D_ConvexHull;
+import uk.ac.leeds.ccg.v2d.geometry.V2D_ConvexArea;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_FiniteGeometry;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_LineSegment;
 import uk.ac.leeds.ccg.v2d.geometry.V2D_Point;
@@ -215,21 +215,27 @@ public class RenderImage {
     }
 
     /**
-     * The main method.
-     * Edit to configure details.
-     * 
+     * The main method. Edit to configure details.
+     *
      * @param args The arguments:
      * <ul>
      * <li>args[0] "br"</li>
      * <li>args[1] path to the data directory</li>
-     * <li>args[2] the filename for the gshhs data set ("gshhs_c", "gshhs_l, "gshhs_i", "gshhs_h", "gshhs_f")</li>
+     * <li>args[2] the filename for the gshhs data set ("gshhs_c", "gshhs_l,
+     * "gshhs_i", "gshhs_h", "gshhs_f")</li>
      * <li>args[3] the scale</li>
      * <li>args[4] the place ("ga", "g", "gb", "iom")</li>
      * </ul>
      */
     public static void main(String[] args) {
-        Path inDataDir = Paths.get(args[1], "data", "input");
-        Path outDataDir = Paths.get(args[1], "data", "output");
+        String directory;
+        if (args.length > 0) {
+            directory = args[1];
+        } else {
+            directory = ".";
+        }
+        Path inDataDir = Paths.get(directory, "data", "input");
+        Path outDataDir = Paths.get(directory, "data", "output");
         Path dir = Paths.get(outDataDir.toString(), "test");
         //boolean drawAxes = true;
         boolean drawAxes = false;
@@ -239,12 +245,16 @@ public class RenderImage {
         //boolean gshhs = false;
         boolean gshhs = true;
         String name;
-        //String gshhs_name = "gshhs_c";
-        //String gshhs_name = "gshhs_l";
-        //String gshhs_name = "gshhs_i";
-        //String gshhs_name = "gshhs_h";
-        //String gshhs_name = "gshhs_f";
-        String gshhs_name = args[2];
+        String gshhs_name;
+        if (args.length > 1) {
+            gshhs_name = args[2];
+        } else {
+            //gshhs_name = "gshhs_c";
+            //gshhs_name = "gshhs_l";
+            //gshhs_name = "gshhs_i";
+            //gshhs_name = "gshhs_h";
+            gshhs_name = "gshhs_f";
+        }
         int nrows;
         int ncols;
         int scale;
@@ -254,26 +264,36 @@ public class RenderImage {
             ncols = 150 * scale;
             name = "test";
         } else {
-            scale = Integer.valueOf(args[3]);
-            if (args[4].equalsIgnoreCase("ga")) {
-                // Global all         
-                nrows = 180 * scale;
-                ncols = 540 * scale;
-            } else if (args[4].equalsIgnoreCase("g")) {
-                // Global less far south          
-                nrows = 165 * scale;
-                ncols = 400 * scale;
-            } else if (args[4].equalsIgnoreCase("gb")) {
-                // GB
-                nrows = 15 * scale;
-                ncols = 14 * scale;
+            if (args.length > 2) {
+                scale = Integer.valueOf(args[3]);
             } else {
-                //args[4].equalsIgnoreCase("iom")
-                // IOM
+                scale = 1;
+            }
+            if (args.length > 4) {
+                if (args[4].equalsIgnoreCase("ga")) {
+                    // Global all         
+                    nrows = 180 * scale;
+                    ncols = 540 * scale;
+                } else if (args[4].equalsIgnoreCase("g")) {
+                    // Global less far south          
+                    nrows = 165 * scale;
+                    ncols = 400 * scale;
+                } else if (args[4].equalsIgnoreCase("gb")) {
+                    // GB
+                    nrows = 15 * scale;
+                    ncols = 14 * scale;
+                } else {
+                    //args[4].equalsIgnoreCase("iom")
+                    // IOM
+                    nrows = 40 * scale;
+                    ncols = 53 * scale;
+                }
+                name = gshhs_name + "_" + args[4];
+            } else {
                 nrows = 40 * scale;
                 ncols = 53 * scale;
+                name = gshhs_name + "_iom";
             }
-            name = gshhs_name + "_" + args[4];
         }
         int nrowsd2 = nrows / 2;
         int ncolsd2 = ncols / 2;
@@ -290,29 +310,37 @@ public class RenderImage {
             xmax = BigRational.valueOf(ncolsd2);
             name = "test";
         } else {
-            if (args[4].equalsIgnoreCase("ga")) {
-                // Global all          
-                xmin = BigRational.valueOf(-ncolsd3);
-                xmax = BigRational.valueOf(ncolssncolsd3);
-                ymin = BigRational.valueOf(-75 * scale);
-                ymax = BigRational.valueOf(90 * scale);
-            } else if (args[4].equalsIgnoreCase("g")) {
-                // Global less far south         
-                xmin = BigRational.valueOf(-20 * scale);
-                xmax = BigRational.valueOf(380 * scale);
-            } else if (args[4].equalsIgnoreCase("gb")) {
-                // GB
-                ymin = BigRational.valueOf(47 * scale);
-                ymax = BigRational.valueOf(62 * scale);
-                xmin = BigRational.valueOf(-10 * scale);
-                xmax = BigRational.valueOf(4 * scale);
+            if (args.length > 4) {
+                if (args[4].equalsIgnoreCase("ga")) {
+                    // Global all          
+                    xmin = BigRational.valueOf(-ncolsd3);
+                    xmax = BigRational.valueOf(ncolssncolsd3);
+                    ymin = BigRational.valueOf(-75 * scale);
+                    ymax = BigRational.valueOf(90 * scale);
+                } else if (args[4].equalsIgnoreCase("g")) {
+                    // Global less far south         
+                    xmin = BigRational.valueOf(-20 * scale);
+                    xmax = BigRational.valueOf(380 * scale);
+                } else if (args[4].equalsIgnoreCase("gb")) {
+                    // GB
+                    ymin = BigRational.valueOf(47 * scale);
+                    ymax = BigRational.valueOf(62 * scale);
+                    xmin = BigRational.valueOf(-10 * scale);
+                    xmax = BigRational.valueOf(4 * scale);
+                } else {
+                    //args[4].equalsIgnoreCase("iom")
+                    // IOM
+                    ymin = BigRational.valueOf(54.03d * scale);
+                    ymax = BigRational.valueOf(54.43d * scale);
+                    xmin = BigRational.valueOf((360d - 4.82) * scale);
+                    xmax = BigRational.valueOf((360d - 4.29) * scale);
+                }
             } else {
-                //args[4].equalsIgnoreCase("iom")
                 // IOM
                 ymin = BigRational.valueOf(54.03d * scale);
                 ymax = BigRational.valueOf(54.43d * scale);
-                xmin = BigRational.valueOf((360d -4.82) * scale);
-                xmax = BigRational.valueOf((360d -4.29) * scale);
+                xmin = BigRational.valueOf((360d - 4.82) * scale);
+                xmax = BigRational.valueOf((360d - 4.29) * scale);
             }
         }
         V2D_Point lb = new V2D_Point(env, offset, new V2D_Vector(xmin, ymin));
@@ -661,7 +689,7 @@ public class RenderImage {
         Triangle t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, bd, oom, rm), oom, rm);
         // Calculate the intersection
         V2D_FiniteGeometry gi = t0.triangle.getIntersect(t1.triangle, oom, rm);
-        ArrayList<V2D_Triangle> git = ((V2D_ConvexHull) gi).getTriangles(oom, rm);
+        ArrayList<V2D_Triangle> git = ((V2D_ConvexArea) gi).getTriangles(oom, rm);
         for (int i = 0; i < git.size(); i++) {
             Triangle t = universe.addTriangle(git.get(i), oom, rm);
             t.setColor(Color.yellow);
@@ -686,7 +714,7 @@ public class RenderImage {
         Triangle t1 = universe.addTriangle(t0.triangle.rotate(origin, theta, bd, oom, rm), oom, rm);
         // Calculate the intersection
         V2D_FiniteGeometry gi = t0.triangle.getIntersect(t1.triangle, oom, rm);
-        ArrayList<V2D_Triangle> git = ((V2D_ConvexHull) gi).getTriangles(oom, rm);
+        ArrayList<V2D_Triangle> git = ((V2D_ConvexArea) gi).getTriangles(oom, rm);
         for (int i = 0; i < git.size(); i++) {
             Triangle t = universe.addTriangle(git.get(i), oom, rm);
             t.setColor(Color.yellow);
@@ -842,17 +870,17 @@ public class RenderImage {
         hole_pts.add(new V2D_Point(env, -5d, -12d));
         hole_pts.add(new V2D_Point(env, -7.5d, -10d));
         hole_pts.add(new V2D_Point(env, -10d, -12.5d));
-        internalHoles.put(internalHoles.size(), 
+        internalHoles.put(internalHoles.size(),
                 new V2D_PolygonNoInternalHoles(
                         hole_pts.toArray(V2D_Point[]::new), oom, rm));
         V2D_Polygon polygon = new V2D_Polygon(
                 new V2D_PolygonNoInternalHoles(
-                pts.toArray(V2D_Point[]::new), oom, rm), 
+                        pts.toArray(V2D_Point[]::new), oom, rm),
                 internalHoles, oom, rm);
         universe.addPolygon(polygon, oom, rm, Color.lightGray, Color.red, Color.blue);
     }
 
-    public static void addPolygons3(Universe universe, V2D_Environment env, 
+    public static void addPolygons3(Universe universe, V2D_Environment env,
             String gshhs_name, int scale, int oom, RoundingMode rm) {
         Path outDataDir = Paths.get("data", "input", "gshhg-bin-2.3.7");
         Path filepath = Paths.get(outDataDir.toString(), gshhs_name + ".b");
@@ -1112,10 +1140,10 @@ public class RenderImage {
      * @param l The polygon to render.
      * @param pix The image.
      */
-    public void renderPolygonNoInternalHoles(PolygonNoInternalHoles polygon, 
+    public void renderPolygonNoInternalHoles(PolygonNoInternalHoles polygon,
             int[] pix) {
         V2D_PolygonNoInternalHoles poly = polygon.polygon;
-        V2D_ConvexHull ch = poly.getConvexHull(oom, rm);
+        V2D_ConvexArea ch = poly.getConvexHull(oom, rm);
         HashMap<Integer, V2D_LineSegment> edges = poly.getEdges(oom, rm);
         V2D_LineSegment[] edgesArray = new V2D_LineSegment[edges.size()];
         for (int i = 0; i < edgesArray.length; i++) {
@@ -1169,7 +1197,7 @@ public class RenderImage {
      */
     public void renderPolygon(Polygon polygon, int[] pix) {
         V2D_Polygon poly = polygon.polygon;
-        V2D_ConvexHull ch = poly.getConvexHull(oom, rm);
+        V2D_ConvexArea ch = poly.getConvexHull(oom, rm);
         HashMap<Integer, V2D_LineSegment> edges = poly.getEdges(oom, rm);
 //        V2D_LineSegment[] edgesArray = new V2D_LineSegment[edges.size()];
 //        for (int i = 0; i < edgesArray.length; i++) {

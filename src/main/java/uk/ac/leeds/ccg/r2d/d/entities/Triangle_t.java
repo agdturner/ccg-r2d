@@ -17,60 +17,61 @@ package uk.ac.leeds.ccg.r2d.d.entities;
 
 import java.awt.Color;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
-import uk.ac.leeds.ccg.r2d.entities.PolygonEntity;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonDouble;
+import uk.ac.leeds.ccg.r2d.entities.TriangleEntity;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_Triangle_d;
 
 /**
- * For representing a polygon entity.
+ * For representing a triangle entity.
  *
  * @author Andy Turner
  */
-public class PolygonDouble extends PolygonEntity {
+public class Triangle_t extends TriangleEntity {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * The polygon geometry
+     * The triangle geometry
      */
-    public V2D_PolygonDouble polygon;
+    public V2D_Triangle_d triangle;
     
     /**
      * Create a new instance.
      *
-     * @param polygon What {@link #polygon} is set to.
+     * @param triangle What {@link #triangle} is set to.
      * @param id What {@link #id} is set to.
      */
-    public PolygonDouble(V2D_PolygonDouble polygon, Data_ID_long id){
+    public Triangle_t(V2D_Triangle_d triangle, Data_ID_long id){
         super(id);
-        this.polygon = polygon;
+        this.triangle = triangle;
     }
     
     /**
      * Create a new instance.
      *
-     * @param polygon What {@link #polygon} is set to.
+     * @param triangle What {@link #triangle} is set to.
      * @param id What {@link #id} is set to.
      * @param color What {@link #color} is set to.
      * @param edgeColor What {@link #edgeColor} is set to.
      */
-    public PolygonDouble(V2D_PolygonDouble polygon, Data_ID_long id,
+    public Triangle_t(V2D_Triangle_d triangle, Data_ID_long id,
             Color color, Color colorEdge){
         super(id, color, colorEdge);
-        this.polygon = polygon;
+        this.triangle = triangle;
     }
     
     /**
      * Create a new instance.
      *
-     * @param polygon What {@link #polygon} is set to.
+     * @param triangle What {@link #triangle} is set to.
      * @param id What {@link #id} is set to.
      * @param color What {@link #color} is set to.
-     * @param colorInternalEdge What {@link #colorInternalEdge} is set to.
-     * @param colorExternalEdge What {@link #colorExternalEdge} is set to.
+     * @param colorPQ What {@link #colorPQ} is set to.
+     * @param colorQR What {@link #colorQR} is set to.
+     * @param colorRP What {@link #colorRP} is set to.
      */
-    public PolygonDouble(V2D_PolygonDouble polygon, Data_ID_long id,
-            Color color, Color colorInternalEdge, Color colorExternalEdge) {
-        super(id, color, colorInternalEdge, colorExternalEdge);
-        this.polygon = polygon;
+    public Triangle_t(V2D_Triangle_d triangle, Data_ID_long id,
+            Color color, Color colorPQ, Color colorQR, Color colorRP) {
+        super(id, color, colorPQ, colorQR, colorRP);
+        this.triangle = triangle;
     }
 }

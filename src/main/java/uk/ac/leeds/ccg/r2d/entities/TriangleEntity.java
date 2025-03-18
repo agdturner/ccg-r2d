@@ -18,7 +18,7 @@ package uk.ac.leeds.ccg.r2d.entities;
 import java.awt.Color;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.r2d.entities.Entity;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_TriangleDouble;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_Triangle_d;
 
 /**
  * For representing a triangle entity.

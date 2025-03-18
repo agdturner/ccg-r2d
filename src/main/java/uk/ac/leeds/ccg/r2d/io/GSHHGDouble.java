@@ -23,14 +23,14 @@ import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
-import uk.ac.leeds.ccg.v2d.core.d.V2D_EnvironmentDouble;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PointDouble;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonDouble;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonNoInternalHolesDouble;
+import uk.ac.leeds.ccg.v2d.core.d.V2D_Environment_d;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_Point_d;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_Polygon_d;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonNoInternalHoles_d;
 
 public class GSHHGDouble {
 
-    public HashMap<Integer, V2D_PolygonDouble> polygons;
+    public HashMap<Integer, V2D_Polygon_d> polygons;
 
     /**
      * @param p The path to the GSHHS file.
@@ -39,7 +39,7 @@ public class GSHHGDouble {
      * @param epsilon The tolerance within which two vectors are regarded as
      * equal.
      */
-    public GSHHGDouble(Path p, V2D_EnvironmentDouble env, int scale, double epsilon) {
+    public GSHHGDouble(Path p, V2D_Environment_d env, int scale, double epsilon) {
 
         polygons = new HashMap<>();
 
@@ -113,13 +113,13 @@ public class GSHHGDouble {
                     } else {
                         
                         
-                    V2D_PointDouble[] points = new V2D_PointDouble[n];                        
+                    V2D_Point_d[] points = new V2D_Point_d[n];                        
                     int x00 = in.readInt();
                     int y00 = in.readInt();
                     int x0 = x00;
                     int y0 = y00;
                     if (n > 1) {
-                        points[0] = new V2D_PointDouble(env, (double) (x0 * scale) / 1000000d, (double) (y0 * scale) / 1000000d);
+                        points[0] = new V2D_Point_d(env, (double) (x0 * scale) / 1000000d, (double) (y0 * scale) / 1000000d);
                         xmin = Math.min(xmin, x0);
                         xmax = Math.max(xmax, x0);
                         ymin = Math.min(ymin, y0);
@@ -134,7 +134,7 @@ public class GSHHGDouble {
                             //System.out.println("Crossright i = " + i);
                             x1 = x1 - 360000000;
                         }
-                        points[1] = new V2D_PointDouble(env, (double) (x1 * scale) / 1000000d, (double) (y1 * scale) / 1000000d);
+                        points[1] = new V2D_Point_d(env, (double) (x1 * scale) / 1000000d, (double) (y1 * scale) / 1000000d);
                         xmin = Math.min(xmin, x1);
                         xmax = Math.max(xmax, x1);
                         ymin = Math.min(ymin, y1);
@@ -156,7 +156,7 @@ public class GSHHGDouble {
                                 //System.out.println("Crossright i = " + i);
                                 x1 = x1 - 360000000;
                             }
-                            points[i] = new V2D_PointDouble(env, (double) (x1 * scale) / 1000000d, (double) (y1 * scale) / 1000000d);
+                            points[i] = new V2D_Point_d(env, (double) (x1 * scale) / 1000000d, (double) (y1 * scale) / 1000000d);
                             xmin = Math.min(xmin, x1);
                             xmax = Math.max(xmax, x1);
                             ymin = Math.min(ymin, y1);
@@ -171,15 +171,15 @@ public class GSHHGDouble {
                             int debug = 1;
                            }
                              try {
-                                V2D_PolygonNoInternalHolesDouble polygon = new V2D_PolygonNoInternalHolesDouble(points, epsilon);
+                                V2D_PolygonNoInternalHoles_d polygon = new V2D_PolygonNoInternalHoles_d(points, epsilon);
 //                                // GB
-//                                V2D_PointDouble pP0P52 = new V2D_PointDouble(env, 0, 52);
+//                                V2D_Point_d pP0P52 = new V2D_Point_d(env, 0, 52);
 //                                if (polygon.contains(pP0P52, epsilon)) {
 //                                    System.out.println("gb id=" + id);
 //                                }
 
                                 // IOM
-                                V2D_PointDouble pN4520083P54239143 = new V2D_PointDouble(env, 360d -4.520083d, 54.239143);
+                                V2D_Point_d pN4520083P54239143 = new V2D_Point_d(env, 360d -4.520083d, 54.239143);
                                 if (polygon.contains(pN4520083P54239143, epsilon)) {
                                     System.out.println("iom id=" + id);
                                 }
@@ -190,14 +190,14 @@ public class GSHHGDouble {
                                         System.out.println("GB contains id=" + id);
                                     }
                                     
-                                    HashMap<Integer, V2D_PolygonNoInternalHolesDouble> internalHoles = new HashMap<>();
+                                    HashMap<Integer, V2D_PolygonNoInternalHoles_d> internalHoles = new HashMap<>();
                                     int id2 = polygons.size();
                                     lookup.put(id, id2);
-                                    polygons.put(id2, new V2D_PolygonDouble(polygon, epsilon));
+                                    polygons.put(id2, new V2D_Polygon_d(polygon, epsilon));
                                 } else {
                                     int id2 = lookup.get(container);
                                     if (polygons.containsKey(id2)) {
-                                        V2D_PolygonDouble containerPolygon = polygons.get(id2);
+                                        V2D_Polygon_d containerPolygon = polygons.get(id2);
                                         containerPolygon.internalHoles.put(containerPolygon.internalHoles.size(), polygon);
                                         contained.add(id);
                                     } else {

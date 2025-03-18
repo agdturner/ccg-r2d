@@ -4,7 +4,7 @@
  */
 package uk.ac.leeds.ccg.r2d;
 
-import uk.ac.leeds.ccg.r2d.d.RenderImageDouble;
+import uk.ac.leeds.ccg.r2d.d.RenderImage_d;
 
 /**
  *
@@ -20,7 +20,7 @@ public class Run {
         if (args[0].equalsIgnoreCase("BR")) {
             RenderImage.main(args);
         } else if (args[0].equalsIgnoreCase("D")) {
-            RenderImageDouble.main(args);
+            RenderImage_d.main(args);
         } else {
             System.err.println("Argument 0 should be either \"br\" or \"d\"");
             System.exit(1);

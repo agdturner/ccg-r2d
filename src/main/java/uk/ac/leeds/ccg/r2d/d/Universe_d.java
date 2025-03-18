@@ -19,40 +19,40 @@ import java.awt.Color;
 import java.util.ArrayList;
 import uk.ac.leeds.ccg.data.id.Data_ID_long;
 import uk.ac.leeds.ccg.grids.d2.grid.d.Grids_GridDouble;
-import uk.ac.leeds.ccg.r2d.d.entities.PolygonDouble;
-import uk.ac.leeds.ccg.r2d.d.entities.PolygonNoInternalHolesDouble;
-import uk.ac.leeds.ccg.r2d.d.entities.TriangleDouble;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_AABBDouble;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonDouble;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonNoInternalHolesDouble;
-import uk.ac.leeds.ccg.v2d.geometry.d.V2D_TriangleDouble;
+import uk.ac.leeds.ccg.r2d.d.entities.Polygon_d;
+import uk.ac.leeds.ccg.r2d.d.entities.PolygonNoInternalHoles_d;
+import uk.ac.leeds.ccg.r2d.d.entities.Triangle_t;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_AABB_d;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_Polygon_d;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_PolygonNoInternalHoles_d;
+import uk.ac.leeds.ccg.v2d.geometry.d.V2D_Triangle_d;
 
 /**
  * A class that holds reference to visible and invisible objects.
  *
  * @author Andy Turner
  */
-public class UniverseDouble {
+public class Universe_d {
 
     /**
      * AABB
      */
-    V2D_AABBDouble envelope;
+    V2D_AABB_d envelope;
 
     /**
      * The triangles.
      */
-    public ArrayList<TriangleDouble> triangles;
+    public ArrayList<Triangle_t> triangles;
     
     /**
      * The polygons with no internal holes.
      */
-    public ArrayList<PolygonNoInternalHolesDouble> pnih;
+    public ArrayList<PolygonNoInternalHoles_d> pnih;
     
     /**
      * The polygons.
      */
-    public ArrayList<PolygonDouble> polygons;
+    public ArrayList<Polygon_d> polygons;
     
     /**
      * The grids to render.
@@ -69,7 +69,7 @@ public class UniverseDouble {
      *
      * @param envelope The initial envelope.
      */
-    public UniverseDouble(V2D_AABBDouble envelope) {
+    public Universe_d(V2D_AABB_d envelope) {
         nextID = 0L;
         triangles = new ArrayList<>();
         pnih = new ArrayList<>();
@@ -90,10 +90,10 @@ public class UniverseDouble {
     /**
      * Adds the triangle and returns entity.
      * @param triangle The triangle to add.
-     * @return The TriangleDouble.
+     * @return The Triangle_t.
      */
-    public TriangleDouble addTriangle(V2D_TriangleDouble triangle){
-        TriangleDouble t = new TriangleDouble(triangle, getNextID());
+    public Triangle_t addTriangle(V2D_Triangle_d triangle){
+        Triangle_t t = new Triangle_t(triangle, getNextID());
         triangles.add(t);
         envelope = envelope.union(triangle.getAABB());
         return t;
@@ -106,8 +106,8 @@ public class UniverseDouble {
      * @param color The colour of the triangle.
      * @param colorEdge The colour of the edge of the triangle.
      */
-    public TriangleDouble addTriangle(V2D_TriangleDouble triangle, Color color, Color colorEdge){
-        TriangleDouble t = new TriangleDouble(triangle, getNextID(), color, colorEdge);
+    public Triangle_t addTriangle(V2D_Triangle_d triangle, Color color, Color colorEdge){
+        Triangle_t t = new Triangle_t(triangle, getNextID(), color, colorEdge);
         triangles.add(t);
         envelope = envelope.union(triangle.getAABB());
         return t;
@@ -122,9 +122,9 @@ public class UniverseDouble {
      * @param colorQR The colour of the triangle QR edge.
      * @param colorRP The colour of the triangle RP edge.
      */
-    public TriangleDouble addTriangle(V2D_TriangleDouble triangle, Color color, 
+    public Triangle_t addTriangle(V2D_Triangle_d triangle, Color color, 
             Color colorPQ, Color colorQR, Color colorRP){
-        TriangleDouble t = new TriangleDouble(triangle, getNextID(), color, 
+        Triangle_t t = new Triangle_t(triangle, getNextID(), color, 
                 colorPQ, colorQR, colorRP);
         triangles.add(t);
         envelope = envelope.union(triangle.getAABB());
@@ -136,9 +136,9 @@ public class UniverseDouble {
      * @param polygon The polygon to add.
      * @return The Triangle.
      */
-    public PolygonNoInternalHolesDouble addPolygonNoInternalHoles(
-            V2D_PolygonNoInternalHolesDouble polygon){
-        PolygonNoInternalHolesDouble p = new PolygonNoInternalHolesDouble(polygon, getNextID());
+    public PolygonNoInternalHoles_d addPolygonNoInternalHoles(
+            V2D_PolygonNoInternalHoles_d polygon){
+        PolygonNoInternalHoles_d p = new PolygonNoInternalHoles_d(polygon, getNextID());
         pnih.add(p);
         envelope = envelope.union(polygon.getAABB());
         return p;
@@ -147,10 +147,10 @@ public class UniverseDouble {
     /**
      * Adds the polygon and returns entity.
      * @param polygon The polygon to add.
-     * @return The TriangleDouble.
+     * @return The Triangle_t.
      */
-    public PolygonDouble addPolygon(V2D_PolygonDouble polygon){
-        PolygonDouble t = new PolygonDouble(polygon, getNextID());
+    public Polygon_d addPolygon(V2D_Polygon_d polygon){
+        Polygon_d t = new Polygon_d(polygon, getNextID());
         polygons.add(t);
         envelope = envelope.union(polygon.getAABB());
         return t;
@@ -163,8 +163,8 @@ public class UniverseDouble {
      * @param color The colour of the polygon.
      * @param colorEdge The colour of the edge of the polygon.
      */
-    public PolygonDouble addPolygon(V2D_PolygonDouble polygon, Color color, Color colorEdge){
-        PolygonDouble t = new PolygonDouble(polygon, getNextID(), color, colorEdge);
+    public Polygon_d addPolygon(V2D_Polygon_d polygon, Color color, Color colorEdge){
+        Polygon_d t = new Polygon_d(polygon, getNextID(), color, colorEdge);
         polygons.add(t);
         envelope = envelope.union(polygon.getAABB());
         return t;
@@ -178,9 +178,9 @@ public class UniverseDouble {
      * @param colorInternalEdge What {@link #colorInternalEdge} is set to.
      * @param colorExternalEdge What {@link #colorExternalEdge} is set to.
      */
-    public PolygonDouble addPolygon(V2D_PolygonDouble polygon, Color color, 
+    public Polygon_d addPolygon(V2D_Polygon_d polygon, Color color, 
             Color colorInternalEdge, Color colorExternalEdge){
-        PolygonDouble t = new PolygonDouble(polygon, getNextID(), color, 
+        Polygon_d t = new Polygon_d(polygon, getNextID(), color, 
                 colorInternalEdge, colorExternalEdge);
         polygons.add(t);
         envelope = envelope.union(polygon.getAABB());
